@@ -17,8 +17,16 @@
     ],
     "authors": [
         {
-            "name": "Dykyi",
+            "name": "Roman Dykyi",
+            "email": "dykyi.roman@gmail.com",
+            "homepage": "https://github.com/dykyi-roman",
             "role": "Developer"
+        }
+    ],
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/dykyi-roman"
         }
     ],
     "homepage": "https://github.com/dykyi-roman/awesome-claude-code",
