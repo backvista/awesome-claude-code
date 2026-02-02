@@ -5,12 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-02-02
+
+### Added
+
+#### Commands
+- `/acc-write-documentation` - Generate documentation for file/folder (README, architecture, diagrams)
+- `/acc-audit-documentation` - Audit documentation quality (completeness, accuracy, clarity)
+
+#### Agents
+- `acc-documentation-writer` - Technical documentation writer (README, architecture, API docs, ADRs)
+- `acc-documentation-auditor` - Documentation quality auditor
+- `acc-diagram-designer` - Mermaid diagram designer (C4, sequence, class, ER diagrams)
+
+#### Knowledge Skills
+- `acc-documentation-knowledge` - Documentation types, audiences, best practices, antipatterns
+- `acc-diagram-knowledge` - Mermaid syntax, C4 model, diagram types, best practices
+- `acc-documentation-qa-knowledge` - Quality checklists, audit criteria, scoring metrics
+
+#### Template Skills
+- `acc-readme-template` - README.md generation with badges, sections, examples
+- `acc-architecture-doc-template` - ARCHITECTURE.md with layers, components, diagrams
+- `acc-adr-template` - Architecture Decision Records (context, decision, consequences)
+- `acc-api-doc-template` - API documentation (endpoints, params, responses)
+- `acc-getting-started-template` - Quick start guides, tutorials
+- `acc-troubleshooting-template` - FAQ and troubleshooting sections
+- `acc-code-examples-template` - Code examples (minimal, complete, progressive)
+- `acc-mermaid-template` - Mermaid diagram templates for all types
+- `acc-changelog-template` - Keep a Changelog format
+
+### Changed
+- Updated documentation with new documentation system components
+- Updated CLAUDE.md with new component flow and version history
+
 ## [2.2.0] - 2026-02-01
 
 ### Added
 
 #### Commands
-- `/acc-psr-audit` - PSR compliance audit (PSR-1/12 coding style, PSR-4 autoloading, PSR interfaces)
+- `/acc-audit-psr` - PSR compliance audit (PSR-1/12 coding style, PSR-4 autoloading, PSR interfaces)
 
 #### Agents
 - `acc-psr-generator` - Generates PSR-compliant PHP components (11 skills)
@@ -54,7 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 #### Commands
-- `/acc-claude-code-audit` - audit .claude folder structure and configuration quality
+- `/acc-audit-claude-code` - audit .claude folder structure and configuration quality
 
 #### Agents
 - `acc-architecture-generator` - meta-generator coordinating DDD and pattern generators
@@ -97,8 +130,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 #### Commands
-- `/acc-architecture-audit` - comprehensive multi-pattern architecture audit
-- `/acc-ddd-audit` - DDD compliance analysis for PHP projects
+- `/acc-audit-architecture` - comprehensive multi-pattern architecture audit
+- `/acc-audit-ddd` - DDD compliance analysis for PHP projects
 
 #### Agents
 - `acc-architecture-auditor` - multi-pattern architecture auditor (DDD, CQRS, Clean, Hexagonal, Layered, EDA, Event Sourcing)
@@ -136,7 +169,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Skill `acc-claude-code-knowledge` - knowledge base for formats and patterns
 - Comprehensive documentation in `.claude/README.md`
 
-[Unreleased]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.2.0...HEAD
+[Unreleased]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v1.0.0...v2.0.0

@@ -1,7 +1,7 @@
 ---
-description: Automatically generate commit message based on changes and push to current branch. Analyzes git diff to create meaningful commit following conventional commits format.
+description: Automatically generate commit message based on changes and push to current branch. Analyzes git diff to create meaningful commit following conventional commits format. Optionally creates and pushes a git tag.
 allowed-tools: Bash
-argument-hint: (no arguments needed)
+argument-hint: [tag-name]
 ---
 
 # Auto Commit & Push
@@ -60,6 +60,7 @@ type(scope): brief summary in lowercase (max 50 chars)
 - Summary should be concise but meaningful
 - Focus on "why" not just "what" in details
 - Use bullet points for multiple changes
+- **DO NOT add "Co-Authored-By:" lines** — keep the commit message clean
 
 ### 6. Create commit
 Execute commit using HEREDOC format:
@@ -81,13 +82,37 @@ EOF
 If push fails (e.g., branch not tracked remotely), run:
 `git push -u origin <branch-name>`
 
-### 8. Confirm success
+### 8. Create tag (if $ARGUMENTS provided)
+
+If `$ARGUMENTS` contains a tag name:
+
+1. Create the tag:
+   ```bash
+   git tag $ARGUMENTS
+   ```
+
+2. Push the tag:
+   ```bash
+   git push origin $ARGUMENTS
+   ```
+
+If tag already exists, respond:
+"Tag '$ARGUMENTS' already exists. Use a different tag name or delete existing tag first."
+
+### 9. Confirm success
 Run `git status` to verify everything is clean and pushed.
 
-Output summary:
+Output summary (without tag):
 ```
 ✓ Committed: <commit message summary>
 ✓ Pushed to: <branch-name>
+```
+
+Output summary (with tag):
+```
+✓ Committed: <commit message summary>
+✓ Pushed to: <branch-name>
+✓ Tagged: <tag-name>
 ```
 
 ## Edge Cases

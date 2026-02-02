@@ -1,5 +1,5 @@
 ---
-description: Audit .claude folder structure, commands, agents, skills, and settings. Evaluates quality, identifies issues, and provides improvement recommendations.
+description: Comprehensive audit of .claude folder. Checks structure, quality, cross-references, antipatterns, resource usage (orphaned components), behavior verification (description vs implementation), and context alignment (project architecture support).
 allowed-tools: Read, Glob, Grep, Bash
 model: opus
 ---
@@ -102,6 +102,128 @@ Common issues to flag:
 7. **Missing error handling** — Commands without pre-flight checks
 8. **Secrets in settings** — API keys or sensitive data in versioned files
 
+### Step 5: Resource Usage Analysis
+
+Build dependency graph and find unused components:
+
+#### 5.1 Build Usage Graph
+
+Extract references from all components:
+
+1. **Commands → Agents**: Parse command bodies for agent references
+   - Look for Task tool calls with agent names
+   - Pattern: `acc-*-agent`, `acc-*-auditor`, `acc-*-generator`, `acc-*-expert`, `acc-*-writer`, `acc-*-designer`
+
+2. **Agents → Skills**: Parse agent frontmatter `skills:` field
+   - Extract skill names from YAML list
+   - Also check agent body for skill mentions
+
+3. **Skills → Skills**: Parse skill bodies for cross-references
+   - Look for skill name patterns in instructions
+
+#### 5.2 Find Orphans
+
+Compare discovered components against usage graph:
+
+- **Orphaned skills** — Skills not referenced by any agent
+- **Orphaned agents** — Agents not referenced by any command
+- **Undocumented commands** — Commands not mentioned in README.md
+
+#### 5.3 Resource Report Format
+
+```
+📊 Resource Usage Analysis
+├── Active components: X/Y (Z%)
+├── Orphaned skills: [list or "none"]
+├── Orphaned agents: [list or "none"]
+├── Undocumented commands: [list or "none"]
+└── Circular references: [list or "none"]
+```
+
+### Step 6: Behavior Verification
+
+Verify that component descriptions match actual behavior:
+
+#### 6.1 Extract Declared Behavior
+
+For each component, parse:
+- `description` field — what it claims to do
+- `argument-hint` — expected input format
+- Key action verbs: generates, creates, audits, analyzes, validates, executes
+
+#### 6.2 Extract Actual Behavior
+
+Analyze component body:
+- Tool usage patterns (Write = generates, Read/Grep = audits, Bash = executes)
+- `$ARGUMENTS` handling — is it used if argument-hint is present?
+- Output patterns — what the component actually produces
+
+#### 6.3 Behavior Mapping Rules
+
+| Description verb | Expected tools | Validation |
+|------------------|----------------|------------|
+| "generates", "creates", "writes" | Write, Edit | Must modify files |
+| "audits", "analyzes", "checks" | Read, Grep, Glob | Must read files |
+| "executes", "runs" | Bash | Must run commands |
+| "validates" | Read, Grep | Must check criteria |
+
+#### 6.4 Behavior Report Format
+
+```
+📋 Behavior Verification
+├── ✅ acc-commit.md — description matches behavior
+├── ⚠️ acc-foo.md — claims "generates" but no Write tool
+├── ❌ acc-bar.md — argument-hint defined but $ARGUMENTS unused
+└── Summary: X/Y components verified (Z%)
+```
+
+### Step 7: Context Awareness
+
+Check alignment with project architecture and goals:
+
+#### 7.1 Detect Project Context
+
+Read project configuration files:
+- `CLAUDE.md` (root) — global instructions
+- `.claude/CLAUDE.md` — project-specific rules
+- `README.md` — project purpose and tech stack
+- `composer.json` — PHP dependencies (if exists)
+
+#### 7.2 Identify Project Patterns
+
+Look for mentions of:
+- Architecture patterns: DDD, CQRS, Clean Architecture, Hexagonal, Event Sourcing
+- Standards: PSR-1, PSR-4, PSR-12, etc.
+- Frameworks: Symfony, Laravel, etc.
+- Tech stack: PHP version, databases, queues
+
+#### 7.3 Verify Alignment
+
+Check if Claude configuration supports detected patterns:
+
+| Project mentions | Required support |
+|------------------|------------------|
+| DDD | DDD audit command, DDD skills |
+| CQRS | CQRS skills |
+| PSR-* | PSR audit command, PSR skills |
+| Event Sourcing | Event skills |
+| PHP X.Y | Skills compatible with version |
+
+#### 7.4 Context Report Format
+
+```
+🎯 Context Alignment
+├── Project type: [detected patterns]
+├── Tech stack: [detected technologies]
+├── Pattern coverage:
+│   ├── ✅ DDD — full support (audit + 13 skills)
+│   ├── ✅ CQRS — full support (4 skills)
+│   ├── ⚠️ Event Sourcing — partial (mentioned but no skills)
+│   └── ❌ Laravel — not supported (no framework-specific skills)
+└── Suggestions:
+    └── 💡 Add Event Sourcing skills (mentioned in CLAUDE.md)
+```
+
 ## Output Format
 
 Generate a structured markdown report:
@@ -117,6 +239,9 @@ Generate a structured markdown report:
 ├── Agents:    X found (Y issues)
 ├── Skills:    X found (Y issues)
 ├── Settings:  X files (Y issues)
+├── Resource usage: X% active
+├── Behavior match: X%
+├── Context alignment: X%
 └── Total issues: X critical, Y warnings, Z suggestions
 ```
 
@@ -178,7 +303,65 @@ Prioritized action items:
 | ⚠️ High | my-command.md | No description | Add description field |
 | 💡 Suggestion | settings.json | No hooks | Consider adding pre-commit hook |
 
-### 5. Quick Fixes
+### 5. Resource Usage
+
+```
+📊 Resource Usage Analysis
+├── Active components: 81/84 (96%)
+├── Orphaned skills:
+│   └── acc-example-skill (not used by any agent)
+├── Orphaned agents: none
+├── Undocumented commands: none
+└── Circular references: none
+```
+
+**Recommendation:**
+- Remove orphaned skills or add them to relevant agents
+- Document the purpose of undocumented commands
+
+### 6. Behavior Verification
+
+```
+📋 Behavior Verification
+├── Commands: 8/8 verified
+│   ├── ✅ acc-commit.md — "generates commit" + Bash ✓
+│   ├── ✅ acc-audit-ddd.md — "audits" + Read/Grep ✓
+│   └── ...
+├── Agents: 11/11 verified
+└── Skills: 73/73 verified
+```
+
+**Mismatches found:**
+| Component | Declared | Actual | Issue |
+|-----------|----------|--------|-------|
+| acc-foo.md | "generates files" | No Write tool | Missing tool capability |
+| acc-bar.md | argument-hint: <path> | $ARGUMENTS unused | Argument not processed |
+
+### 7. Context Alignment
+
+```
+🎯 Context Alignment
+├── Project context detected:
+│   ├── Architecture: DDD, CQRS, Clean Architecture
+│   ├── Standards: PSR-1, PSR-4, PSR-12
+│   ├── Tech: PHP 8.5, Redis, RabbitMQ
+│   └── Principles: SOLID, GRASP
+├── Pattern coverage:
+│   ├── ✅ DDD — full (audit + 13 skills)
+│   ├── ✅ CQRS — full (4 skills)
+│   ├── ✅ PSR — full (audit + 11 skills)
+│   ├── ✅ SOLID — full (knowledge + analyzer)
+│   └── ✅ GRASP — full (knowledge skill)
+└── Suggestions: none
+```
+
+**Gaps identified:**
+| Context | Required | Available | Status |
+|---------|----------|-----------|--------|
+| Event Sourcing | skills/audit | knowledge only | ⚠️ Partial |
+| Redis | cache skills | none | 💡 Consider |
+
+### 8. Quick Fixes
 
 Ready-to-apply fixes for common issues:
 
@@ -243,5 +426,5 @@ mkdir -p .claude/commands .claude/agents .claude/skills
 ## Usage
 
 ```bash
-/acc-claude-code-audit
+/acc-audit-claude-code
 ```

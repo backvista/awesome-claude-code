@@ -1,0 +1,161 @@
+# Skills
+
+Knowledge bases and code generators. Skills provide domain expertise and code generation templates for agents.
+
+## Skill Types
+
+| Type | Count | Purpose | Example |
+|------|-------|---------|---------|
+| **Knowledge** | 20 | Provide expertise and best practices | `acc-ddd-knowledge` |
+| **Analyzer** | 1 | Detect violations and antipatterns | `acc-analyze-solid-violations` |
+| **Generator** | 43 | Generate PHP code with tests | `acc-create-entity` |
+| **Template** | 9 | Documentation templates | `acc-readme-template` |
+
+## How Skills Work
+
+1. **Loading**: Skills are loaded by agents via `skills:` frontmatter
+2. **Activation**: Triggered by keywords in user request or agent decision
+3. **Execution**: Skill provides templates, rules, or generates code
+4. **Output**: Generated code follows PHP 8.5, DDD, and PSR standards
+
+---
+
+## Knowledge Skills
+
+Knowledge bases for architecture audits and best practices.
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-claude-code-knowledge` | `skills/acc-claude-code-knowledge/` | Claude Code formats and patterns |
+| `acc-ddd-knowledge` | `skills/acc-ddd-knowledge/` | DDD patterns, antipatterns |
+| `acc-cqrs-knowledge` | `skills/acc-cqrs-knowledge/` | CQRS command/query patterns |
+| `acc-clean-arch-knowledge` | `skills/acc-clean-arch-knowledge/` | Clean Architecture patterns |
+| `acc-hexagonal-knowledge` | `skills/acc-hexagonal-knowledge/` | Hexagonal/Ports & Adapters |
+| `acc-layer-arch-knowledge` | `skills/acc-layer-arch-knowledge/` | Layered Architecture patterns |
+| `acc-event-sourcing-knowledge` | `skills/acc-event-sourcing-knowledge/` | Event Sourcing patterns |
+| `acc-eda-knowledge` | `skills/acc-eda-knowledge/` | Event-Driven Architecture |
+| `acc-outbox-pattern-knowledge` | `skills/acc-outbox-pattern-knowledge/` | Transactional Outbox pattern |
+| `acc-saga-pattern-knowledge` | `skills/acc-saga-pattern-knowledge/` | Saga/distributed transactions |
+| `acc-stability-patterns-knowledge` | `skills/acc-stability-patterns-knowledge/` | Circuit Breaker, Retry, Rate Limiter, Bulkhead |
+| `acc-adr-knowledge` | `skills/acc-adr-knowledge/` | Action-Domain-Responder pattern (MVC alternative) |
+| `acc-solid-knowledge` | `skills/acc-solid-knowledge/` | SOLID principles (SRP, OCP, LSP, ISP, DIP) |
+| `acc-grasp-knowledge` | `skills/acc-grasp-knowledge/` | GRASP patterns (9 responsibility assignment principles) |
+| `acc-psr-coding-style-knowledge` | `skills/acc-psr-coding-style-knowledge/` | PSR-1/PSR-12 coding standards |
+| `acc-psr-autoloading-knowledge` | `skills/acc-psr-autoloading-knowledge/` | PSR-4 autoloading standard |
+| `acc-psr-overview-knowledge` | `skills/acc-psr-overview-knowledge/` | All PSR standards overview |
+| `acc-documentation-knowledge` | `skills/acc-documentation-knowledge/` | Documentation types, audiences, best practices |
+| `acc-diagram-knowledge` | `skills/acc-diagram-knowledge/` | Mermaid syntax, C4 model, diagram types |
+| `acc-documentation-qa-knowledge` | `skills/acc-documentation-qa-knowledge/` | Quality checklists, audit criteria |
+
+## Analyzer Skills
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-analyze-solid-violations` | `skills/acc-analyze-solid-violations/` | SOLID violations analyzer with reports |
+
+## Generator Skills
+
+Code generators for DDD and architecture components (PHP 8.5).
+
+### DDD Components
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-create-value-object` | `skills/acc-create-value-object/` | DDD Value Objects |
+| `acc-create-entity` | `skills/acc-create-entity/` | DDD Entities |
+| `acc-create-aggregate` | `skills/acc-create-aggregate/` | DDD Aggregates |
+| `acc-create-domain-event` | `skills/acc-create-domain-event/` | Domain Events |
+| `acc-create-repository` | `skills/acc-create-repository/` | Repository interfaces |
+| `acc-create-domain-service` | `skills/acc-create-domain-service/` | DDD Domain Services |
+| `acc-create-factory` | `skills/acc-create-factory/` | DDD Factories |
+| `acc-create-specification` | `skills/acc-create-specification/` | DDD Specifications |
+| `acc-create-dto` | `skills/acc-create-dto/` | DTOs for layer boundaries |
+| `acc-create-anti-corruption-layer` | `skills/acc-create-anti-corruption-layer/` | Anti-Corruption Layer (ACL) |
+
+### CQRS Components
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-create-command` | `skills/acc-create-command/` | CQRS Commands |
+| `acc-create-query` | `skills/acc-create-query/` | CQRS Queries |
+| `acc-create-use-case` | `skills/acc-create-use-case/` | Application Use Cases |
+| `acc-create-read-model` | `skills/acc-create-read-model/` | CQRS Read Models/Projections |
+
+### Stability Patterns
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-create-circuit-breaker` | `skills/acc-create-circuit-breaker/` | Circuit Breaker pattern |
+| `acc-create-retry-pattern` | `skills/acc-create-retry-pattern/` | Retry with exponential backoff |
+| `acc-create-rate-limiter` | `skills/acc-create-rate-limiter/` | Rate limiting (Token Bucket, Sliding Window) |
+| `acc-create-bulkhead` | `skills/acc-create-bulkhead/` | Bulkhead isolation pattern |
+
+### Integration Patterns
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-create-outbox-pattern` | `skills/acc-create-outbox-pattern/` | Transactional Outbox |
+| `acc-create-saga-pattern` | `skills/acc-create-saga-pattern/` | Saga orchestration |
+
+### Behavioral Patterns
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-create-strategy` | `skills/acc-create-strategy/` | Strategy pattern |
+| `acc-create-state` | `skills/acc-create-state/` | State machine pattern |
+| `acc-create-chain-of-responsibility` | `skills/acc-create-chain-of-responsibility/` | Handler chains |
+| `acc-create-decorator` | `skills/acc-create-decorator/` | Decorator pattern |
+| `acc-create-null-object` | `skills/acc-create-null-object/` | Null Object pattern |
+| `acc-create-policy` | `skills/acc-create-policy/` | Policy pattern |
+
+### Creational Patterns
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-create-builder` | `skills/acc-create-builder/` | Builder pattern |
+| `acc-create-object-pool` | `skills/acc-create-object-pool/` | Object Pool pattern |
+| `acc-create-di-container` | `skills/acc-create-di-container/` | DI Container configuration |
+| `acc-create-mediator` | `skills/acc-create-mediator/` | Mediator pattern |
+
+### Presentation Patterns (ADR)
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-create-action` | `skills/acc-create-action/` | ADR Action classes (HTTP handlers) |
+| `acc-create-responder` | `skills/acc-create-responder/` | ADR Responder classes (response builders) |
+
+### PSR Implementations
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-create-psr3-logger` | `skills/acc-create-psr3-logger/` | PSR-3 Logger Interface |
+| `acc-create-psr6-cache` | `skills/acc-create-psr6-cache/` | PSR-6 Caching Interface |
+| `acc-create-psr7-http-message` | `skills/acc-create-psr7-http-message/` | PSR-7 HTTP Messages |
+| `acc-create-psr11-container` | `skills/acc-create-psr11-container/` | PSR-11 Container Interface |
+| `acc-create-psr13-link` | `skills/acc-create-psr13-link/` | PSR-13 Hypermedia Links |
+| `acc-create-psr14-event-dispatcher` | `skills/acc-create-psr14-event-dispatcher/` | PSR-14 Event Dispatcher |
+| `acc-create-psr15-middleware` | `skills/acc-create-psr15-middleware/` | PSR-15 HTTP Middleware |
+| `acc-create-psr16-simple-cache` | `skills/acc-create-psr16-simple-cache/` | PSR-16 Simple Cache |
+| `acc-create-psr17-http-factory` | `skills/acc-create-psr17-http-factory/` | PSR-17 HTTP Factories |
+| `acc-create-psr18-http-client` | `skills/acc-create-psr18-http-client/` | PSR-18 HTTP Client |
+| `acc-create-psr20-clock` | `skills/acc-create-psr20-clock/` | PSR-20 Clock Interface |
+
+### Documentation Templates
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-readme-template` | `skills/acc-readme-template/` | README.md generation |
+| `acc-architecture-doc-template` | `skills/acc-architecture-doc-template/` | ARCHITECTURE.md generation |
+| `acc-adr-template` | `skills/acc-adr-template/` | Architecture Decision Records |
+| `acc-api-doc-template` | `skills/acc-api-doc-template/` | API documentation |
+| `acc-getting-started-template` | `skills/acc-getting-started-template/` | Getting started guides |
+| `acc-troubleshooting-template` | `skills/acc-troubleshooting-template/` | FAQ and troubleshooting |
+| `acc-code-examples-template` | `skills/acc-code-examples-template/` | Code examples |
+| `acc-mermaid-template` | `skills/acc-mermaid-template/` | Mermaid diagram templates |
+| `acc-changelog-template` | `skills/acc-changelog-template/` | CHANGELOG format |
+
+---
+
+## Navigation
+
+[← Back to README](../README.md) | [Commands](commands.md) | [Agents](agents.md) | [Component Flow →](component-flow.md) | [Quick Reference](quick-reference.md)

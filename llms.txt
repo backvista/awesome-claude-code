@@ -1,10 +1,13 @@
 # Awesome Claude Code
 
-> Claude Code extension for PHP 8.5 developers
+> Claude Code extension for PHP with DDD, CQRS, Clean Architecture generators, and documentation tools.
 
-## What is this?
+## Quick Facts
 
-A Composer package that adds 40+ skills, agents, and commands to Claude Code for PHP development with DDD, CQRS, and Clean Architecture patterns.
+- 8 commands, 11 agents, 73 skills
+- PHP 8.5, PSR-12, readonly classes
+- DDD/CQRS/Hexagonal patterns
+- Documentation generation and audit
 
 ## Installation
 
@@ -12,52 +15,95 @@ A Composer package that adds 40+ skills, agents, and commands to Claude Code for
 composer require dykyi-roman/awesome-claude-code
 ```
 
-## Key Features
+Components auto-copy to `.claude/` directory.
 
-- DDD component generators (Value Objects, Entities, Aggregates, Domain Events, Repositories)
-- CQRS generators (Commands, Queries, Handlers)
-- Architecture audit tools (DDD, CQRS, Clean Architecture, Hexagonal, Event Sourcing)
-- Saga and Outbox pattern support for distributed systems
-- Anti-Corruption Layer generators for external integrations
-- Event-Driven Architecture patterns and knowledge bases
+## Key Commands
 
-## Supported Patterns
+| Command | Purpose |
+|---------|---------|
+| `/acc-audit-architecture <path>` | Multi-pattern architecture audit |
+| `/acc-audit-ddd <path>` | DDD compliance analysis |
+| `/acc-audit-psr <path>` | PSR compliance audit |
+| `/acc-audit-documentation <path>` | Audit documentation quality |
+| `/acc-audit-claude-code` | Audit .claude folder structure |
+| `/acc-write-documentation <path>` | Generate documentation |
+| `/acc-claude-code` | Create commands/agents/skills |
+| `/acc-commit` | Auto-generate commit message |
 
-- Domain-Driven Design (DDD)
-- Command Query Responsibility Segregation (CQRS)
-- Clean Architecture
-- Hexagonal Architecture (Ports & Adapters)
-- Event Sourcing
-- Event-Driven Architecture (EDA)
-- Saga Pattern
-- Outbox Pattern
-- Anti-Corruption Layer (ACL)
+## Agents
 
-## Components
+| Agent | Purpose |
+|-------|---------|
+| `acc-architecture-auditor` | Multi-pattern architecture auditor |
+| `acc-ddd-auditor` | DDD compliance auditor |
+| `acc-ddd-generator` | DDD component generator |
+| `acc-pattern-generator` | Design pattern generator |
+| `acc-psr-generator` | PSR implementation generator |
+| `acc-documentation-writer` | Technical documentation writer |
+| `acc-documentation-auditor` | Documentation quality auditor |
+| `acc-diagram-designer` | Mermaid diagram designer |
 
-### Commands
-- /acc-architecture-audit - Multi-pattern architecture audit
-- /acc-ddd-audit - DDD compliance analysis
-- /acc-claude-code - Interactive wizard for extensions
-- /acc-commit - Auto-generate commit messages
+## Skills by Category
 
-### Agents
-- acc-architecture-auditor - Multi-pattern auditor
-- acc-ddd-generator - DDD component generator
-- acc-pattern-generator - Advanced pattern generator
+### Knowledge (20)
+- Architecture: DDD, CQRS, Clean, Hexagonal, Layered, EDA, Event Sourcing
+- Patterns: Saga, Outbox, Stability (Circuit Breaker, Retry, Rate Limiter, Bulkhead)
+- Principles: SOLID, GRASP, ADR
+- Standards: PSR-1/4/12, PSR overview
+- Documentation: types, diagrams, QA
 
-### Generator Skills
-- acc-create-value-object - Value Objects with tests
-- acc-create-entity - Entities with tests
-- acc-create-aggregate - Aggregates with events
-- acc-create-command - CQRS Commands
-- acc-create-query - CQRS Queries
-- acc-create-saga-pattern - Saga orchestration
-- acc-create-outbox-pattern - Transactional outbox
-- acc-create-anti-corruption-layer - ACL components
+### Generators (43)
+- DDD: Value Objects, Entities, Aggregates, Domain Events, Repositories, etc.
+- CQRS: Commands, Queries, Use Cases, Read Models
+- Stability: Circuit Breaker, Retry, Rate Limiter, Bulkhead
+- Integration: Saga, Outbox
+- Behavioral: Strategy, State, Decorator, Chain of Responsibility, Null Object, Policy
+- Creational: Builder, Object Pool, DI Container, Mediator
+- ADR: Action, Responder
+- PSR: 3, 6, 7, 11, 13, 14, 15, 16, 17, 18, 20
+
+### Templates (9)
+- README, Architecture, ADR, API docs
+- Getting Started, Troubleshooting
+- Code Examples, Mermaid diagrams, Changelog
+
+## Project Structure
+
+```
+.claude/
+├── commands/        # Slash commands (8)
+├── agents/          # Subagents (11)
+└── skills/          # Knowledge + generators (73)
+```
+
+## Documentation
+
+- Main README: [README.md](README.md)
+- Component docs: [.claude/README.md](.claude/README.md)
+- Changelog: [CHANGELOG.md](CHANGELOG.md)
+
+## Usage Examples
+
+```bash
+# Audit architecture
+/acc-audit-architecture ./src
+
+# Generate documentation
+/acc-write-documentation ./src
+
+# Check documentation quality
+/acc-audit-documentation ./docs
+
+# Create new DDD component
+/acc-create-value-object Email
+```
 
 ## Links
 
 - GitHub: https://github.com/dykyi-roman/awesome-claude-code
 - Packagist: https://packagist.org/packages/dykyi-roman/awesome-claude-code
 - Author: https://github.com/dykyi-roman
+
+## Version
+
+v2.3.0 - Documentation system with 3 agents and 12 skills

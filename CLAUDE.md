@@ -41,23 +41,31 @@ make release           # Prepare release (run checks)
 ### Component Flow
 
 ```
-COMMANDS                    AGENTS                      SKILLS
-────────                    ──────                      ──────
-/acc-commit ────────────→ (direct Bash)
+COMMANDS                      AGENTS                      SKILLS
+────────                      ──────                      ──────
+/acc-commit ──────────────→ (direct Bash)
 
-/acc-claude-code ───────→ acc-claude-code-expert ───→ acc-claude-code-knowledge
+/acc-claude-code ─────────→ acc-claude-code-expert ───→ acc-claude-code-knowledge
 
-/acc-ddd-audit ─────────→ acc-ddd-auditor ──────────→ acc-ddd-knowledge
-                                │
-                                └──→ (Task) acc-ddd-generator ──→ 13 create-* skills
+/acc-audit-ddd ───────────→ acc-ddd-auditor ──────────→ acc-ddd-knowledge
+                                  │
+                                  └──→ (Task) acc-ddd-generator ──→ 13 create-* skills
 
-/acc-architecture-audit ─→ acc-architecture-auditor ─→ 10 knowledge skills
-                                │
-                                ├──→ (Task) acc-ddd-generator ──→ 13 create-* skills
-                                └──→ (Task) acc-pattern-generator → 15 create-* skills
+/acc-audit-architecture ──→ acc-architecture-auditor ─→ 10 knowledge skills
+                                  │
+                                  ├──→ (Task) acc-ddd-generator ──→ 13 create-* skills
+                                  └──→ (Task) acc-pattern-generator → 20 create-* skills
+
+/acc-audit-psr ───────────→ acc-psr-generator ────────→ 11 PSR create-* skills
+                                  │
+                                  └──→ 5 PSR knowledge skills
+
+/acc-write-documentation ─→ acc-documentation-writer ─→ 8 template skills
+                                  │
+                                  └──→ (Task) acc-diagram-designer → 2 diagram skills
+
+/acc-audit-documentation → acc-documentation-auditor → 3 QA knowledge skills
 ```
-
-See [.claude/README.md](.claude/README.md) for detailed component documentation.
 
 ## Component Formats
 
@@ -109,20 +117,12 @@ All components use `acc-` prefix (Awesome Claude Code) to avoid conflicts with u
 When adding new components, verify proper integration in the component chain:
 
 ### After Adding a Skill
-1. **Verify agent usage** - ensure skill is listed in relevant agent's `skills:` frontmatter
-2. Check if skill should be used by:
-   - `acc-ddd-generator` (for DDD create-* skills)
-   - `acc-pattern-generator` (for pattern create-* skills)
-   - `acc-ddd-auditor` (for DDD knowledge skills)
-   - `acc-architecture-auditor` (for architecture knowledge skills)
-   - `acc-pattern-auditor` (for pattern knowledge skills)
+1. **Verify agent usage** — ensure skill is listed in relevant agent's `skills:` frontmatter
+2. Check if skill should be used by appropriate generator/auditor agent
 
 ### After Adding an Agent
-1. **Verify command usage** - ensure agent is invoked by relevant command via `Task` tool
-2. Check if agent should be called from:
-   - `/acc-ddd-audit` → `acc-ddd-auditor`, `acc-ddd-generator`
-   - `/acc-architecture-audit` → `acc-architecture-auditor`, `acc-ddd-generator`, `acc-pattern-generator`
-   - `/acc-claude-code` → `acc-claude-code-expert`
+1. **Verify command usage** — ensure agent is invoked by relevant command via `Task` tool
+2. Check component flow diagram for correct placement
 
 ### Integration Checklist
 ```
@@ -131,22 +131,12 @@ Skill → Agent (skills: frontmatter) → Command (Task tool call)
 
 ## Documentation Updates
 
-When adding, removing, or modifying components, **always update documentation**:
+When adding, removing, or modifying components, **always update**:
 
-| Change | Update |
-|--------|--------|
-| Add/remove command | `.claude/README.md`, `README.md` |
-| Add/remove agent | `.claude/README.md`, `README.md` |
-| Add/remove skill | `.claude/README.md`, `README.md` |
-| Change component flow | `.claude/README.md`, `CLAUDE.md` |
-
-**Checklist:**
-1. Update component tables in both README files
-2. Update statistics (counts) in `.claude/README.md`
-3. Update file structure tree in `.claude/README.md`
-4. Update dependency graph if flow changes
-5. **Verify skill is used in correct agents**
-6. **Verify agent is called from correct commands**
+1. Component tables in `README.md` and `docs/`
+2. Statistics (counts) where mentioned
+3. Component flow diagram if flow changes
+4. `CHANGELOG.md` for release notes
 
 ## Testing
 

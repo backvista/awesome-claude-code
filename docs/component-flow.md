@@ -1,0 +1,146 @@
+# Component Flow
+
+How commands, agents, and skills interact. This document shows the dependency graph and execution flow.
+
+## Architecture Overview
+
+```
+User Input → Command → Agent(s) → Skills → Output
+```
+
+1. **User** invokes a slash command (e.g., `/acc-audit-architecture`)
+2. **Command** loads primary agent and passes context
+3. **Agent** loads skills and performs analysis/generation
+4. **Agent** may delegate subtasks to other agents via Task tool
+5. **Skills** provide domain knowledge or generate code
+6. **Output** is returned to user (report, generated files, etc.)
+
+---
+
+## Dependency Graph
+
+```
+COMMANDS                    AGENTS                      SKILLS
+────────                    ──────                      ──────
+/acc-commit ────────────→ (direct Bash)
+
+/acc-claude-code ───────→ acc-claude-code-expert ───→ acc-claude-code-knowledge
+
+/acc-audit-claude-code ─→ (direct analysis)
+
+/acc-audit-ddd ─────────→ acc-ddd-auditor ──────────→ acc-ddd-knowledge
+                                │
+                                └──→ (Task) acc-ddd-generator ──→ 13 create-* skills
+
+/acc-audit-architecture ─→ acc-architecture-auditor ─→ 11 knowledge skills
+                                │
+                                ├──→ (Task) acc-ddd-generator ──→ 13 create-* skills
+                                └──→ (Task) acc-pattern-generator → 15 create-* skills
+
+/acc-audit-psr ─────────→ (direct analysis) ────────→ 5 PSR knowledge skills
+                                │
+                                └──→ (Task) acc-psr-generator ──→ 11 PSR create-* skills
+
+/acc-write-documentation → acc-documentation-writer ─→ 8 template skills
+                                │
+                                └──→ (Task) acc-diagram-designer ─→ 2 diagram skills
+
+/acc-audit-documentation → acc-documentation-auditor → 3 QA knowledge skills
+```
+
+## Audit → Generate Workflow
+
+```
+User: /acc-audit-architecture ./src
+       ↓
+Command loads acc-architecture-auditor agent
+       ↓
+Auditor analyzes project using knowledge skills
+       ↓
+Auditor generates report with recommendations
+       ↓
+Auditor asks "Generate code?"
+       ↓
+If yes → Task tool invokes generator agent
+       ↓
+Generator selects appropriate create-* skill
+       ↓
+Skill generates PHP code with tests
+```
+
+## Generator Mapping
+
+| Issue Type | Generator Agent | Skills Used |
+|------------|-----------------|-------------|
+| DDD components | `acc-ddd-generator` | 13 acc-create-* skills |
+| Design patterns | `acc-pattern-generator` | 15 acc-create-* skills |
+| PSR implementations | `acc-psr-generator` | 11 acc-create-psr* skills |
+| Architecture | `acc-architecture-generator` | Coordinator (delegates) |
+
+## Generator Skills by Category
+
+### DDD (13 skills)
+
+- `acc-create-value-object` — Value Objects
+- `acc-create-entity` — Entities
+- `acc-create-aggregate` — Aggregates
+- `acc-create-domain-event` — Domain Events
+- `acc-create-repository` — Repository interfaces
+- `acc-create-command` — CQRS Commands
+- `acc-create-query` — CQRS Queries
+- `acc-create-use-case` — Application Use Cases
+- `acc-create-domain-service` — Domain Services
+- `acc-create-factory` — Factories
+- `acc-create-specification` — Specifications
+- `acc-create-dto` — DTOs
+- `acc-create-anti-corruption-layer` — Anti-Corruption Layer
+
+### Stability Patterns (4 skills)
+
+- `acc-create-circuit-breaker` — Circuit Breaker
+- `acc-create-retry-pattern` — Retry with backoff
+- `acc-create-rate-limiter` — Rate limiting
+- `acc-create-bulkhead` — Bulkhead isolation
+
+### Integration Patterns (2 skills)
+
+- `acc-create-outbox-pattern` — Transactional Outbox
+- `acc-create-saga-pattern` — Saga orchestration
+
+### Behavioral Patterns (5 skills)
+
+- `acc-create-strategy` — Strategy pattern
+- `acc-create-state` — State machine
+- `acc-create-chain-of-responsibility` — Handler chains
+- `acc-create-decorator` — Decorator pattern
+- `acc-create-null-object` — Null Object pattern
+
+### Creational Patterns (2 skills)
+
+- `acc-create-builder` — Builder pattern
+- `acc-create-object-pool` — Object Pool
+
+### Enterprise Patterns (2 skills)
+
+- `acc-create-read-model` — CQRS Read Models
+- `acc-create-policy` — Policy pattern
+
+### PSR Implementations (11 skills)
+
+- `acc-create-psr3-logger` — PSR-3 Logger Interface
+- `acc-create-psr6-cache` — PSR-6 Caching Interface
+- `acc-create-psr7-http-message` — PSR-7 HTTP Message Interface
+- `acc-create-psr11-container` — PSR-11 Container Interface
+- `acc-create-psr13-link` — PSR-13 Hypermedia Links
+- `acc-create-psr14-event-dispatcher` — PSR-14 Event Dispatcher
+- `acc-create-psr15-middleware` — PSR-15 HTTP Handlers/Middleware
+- `acc-create-psr16-simple-cache` — PSR-16 Simple Cache
+- `acc-create-psr17-http-factory` — PSR-17 HTTP Factories
+- `acc-create-psr18-http-client` — PSR-18 HTTP Client
+- `acc-create-psr20-clock` — PSR-20 Clock Interface
+
+---
+
+## Navigation
+
+[← Back to README](../README.md) | [Commands](commands.md) | [Agents](agents.md) | [Skills](skills.md) | [Quick Reference →](quick-reference.md)
