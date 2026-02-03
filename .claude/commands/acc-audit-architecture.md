@@ -2,18 +2,43 @@
 description: Comprehensive architecture audit with pattern recommendations. Detects DDD, CQRS, Clean/Hexagonal/Layered Architecture, Event Sourcing, EDA, Outbox, Saga, and Stability patterns. Provides actionable recommendations with links to generation skills.
 allowed-tools: Read, Grep, Glob, Bash, Task
 model: opus
-argument-hint: <path-to-php-project>
+argument-hint: <path> [-- additional instructions]
 ---
 
 # Architecture Audit Command
 
 Perform a comprehensive architecture audit with actionable pattern recommendations.
 
+## Input Parsing
+
+Parse `$ARGUMENTS` to extract path and optional meta-instructions:
+
+```
+Format: <path> [-- <meta-instructions>]
+
+Examples:
+- /acc-audit-architecture ./src
+- /acc-audit-architecture ./src -- focus on CQRS and Event Sourcing
+- /acc-audit-architecture ./src -- skip stability patterns, check DDD only
+- /acc-audit-architecture ./src -- особое внимание на Saga и Outbox
+- /acc-audit-architecture ./src -- only structural audit (DDD, Clean, SOLID)
+```
+
+**Parsing rules:**
+1. Split `$ARGUMENTS` by ` -- ` (space-dash-dash-space)
+2. First part = **path** (required, default: current directory)
+3. Second part = **meta-instructions** (optional, additional focus/filters)
+
 ## Target
 
-Analyze the project at: `$ARGUMENTS`
+- **Path**: First part of `$ARGUMENTS` (before `--`)
+- **Meta-instructions**: Second part (after `--`) — use to customize audit scope
 
-If no path provided, analyze the current working directory.
+If meta-instructions provided, adjust audit to:
+- Focus on specific patterns/auditors mentioned
+- Skip certain auditors if requested (structural/behavioral/integration)
+- Apply additional checks
+- Modify report format if requested
 
 ## Pre-flight Check
 

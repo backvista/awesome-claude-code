@@ -2,11 +2,34 @@
 description: Interactive wizard for creating Claude Code commands, agents, and skills. Use when you need to extend Claude Code capabilities.
 allowed-tools: Read, Write, Edit, Glob, Grep, Task
 model: opus
+argument-hint: [component-type] [-- additional instructions]
 ---
 
 # Claude Code Creator
 
 You are a master of creating Claude Code components.
+
+## Input Parsing
+
+Parse `$ARGUMENTS` to extract component type and optional meta-instructions:
+
+```
+Format: [component-type] [-- <meta-instructions>]
+
+Examples:
+- /acc-write-claude-component
+- /acc-write-claude-component command
+- /acc-write-claude-component agent -- for DDD auditing
+- /acc-write-claude-component skill -- generates Value Objects
+```
+
+**Parsing rules:**
+1. Split `$ARGUMENTS` by ` -- ` (space-dash-dash-space)
+2. First part = **component type** (optional: command/agent/skill/hook)
+3. Second part = **meta-instructions** (optional, hints about purpose)
+
+If component type provided, skip Step 1 and go directly to Step 2.
+If meta-instructions provided, use them to guide questions in Step 2.
 
 ## Process
 

@@ -70,30 +70,43 @@ allowed-tools: Optional
 .claude/
 ├── commands/
 │   ├── acc-audit-architecture.md
-│   ├── acc-audit-claude-code.md
+│   ├── acc-audit-claude-components.md
 │   ├── acc-audit-ddd.md
 │   ├── acc-audit-documentation.md
 │   ├── acc-audit-psr.md
-│   ├── acc-claude-code.md
+│   ├── acc-audit-test.md
+│   ├── acc-write-claude-component.md
 │   ├── acc-commit.md
-│   └── acc-write-documentation.md
+│   ├── acc-write-documentation.md
+│   └── acc-write-test.md
 ├── agents/
 │   ├── acc-architecture-auditor.md
 │   ├── acc-architecture-generator.md
+│   ├── acc-behavioral-auditor.md
+│   ├── acc-behavioral-generator.md
 │   ├── acc-claude-code-expert.md
+│   ├── acc-creational-auditor.md
+│   ├── acc-creational-generator.md
 │   ├── acc-ddd-auditor.md
 │   ├── acc-ddd-generator.md
 │   ├── acc-documentation-auditor.md
 │   ├── acc-documentation-writer.md
 │   ├── acc-diagram-designer.md
+│   ├── acc-integration-auditor.md
+│   ├── acc-integration-generator.md
 │   ├── acc-pattern-auditor.md
 │   ├── acc-pattern-generator.md
 │   ├── acc-psr-auditor.md
-│   └── acc-psr-generator.md
+│   ├── acc-psr-generator.md
+│   ├── acc-stability-auditor.md
+│   ├── acc-stability-generator.md
+│   ├── acc-structural-auditor.md
+│   ├── acc-test-auditor.md
+│   └── acc-test-generator.md
 ├── skills/
-│   ├── acc-*-knowledge/          # 20 knowledge skills
-│   ├── acc-analyze-*/            # 1 analyzer skill
-│   ├── acc-create-*/             # 43 generator skills
+│   ├── acc-*-knowledge/          # 21 knowledge skills
+│   ├── acc-analyze-*/            # 9 analyzer skills
+│   ├── acc-create-*/             # 48 generator skills
 │   └── acc-*-template/           # 9 template skills
 └── settings.json
 
@@ -109,13 +122,13 @@ docs/                       # Documentation (root level)
 
 | Component | Count |
 |-----------|-------|
-| Commands | 8 |
-| Agents | 11 |
-| Knowledge Skills | 20 |
-| Analyzer Skills | 1 |
-| Generator Skills | 43 |
+| Commands | 10 |
+| Agents | 23 |
+| Knowledge Skills | 21 |
+| Analyzer Skills | 9 |
+| Generator Skills | 48 |
 | Template Skills | 9 |
-| **Total Skills** | **73** |
+| **Total Skills** | **87** |
 
 ---
 

@@ -15,6 +15,9 @@ Generate comprehensive architecture documentation for PHP projects.
 ## Overview
 {high-level description}
 
+## Directory Structure
+{annotated project tree}
+
 ## System Context
 {C4 context diagram}
 
@@ -38,6 +41,62 @@ Generate comprehensive architecture documentation for PHP projects.
 ```
 
 ## Section Templates
+
+### Directory Structure Section
+
+```markdown
+## Directory Structure
+
+```
+project/
+├── src/                           # Source code
+│   ├── Domain/                    # Domain Layer (DDD)
+│   │   ├── Entity/                # Domain entities
+│   │   ├── ValueObject/           # Value objects
+│   │   ├── Repository/            # Repository interfaces
+│   │   ├── Service/               # Domain services
+│   │   └── Event/                 # Domain events
+│   ├── Application/               # Application Layer
+│   │   ├── UseCase/               # Use cases / Commands / Queries
+│   │   ├── DTO/                   # Data Transfer Objects
+│   │   └── Service/               # Application services
+│   ├── Infrastructure/            # Infrastructure Layer
+│   │   ├── Persistence/           # Repository implementations
+│   │   ├── Http/                  # HTTP clients
+│   │   ├── Messaging/             # Queue adapters
+│   │   └── Cache/                 # Cache adapters
+│   └── Presentation/              # Presentation Layer
+│       ├── Api/                   # REST API (Actions, Requests, Responses)
+│       ├── Web/                   # Web controllers
+│       └── Console/               # CLI commands
+├── tests/                         # Test suite
+│   ├── Unit/                      # Unit tests (mirrors src/)
+│   ├── Integration/               # Integration tests
+│   └── Functional/                # E2E / Functional tests
+├── config/                        # Configuration files
+├── public/                        # Web root
+├── docker/                        # Docker configuration
+└── docs/                          # Documentation
+    ├── architecture/              # Architecture docs
+    ├── adr/                       # Architecture Decision Records
+    └── api/                       # API documentation
+```
+
+### Generation Command
+
+```bash
+tree -L 3 -I 'vendor|node_modules|.git|var|cache' --dirsfirst
+```
+
+### Annotation Rules
+
+| Rule | Description |
+|------|-------------|
+| Layer name | Add DDD layer in comment |
+| Purpose | Describe directory purpose |
+| Depth | Max 3 levels in main docs |
+| Details | Link to subdirectory READMEs |
+```
 
 ### Overview Section
 
@@ -310,6 +369,23 @@ Order Management System follows Domain-Driven Design with Clean Architecture pri
 - **Domain-Centric** — Business logic in Domain layer
 - **Dependency Inversion** — Abstractions over implementations
 - **Bounded Contexts** — Order, Inventory, Shipping
+
+## Directory Structure
+
+```
+order-management/
+├── src/
+│   ├── Order/                     # Order Bounded Context
+│   │   ├── Domain/                # Domain Layer
+│   │   ├── Application/           # Application Layer
+│   │   ├── Infrastructure/        # Infrastructure Layer
+│   │   └── Presentation/          # Presentation Layer
+│   ├── Inventory/                 # Inventory Bounded Context
+│   └── Shipping/                  # Shipping Bounded Context
+├── tests/
+├── config/
+└── docs/
+```
 
 ## System Context
 

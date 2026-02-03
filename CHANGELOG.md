@@ -5,23 +5,55 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.3.0] - 2026-02-02
+## [2.4.0] - 2026-02-03
 
 ### Added
 
 #### Commands
+- `/acc-write-test` - Generate tests for PHP file/folder (unit, integration, builders, mocks)
+- `/acc-audit-test` - Audit test quality (coverage gaps, test smells, naming, isolation)
 - `/acc-write-documentation` - Generate documentation for file/folder (README, architecture, diagrams)
 - `/acc-audit-documentation` - Audit documentation quality (completeness, accuracy, clarity)
 
-#### Agents
+#### Agents (15 new agents)
+- `acc-structural-auditor` - Structural architecture auditor (DDD, Clean, Hexagonal, Layered, SOLID, GRASP) — 12 skills (6 knowledge + 6 analyzer)
+- `acc-behavioral-auditor` - Behavioral patterns auditor (CQRS, Event Sourcing, EDA, Strategy, State, etc.) — 12 skills
+- `acc-integration-auditor` - Integration patterns auditor (Outbox, Saga, ADR) — 12 skills
+- `acc-stability-auditor` - Stability patterns auditor (Circuit Breaker, Retry, Rate Limiter, Bulkhead) — 5 skills
+- `acc-creational-auditor` - Creational patterns auditor (Builder, Object Pool, Factory) — 3 skills
+- `acc-stability-generator` - Stability patterns generator — 5 skills
+- `acc-behavioral-generator` - Behavioral patterns generator (Strategy, State, Chain, Decorator, Null Object) — 5 skills
+- `acc-creational-generator` - Creational patterns generator — 3 skills
+- `acc-integration-generator` - Integration patterns generator (Outbox, Saga, Action, Responder) — 7 skills
+- `acc-test-auditor` - Test quality auditor (coverage analysis, smell detection, quality metrics)
+- `acc-test-generator` - Test generator for DDD/CQRS projects (unit, integration, builders, mocks)
 - `acc-documentation-writer` - Technical documentation writer (README, architecture, API docs, ADRs)
 - `acc-documentation-auditor` - Documentation quality auditor
 - `acc-diagram-designer` - Mermaid diagram designer (C4, sequence, class, ER diagrams)
+- `acc-psr-auditor` - PSR compliance auditor for `/acc-audit-psr` command
 
 #### Knowledge Skills
+- `acc-testing-knowledge` - Testing pyramid, AAA pattern, naming conventions, isolation, DDD testing
 - `acc-documentation-knowledge` - Documentation types, audiences, best practices, antipatterns
 - `acc-diagram-knowledge` - Mermaid syntax, C4 model, diagram types, best practices
 - `acc-documentation-qa-knowledge` - Quality checklists, audit criteria, scoring metrics
+
+#### Analyzer Skills (8 new)
+- `acc-analyze-test-coverage` - Detects untested classes, methods, branches, exception paths
+- `acc-detect-test-smells` - Detects 15 test antipatterns (logic in test, mock overuse, etc.)
+- `acc-detect-code-smells` - Detects God Class, Feature Envy, Data Clumps, Long Parameter List, Long Method, Primitive Obsession, Message Chains, Inappropriate Intimacy
+- `acc-check-bounded-contexts` - Analyzes DDD bounded context boundaries, cross-context coupling, shared kernel violations, context mapping issues
+- `acc-check-immutability` - Checks Value Objects, Events, DTOs for readonly properties, no setters, final classes, wither patterns
+- `acc-check-leaky-abstractions` - Detects leaky abstractions, implementation details in interfaces, framework leakage into domain
+- `acc-check-encapsulation` - Detects public mutable state, exposed internals, Tell Don't Ask violations, getter/setter abuse
+- `acc-analyze-coupling-cohesion` - Analyzes coupling/cohesion metrics (Afferent/Efferent coupling Ca/Ce, LCOM, instability index)
+
+#### Generator Skills
+- `acc-create-unit-test` - PHPUnit unit tests with AAA pattern, proper naming, attributes
+- `acc-create-integration-test` - Integration tests with database transactions, HTTP mocking
+- `acc-create-test-builder` - Test Data Builder and Object Mother patterns
+- `acc-create-mock-repository` - InMemory repository implementations for testing
+- `acc-create-test-double` - Mocks, Stubs, Fakes, Spies with decision matrix
 
 #### Template Skills
 - `acc-readme-template` - README.md generation with badges, sections, examples
@@ -34,11 +66,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `acc-mermaid-template` - Mermaid diagram templates for all types
 - `acc-changelog-template` - Keep a Changelog format
 
-### Changed
-- Updated documentation with new documentation system components
-- Updated CLAUDE.md with new component flow and version history
+#### Hooks (10 ready-to-use)
+- Auto-format PHP - runs `php-cs-fixer` on PHP files after editing
+- Require strict_types - blocks PHP files without `declare(strict_types=1)`
+- Protect vendor/ - prevents modification of vendor/ directory
+- PHP Syntax Check - validates PHP syntax after editing
+- Auto-run Tests - runs PHPUnit tests for modified class
+- Final Domain Classes - warns if Domain class not final
+- File Size Check - detects God Class antipattern (>300 lines)
+- No Direct Commits - forbids commits to main/master branches
+- Protect Migrations - prevents editing existing migrations
+- Test Without Source - warns when changing only tests
 
-## [2.2.0] - 2026-02-01
+#### MCP Documentation
+- `docs/mcp.md` - Model Context Protocol servers guide
+- Database MCP (PostgreSQL/MySQL) - query databases, validate Entity/table mapping
+- Configuration examples for Docker environments
+
+#### Configuration
+- `settings.json` - Shared team-wide settings with hooks and permissions
+
+#### Documentation
+- `docs/hooks.md` - Full hooks documentation with installation guide
+- `docs/mcp.md` - MCP servers documentation with DDD use cases
+
+#### Features
+- **Meta-instructions support** for all commands via `--` separator
+  - Allows passing additional context to any command
+  - Examples: `/acc-audit-ddd ./src -- focus on aggregate boundaries`
+  - Supports language customization: `/acc-commit -- use Russian for commit message`
+
+### Changed
+- **Decomposed `acc-architecture-auditor`** from 42 skills to coordinator pattern (0 skills)
+  - Now delegates to 3 specialized auditors via Task tool (parallel execution)
+  - Cross-pattern conflict analysis between structural/behavioral/integration domains
+- **Refactored `acc-pattern-auditor`** from 24 skills to coordinator pattern (2 knowledge skills)
+  - Now delegates to 4 specialized auditors via Task tool
+  - Prevents God-Agent antipattern (max 15 skills per agent rule)
+- **Refactored `acc-pattern-generator`** from 23 skills to coordinator pattern (1 skill)
+  - Now delegates to 4 specialized generators via Task tool
+- **Reduced `acc-ddd-auditor`** from 16 to 3 skills (knowledge only)
+  - Generation delegated to `acc-ddd-generator` via Task tool
+- **Reduced `acc-structural-auditor`** from 16 to 6 knowledge skills, then extended to 12 skills (added 6 analyzer skills: solid-violations, code-smells, bounded-contexts, immutability, leaky-abstractions, encapsulation)
+- **Extended `acc-behavioral-auditor`** to include GoF patterns (Strategy, State, Chain, Decorator, Null Object) and immutability checks — now 13 skills
+- **Extended `acc-pattern-auditor`** from 2 to 3 skills (added coupling/cohesion analysis)
+- **Extended `acc-ddd-auditor`** from 3 to 4 skills (added bounded context analysis)
+- Renamed `/acc-claude-code` to `/acc-write-claude-component` for consistency
+- Updated component counts: 10 commands, 23 agents, 87 skills
+
+## [2.3.0] - 2026-02-02
 
 ### Added
 
@@ -82,7 +158,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated `acc-pattern-generator` to include DI Container, Mediator, Action, and Responder skills
 - Updated `acc-pattern-auditor` to include SOLID/GRASP knowledge and analyzer skills
 
-## [2.1.0] - 2026-01-31
+## [2.2.0] - 2026-01-31
 
 ### Added
 
@@ -125,7 +201,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored 22 skills to use `references/` folder structure (under 500 lines each)
 - Skills now have `templates.md` and `examples.md` in references folder
 
-## [2.0.0] - 2026-01-30
+## [2.1.0] - 2026-01-30
 
 ### Added
 
@@ -157,19 +233,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `acc-create-query` - generates CQRS Queries and Handlers
 - `acc-create-use-case` - generates Application Use Cases
 
-## [1.0.0] - 2026-01-29
+## [2.0.0] - 2026-01-29
 
 ### Added
 
-- Initial release
 - Composer plugin for auto-copying Claude Code components
-- Command `/acc-claude-code` - interactive wizard for creating commands, agents, skills, hooks
+- Command `/acc-write-claude-component` - interactive wizard for creating commands, agents, skills, hooks
 - Command `/acc-commit` - auto-generate commit message and push
 - Agent `acc-claude-code-expert` - expert in Claude Code architecture
 - Skill `acc-claude-code-knowledge` - knowledge base for formats and patterns
 - Comprehensive documentation in `.claude/README.md`
 
-[Unreleased]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.3.0...HEAD
+## [1.0.0] - 2026-01-28
+
+### Added
+
+- Initial release
+- Project structure and Composer package setup
+
+[Unreleased]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.4.0...HEAD
+[2.4.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.0.0...v2.1.0

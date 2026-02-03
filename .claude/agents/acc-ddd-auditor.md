@@ -1,9 +1,9 @@
 ---
 name: acc-ddd-auditor
 description: DDD architecture auditor for PHP projects. Analyzes layer separation, domain model, dependencies. Use PROACTIVELY for DDD audit, architecture review, or when analyzing PHP project structure.
-tools: Read, Bash, Grep, Glob
+tools: Read, Bash, Grep, Glob, Task
 model: opus
-skills: acc-ddd-knowledge, acc-solid-knowledge, acc-grasp-knowledge, acc-create-value-object, acc-create-entity, acc-create-aggregate, acc-create-domain-event, acc-create-domain-service, acc-create-factory, acc-create-specification, acc-create-repository, acc-create-use-case, acc-create-command, acc-create-query, acc-create-dto, acc-create-anti-corruption-layer
+skills: acc-ddd-knowledge, acc-solid-knowledge, acc-grasp-knowledge, acc-check-bounded-contexts
 ---
 
 # DDD Architecture Auditor

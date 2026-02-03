@@ -11,7 +11,7 @@
 [![Last Commit](https://img.shields.io/github/last-commit/dykyi-roman/awesome-claude-code?style=flat-square)](https://github.com/dykyi-roman/awesome-claude-code)
 
 > **The most comprehensive Claude Code extension for PHP developers.**
-> Auto-generate DDD components, audit architecture, generate documentation, and boost productivity with 73 skills and 12 agents.
+> Auto-generate DDD components, audit architecture, generate tests and documentation, boost productivity with 87 skills and 23 agents.
 
 ## Table of Contents
 
@@ -26,16 +26,19 @@
 - [Skills](#skills)
 - [Component Flow](#component-flow)
 - [Supported Patterns](#supported-patterns)
+- [Hooks](#hooks)
+- [MCP](#mcp)
 - [FAQ](#faq)
 - [Contributing](#contributing)
 - [License](#license)
 
 ## Features
 
-- **73 Skills** — DDD, CQRS, Clean Architecture, Stability Patterns, PSR implementations, Documentation, SOLID/GRASP audits
+- **87 Skills** — DDD, CQRS, Clean Architecture, Stability Patterns, PSR implementations, Testing, Documentation, SOLID/GRASP audits
+- **10 Hooks** — Auto-format PHP, strict_types validation, vendor protection, syntax check, auto-tests, and more
+- **MCP Support** — Database (PostgreSQL/MySQL), GitHub, Docker integration
 - **Architecture Audit** — Automated compliance checking for 10+ patterns
 - **Zero Config** — Auto-installs to `.claude/` directory via Composer
-- **Tested Patterns** — Unit tests included for all generators
 - **Knowledge Bases** — Deep expertise in DDD, CQRS, Hexagonal, EDA, Stability patterns
 
 ## Demo
@@ -63,7 +66,7 @@
 ### Code Generation
 
 ```bash
-/acc-claude-code
+/acc-write-claude-component
 > What would you like to create? Entity
 > Entity name? User
 > Properties? id:UserId, email:Email, name:string
@@ -130,58 +133,99 @@ Existing files are not overwritten.
 | Scenario | Command | Result |
 |----------|---------|--------|
 | Audit existing architecture | `/acc-audit-architecture ./src` | Full compliance report with recommendations |
-| Create DDD entity | `/acc-claude-code` → Entity | Entity + Repository interface + Unit tests |
-| Generate Value Object | `/acc-claude-code` → Value Object | Immutable VO with validation + tests |
+| Create DDD entity | `/acc-write-claude-component` → Entity | Entity + Repository interface + Unit tests |
+| Generate Value Object | `/acc-write-claude-component` → Value Object | Immutable VO with validation + tests |
 | Check PSR compliance | `/acc-audit-psr ./src` | Coding standards report (PSR-1, 4, 12) |
 | Generate documentation | `/acc-write-documentation` | README + ARCHITECTURE.md + diagrams |
 | Audit documentation quality | `/acc-audit-documentation ./docs` | Completeness and accuracy report |
-| Create stability pattern | `/acc-claude-code` → Circuit Breaker | Pattern implementation + tests |
+| Create stability pattern | `/acc-write-claude-component` → Circuit Breaker | Pattern implementation + tests |
 | DDD-specific audit | `/acc-audit-ddd ./src` | Domain model analysis + suggestions |
 
 ## Overview
 
 | Component | Count | Description |
 |-----------|-------|-------------|
-| Commands | 8 | Slash commands for audits, generation, commits |
-| Agents | 11 | Specialized subagents for complex tasks |
-| Skills | 73 | Knowledge bases, code generators, templates |
+| Commands | 10 | Slash commands for audits, generation, commits |
+| Agents | 23 | Specialized subagents for complex tasks |
+| Skills | 87 | Knowledge bases, code generators, templates |
 
 ## Documentation
 
-- [Commands](docs/commands.md) — 8 slash commands
-- [Agents](docs/agents.md) — 11 subagents
-- [Skills](docs/skills.md) — 73 skills (knowledge + generators + templates)
+- [Commands](docs/commands.md) — 10 slash commands
+- [Agents](docs/agents.md) — 23 subagents
+- [Skills](docs/skills.md) — 87 skills (knowledge + generators + templates)
+- [Hooks](docs/hooks.md) — 10 ready-to-use hooks for PHP/DDD
+- [MCP](docs/mcp.md) — Model Context Protocol servers
 - [Component Flow](docs/component-flow.md) — dependency graph and workflows
 - [Quick Reference](docs/quick-reference.md) — paths, formats, best practices
 
 ## Commands
 
-| Command                     | Description                                                       |
-|-----------------------------|-------------------------------------------------------------------|
-| `/acc-commit`               | Auto-generate commit message from diff and push to current branch |
-| `/acc-claude-code`          | Interactive wizard for creating commands, agents, skills, hooks   |
-| `/acc-audit-claude-code`    | Audit `.claude/` folder structure and configuration quality       |
-| `/acc-audit-architecture`   | Comprehensive multi-pattern architecture audit for PHP projects   |
-| `/acc-audit-ddd`            | DDD compliance analysis for PHP projects                          |
-| `/acc-audit-psr`            | PSR compliance audit (coding style, autoloading, interfaces)      |
-| `/acc-write-documentation`  | Generate README, architecture docs, Mermaid diagrams              |
-| `/acc-audit-documentation`  | Audit documentation quality (completeness, accuracy, clarity)     |
+All commands support **meta-instructions** via `--` separator for additional context:
+
+```bash
+/acc-audit-ddd ./src -- focus on aggregate boundaries
+/acc-write-test src/Order.php -- only unit tests
+/acc-commit v2.5.0 -- mention breaking changes
+```
+
+| Command                       | Arguments                     | Description                                       |
+|-------------------------------|-------------------------------|---------------------------------------------------|
+| `/acc-commit`                 | `[tag] [-- instructions]`     | Auto-generate commit message and push             |
+| `/acc-write-claude-component` | `[type] [-- instructions]`    | Create commands, agents, skills, hooks            |
+| `/acc-audit-claude-components`| `[-- instructions]`           | Audit `.claude/` folder quality                   |
+| `/acc-audit-architecture`     | `<path> [-- instructions]`    | Multi-pattern architecture audit                  |
+| `/acc-audit-ddd`              | `<path> [-- instructions]`    | DDD compliance analysis                           |
+| `/acc-audit-psr`              | `<path> [-- instructions]`    | PSR compliance audit                              |
+| `/acc-write-documentation`    | `<path> [-- instructions]`    | Generate documentation                            |
+| `/acc-audit-documentation`    | `<path> [-- instructions]`    | Audit documentation quality                       |
+| `/acc-write-test`             | `<path> [-- instructions]`    | Generate tests for PHP code                       |
+| `/acc-audit-test`             | `<path> [-- instructions]`    | Audit test quality and coverage                   |
 
 ## Agents
+
+### Coordinators (delegate to specialized agents)
+
+| Agent                        | Description                                                                               |
+|------------------------------|-------------------------------------------------------------------------------------------|
+| `acc-architecture-auditor`   | Architecture audit coordinator (orchestrates structural, behavioral, integration auditors)|
+| `acc-pattern-auditor`        | Design patterns audit coordinator (orchestrates stability, behavioral, creational, integration auditors) |
+| `acc-pattern-generator`      | Design patterns generation coordinator (orchestrates stability, behavioral, creational, integration generators) |
+
+### Auditors
+
+| Agent                        | Description                                                                               |
+|------------------------------|-------------------------------------------------------------------------------------------|
+| `acc-structural-auditor`     | Structural patterns auditor (DDD, Clean, Hexagonal, Layered, SOLID, GRASP) — 11 skills    |
+| `acc-behavioral-auditor`     | Behavioral patterns auditor (CQRS, Event Sourcing, EDA, Strategy, State, etc.) — 13 skills|
+| `acc-integration-auditor`    | Integration patterns auditor (Outbox, Saga, ADR) — 12 skills                              |
+| `acc-stability-auditor`      | Stability patterns auditor (Circuit Breaker, Retry, Rate Limiter, Bulkhead) — 5 skills    |
+| `acc-creational-auditor`     | Creational patterns auditor (Builder, Object Pool, Factory) — 3 skills                    |
+| `acc-ddd-auditor`            | Specialized DDD compliance auditor — 4 knowledge skills                                   |
+| `acc-psr-auditor`            | PSR compliance auditor (PSR-1/12, PSR-4, PSR interfaces)                                  |
+| `acc-documentation-auditor`  | Documentation quality auditor (completeness, accuracy, clarity)                           |
+| `acc-test-auditor`           | Test quality auditor (coverage, smells, naming, isolation)                                |
+
+### Generators
+
+| Agent                        | Description                                                                               |
+|------------------------------|-------------------------------------------------------------------------------------------|
+| `acc-architecture-generator` | Generates architecture components based on detected patterns                              |
+| `acc-ddd-generator`          | Creates DDD components (Entity, ValueObject, Aggregate, Repository, etc.)                 |
+| `acc-stability-generator`    | Generates stability patterns (Circuit Breaker, Retry, Rate Limiter, Bulkhead) — 5 skills  |
+| `acc-behavioral-generator`   | Generates behavioral patterns (Strategy, State, Chain, Decorator, Null Object) — 5 skills |
+| `acc-creational-generator`   | Generates creational patterns (Builder, Object Pool, Factory) — 3 skills                  |
+| `acc-integration-generator`  | Generates integration patterns (Outbox, Saga, Action, Responder) — 7 skills               |
+| `acc-psr-generator`          | Generates PSR-compliant PHP components                                                    |
+| `acc-documentation-writer`   | Technical documentation writer (README, architecture, API docs)                           |
+| `acc-diagram-designer`       | Diagram designer for Mermaid, C4 models, sequence diagrams                                |
+| `acc-test-generator`         | Test generator for DDD/CQRS projects (unit, integration, builders)                        |
+
+### Experts
 
 | Agent                        | Description                                                                               |
 |------------------------------|-------------------------------------------------------------------------------------------|
 | `acc-claude-code-expert`     | Expert in Claude Code architecture and extensions                                         |
-| `acc-architecture-auditor`   | Multi-pattern architecture auditor (DDD, CQRS, Clean, Hexagonal, Layered, EDA, Stability) |
-| `acc-architecture-generator` | Generates architecture components based on detected patterns                              |
-| `acc-pattern-auditor`        | Audits implementation patterns (Saga, Outbox, Stability, Behavioral)                      |
-| `acc-pattern-generator`      | Generates advanced pattern components                                                     |
-| `acc-ddd-auditor`            | Specialized DDD compliance auditor                                                        |
-| `acc-ddd-generator`          | Creates DDD and architecture components                                                   |
-| `acc-psr-generator`          | Generates PSR-compliant PHP components                                                    |
-| `acc-documentation-writer`   | Technical documentation writer (README, architecture, API docs)                           |
-| `acc-documentation-auditor`  | Documentation quality auditor (completeness, accuracy, clarity)                           |
-| `acc-diagram-designer`       | Diagram designer for Mermaid, C4 models, sequence diagrams                                |
 
 ## Skills
 
@@ -189,8 +233,8 @@ Existing files are not overwritten.
 
 | Category | Count | Examples |
 |----------|-------|----------|
-| Knowledge | 20 | DDD, CQRS, Clean Architecture, SOLID, GRASP, PSR |
-| Analyzer | 1 | SOLID violations analyzer |
+| Knowledge | 21 | DDD, CQRS, Clean Architecture, SOLID, GRASP, PSR |
+| Analyzer | 9 | SOLID violations, code smells, coupling/cohesion, bounded contexts |
 | DDD Generators | 10 | Entity, ValueObject, Aggregate, Repository |
 | CQRS Generators | 4 | Command, Query, UseCase, ReadModel |
 | Stability Patterns | 4 | CircuitBreaker, Retry, RateLimiter, Bulkhead |
@@ -332,16 +376,32 @@ COMMANDS                      AGENTS                      SKILLS
 ────────                      ──────                      ──────
 /acc-commit ──────────────→ (direct Bash)
 
-/acc-claude-code ─────────→ acc-claude-code-expert ───→ acc-claude-code-knowledge
+/acc-write-claude-component ─────────→ acc-claude-code-expert ───→ acc-claude-code-knowledge
 
-/acc-audit-ddd ───────────→ acc-ddd-auditor ──────────→ acc-ddd-knowledge
+/acc-audit-ddd ───────────→ acc-ddd-auditor (3 skills) ──→ DDD, SOLID, GRASP knowledge
                                   │
                                   └──→ (Task) acc-ddd-generator ──→ 13 create-* skills
 
-/acc-audit-architecture ──→ acc-architecture-auditor ─→ 10 knowledge skills
+/acc-audit-architecture ──→ acc-architecture-auditor (coordinator)
                                   │
-                                  ├──→ (Task) acc-ddd-generator ──→ 13 create-* skills
-                                  └──→ (Task) acc-pattern-generator → 20 create-* skills
+                                  ├──→ (Task) acc-structural-auditor ──→ 12 skills
+                                  ├──→ (Task) acc-behavioral-auditor ──→ 12 skills
+                                  ├──→ (Task) acc-integration-auditor ─→ 12 skills
+                                  │
+                                  ├──→ (Task) acc-ddd-generator
+                                  └──→ (Task) acc-pattern-generator (coordinator)
+                                                     │
+                                                     ├──→ (Task) acc-stability-generator ─→ 5 skills
+                                                     ├──→ (Task) acc-behavioral-generator → 5 skills
+                                                     ├──→ (Task) acc-creational-generator → 3 skills
+                                                     └──→ (Task) acc-integration-generator→ 7 skills
+
+/acc-audit-pattern ───────→ acc-pattern-auditor (coordinator)
+                                  │
+                                  ├──→ (Task) acc-stability-auditor ───→ 5 skills
+                                  ├──→ (Task) acc-behavioral-auditor ──→ 12 skills
+                                  ├──→ (Task) acc-creational-auditor ──→ 3 skills
+                                  └──→ (Task) acc-integration-auditor ─→ 12 skills
 
 /acc-audit-psr ───────────→ acc-psr-auditor ──────────→ 3 PSR knowledge skills
                                   │
@@ -352,6 +412,13 @@ COMMANDS                      AGENTS                      SKILLS
                                   └──→ (Task) acc-diagram-designer → 2 diagram skills
 
 /acc-audit-documentation → acc-documentation-auditor → 3 QA knowledge skills
+
+/acc-write-test ─────────→ acc-test-generator ────────→ acc-testing-knowledge
+                                                        5 test create-* skills
+
+/acc-audit-test ─────────→ acc-test-auditor ──────────→ acc-testing-knowledge
+                                  │                     2 test analyze skills
+                                  └──→ (Task) acc-test-generator
 ```
 
 ## Supported Patterns
@@ -375,17 +442,43 @@ This extension provides comprehensive support for modern software architecture p
 
 ```
 .claude/
-├── commands/           # 8 slash commands
-├── agents/             # 11 subagents
-└── skills/             # 73 skills
+├── commands/           # 10 slash commands
+├── agents/             # 23 subagents
+├── skills/             # 87 skills
+└── settings.json       # Shared team configuration
 
 docs/                   # Detailed documentation
 ├── commands.md
 ├── agents.md
 ├── skills.md
+├── hooks.md
+├── mcp.md
 ├── component-flow.md
 └── quick-reference.md
 ```
+
+## Hooks
+
+Hooks execute shell commands in response to Claude Code events. See [docs/hooks.md](docs/hooks.md) for full documentation.
+
+| Hook                 | Type  | Description                        |
+|----------------------|-------|------------------------------------|
+| Auto-format PHP      | info  | Runs `php-cs-fixer` on PHP files   |
+| Require strict_types | block | Requires `declare(strict_types=1)` |
+| Protect vendor/      | block | Prevents modification of vendor/   |
+| PHP Syntax Check     | info  | Validates PHP syntax               |
+| Auto-run Tests       | info  | Runs tests for modified class      |
+| Final Domain Classes | warn  | Warns if Domain class not final    |
+| File Size Check      | warn  | Detects God Class antipattern      |
+| No Direct Commits    | block | Forbids commits to main/master     |
+| Protect Migrations   | block | Prevents editing existing migrations |
+| Test Without Source  | warn  | Warns when changing only tests     |
+
+## MCP
+
+Model Context Protocol servers extend Claude Code capabilities. See [docs/mcp.md](docs/mcp.md) for full documentation.
+
+*Coming soon*
 
 ## FAQ
 
@@ -410,7 +503,7 @@ Generated code targets PHP 8.5+ and uses modern features like readonly classes, 
 <details>
 <summary><strong>How do I add my own commands/skills?</strong></summary>
 
-Use the `/acc-claude-code` wizard to create new components interactively. It guides you through creating commands, agents, or skills with proper formatting and structure.
+Use the `/acc-write-claude-component` wizard to create new components interactively. It guides you through creating commands, agents, or skills with proper formatting and structure.
 </details>
 
 <details>

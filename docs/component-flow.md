@@ -24,18 +24,46 @@ COMMANDS                    AGENTS                      SKILLS
 ────────                    ──────                      ──────
 /acc-commit ────────────→ (direct Bash)
 
-/acc-claude-code ───────→ acc-claude-code-expert ───→ acc-claude-code-knowledge
+/acc-write-claude-component ───────→ acc-claude-code-expert ───→ acc-claude-code-knowledge
 
-/acc-audit-claude-code ─→ (direct analysis)
+/acc-audit-claude-components → (direct analysis)
 
-/acc-audit-ddd ─────────→ acc-ddd-auditor ──────────→ acc-ddd-knowledge
+/acc-audit-ddd ─────────→ acc-ddd-auditor (3 skills) ──→ DDD, SOLID, GRASP knowledge
                                 │
                                 └──→ (Task) acc-ddd-generator ──→ 13 create-* skills
 
-/acc-audit-architecture ─→ acc-architecture-auditor ─→ 11 knowledge skills
+/acc-audit-architecture ─→ acc-architecture-auditor (coordinator)
                                 │
-                                ├──→ (Task) acc-ddd-generator ──→ 13 create-* skills
-                                └──→ (Task) acc-pattern-generator → 15 create-* skills
+                                ├──→ (Task) acc-structural-auditor ──→ 12 skills
+                                │           └── DDD, Clean, Hexagonal, Layered, SOLID, GRASP + 6 analyzers
+                                │
+                                ├──→ (Task) acc-behavioral-auditor ──→ 12 skills
+                                │           └── CQRS, Event Sourcing, EDA, Strategy, State, etc.
+                                │
+                                ├──→ (Task) acc-integration-auditor ─→ 12 skills
+                                │           └── Outbox, Saga, ADR
+                                │
+                                ├──→ (Task) acc-ddd-generator
+                                └──→ (Task) acc-pattern-generator (coordinator)
+                                                  │
+                                                  ├──→ (Task) acc-stability-generator ──→ 5 skills
+                                                  ├──→ (Task) acc-behavioral-generator ─→ 5 skills
+                                                  ├──→ (Task) acc-creational-generator ─→ 3 skills
+                                                  └──→ (Task) acc-integration-generator → 7 skills
+
+/acc-audit-pattern ─────→ acc-pattern-auditor (coordinator, 2 skills)
+                                │
+                                ├──→ (Task) acc-stability-auditor ───→ 5 skills
+                                │           └── Circuit Breaker, Retry, Rate Limiter, Bulkhead
+                                │
+                                ├──→ (Task) acc-behavioral-auditor ──→ 12 skills
+                                │           └── Strategy, State, Chain, Decorator, Null Object
+                                │
+                                ├──→ (Task) acc-creational-auditor ──→ 3 skills
+                                │           └── Builder, Object Pool, Factory
+                                │
+                                └──→ (Task) acc-integration-auditor ─→ 12 skills
+                                            └── Outbox, Saga, ADR
 
 /acc-audit-psr ─────────→ acc-psr-auditor ─────────→ 3 PSR knowledge skills
                                 │
@@ -46,6 +74,13 @@ COMMANDS                    AGENTS                      SKILLS
                                 └──→ (Task) acc-diagram-designer ─→ 2 diagram skills
 
 /acc-audit-documentation → acc-documentation-auditor → 3 QA knowledge skills
+
+/acc-write-test ────────→ acc-test-generator ────────→ acc-testing-knowledge
+                                                       5 test create-* skills
+
+/acc-audit-test ────────→ acc-test-auditor ──────────→ acc-testing-knowledge
+                                │                      2 test analyze skills
+                                └──→ (Task) acc-test-generator
 ```
 
 ## Audit → Generate Workflow
@@ -73,9 +108,13 @@ Skill generates PHP code with tests
 | Issue Type | Generator Agent | Skills Used |
 |------------|-----------------|-------------|
 | DDD components | `acc-ddd-generator` | 13 acc-create-* skills |
-| Design patterns | `acc-pattern-generator` | 15 acc-create-* skills |
+| Stability patterns | `acc-stability-generator` | 5 acc-create-* skills |
+| Behavioral patterns | `acc-behavioral-generator` | 5 acc-create-* skills |
+| Creational patterns | `acc-creational-generator` | 3 acc-create-* skills |
+| Integration patterns | `acc-integration-generator` | 7 acc-create-* skills |
 | PSR implementations | `acc-psr-generator` | 11 acc-create-psr* skills |
 | Architecture | `acc-architecture-generator` | Coordinator (delegates) |
+| Design patterns | `acc-pattern-generator` | Coordinator (delegates to 4 generators) |
 
 ## Generator Skills by Category
 

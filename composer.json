@@ -28,7 +28,10 @@
         "repository",
         "saga-pattern",
         "outbox-pattern",
-        "anti-corruption-layer"
+        "anti-corruption-layer",
+        "hooks",
+        "mcp",
+        "model-context-protocol"
     ],
     "authors": [
         {

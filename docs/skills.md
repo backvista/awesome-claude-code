@@ -6,9 +6,9 @@ Knowledge bases and code generators. Skills provide domain expertise and code ge
 
 | Type | Count | Purpose | Example |
 |------|-------|---------|---------|
-| **Knowledge** | 20 | Provide expertise and best practices | `acc-ddd-knowledge` |
-| **Analyzer** | 1 | Detect violations and antipatterns | `acc-analyze-solid-violations` |
-| **Generator** | 43 | Generate PHP code with tests | `acc-create-entity` |
+| **Knowledge** | 21 | Provide expertise and best practices | `acc-ddd-knowledge` |
+| **Analyzer** | 9 | Detect violations and antipatterns | `acc-analyze-solid-violations` |
+| **Generator** | 48 | Generate PHP code with tests | `acc-create-entity` |
 | **Template** | 9 | Documentation templates | `acc-readme-template` |
 
 ## How Skills Work
@@ -46,12 +46,21 @@ Knowledge bases for architecture audits and best practices.
 | `acc-documentation-knowledge` | `skills/acc-documentation-knowledge/` | Documentation types, audiences, best practices |
 | `acc-diagram-knowledge` | `skills/acc-diagram-knowledge/` | Mermaid syntax, C4 model, diagram types |
 | `acc-documentation-qa-knowledge` | `skills/acc-documentation-qa-knowledge/` | Quality checklists, audit criteria |
+| `acc-testing-knowledge` | `skills/acc-testing-knowledge/` | Testing pyramid, AAA, naming, isolation, DDD testing |
 
 ## Analyzer Skills
 
 | Skill | Path | Description |
 |-------|------|-------------|
 | `acc-analyze-solid-violations` | `skills/acc-analyze-solid-violations/` | SOLID violations analyzer with reports |
+| `acc-analyze-test-coverage` | `skills/acc-analyze-test-coverage/` | Detects untested classes, methods, branches |
+| `acc-detect-test-smells` | `skills/acc-detect-test-smells/` | Detects 15 test antipatterns |
+| `acc-detect-code-smells` | `skills/acc-detect-code-smells/` | Detects God Class, Feature Envy, Data Clumps, etc. |
+| `acc-check-bounded-contexts` | `skills/acc-check-bounded-contexts/` | Analyzes DDD bounded context boundaries |
+| `acc-check-immutability` | `skills/acc-check-immutability/` | Checks Value Objects, Events, DTOs immutability |
+| `acc-check-leaky-abstractions` | `skills/acc-check-leaky-abstractions/` | Detects leaky abstractions, framework leakage |
+| `acc-check-encapsulation` | `skills/acc-check-encapsulation/` | Detects public state, Tell Don't Ask violations |
+| `acc-analyze-coupling-cohesion` | `skills/acc-analyze-coupling-cohesion/` | Coupling/cohesion metrics (Ca/Ce, LCOM) |
 
 ## Generator Skills
 
@@ -139,6 +148,16 @@ Code generators for DDD and architecture components (PHP 8.5).
 | `acc-create-psr17-http-factory` | `skills/acc-create-psr17-http-factory/` | PSR-17 HTTP Factories |
 | `acc-create-psr18-http-client` | `skills/acc-create-psr18-http-client/` | PSR-18 HTTP Client |
 | `acc-create-psr20-clock` | `skills/acc-create-psr20-clock/` | PSR-20 Clock Interface |
+
+### Testing
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-create-unit-test` | `skills/acc-create-unit-test/` | PHPUnit unit tests with AAA pattern |
+| `acc-create-integration-test` | `skills/acc-create-integration-test/` | Integration tests with DB transactions |
+| `acc-create-test-builder` | `skills/acc-create-test-builder/` | Test Data Builder / Object Mother patterns |
+| `acc-create-mock-repository` | `skills/acc-create-mock-repository/` | InMemory repository implementations |
+| `acc-create-test-double` | `skills/acc-create-test-double/` | Mocks, Stubs, Fakes, Spies |
 
 ### Documentation Templates
 

@@ -2,18 +2,41 @@
 description: Audit documentation quality. Checks completeness, accuracy, clarity, navigation, and diagrams. Use for documentation review and improvement planning.
 allowed-tools: Read, Glob, Grep, Bash, Task
 model: opus
-argument-hint: <path-to-audit>
+argument-hint: <path> [-- additional instructions]
 ---
 
 # Documentation Audit
 
 Perform a comprehensive documentation quality audit with actionable improvement recommendations.
 
+## Input Parsing
+
+Parse `$ARGUMENTS` to extract path and optional meta-instructions:
+
+```
+Format: <path> [-- <meta-instructions>]
+
+Examples:
+- /acc-audit-documentation docs/
+- /acc-audit-documentation docs/ -- focus on API documentation
+- /acc-audit-documentation README.md -- check examples actually work
+- /acc-audit-documentation ./ -- skip architecture, check links only
+```
+
+**Parsing rules:**
+1. Split `$ARGUMENTS` by ` -- ` (space-dash-dash-space)
+2. First part = **path** (required, default: current directory)
+3. Second part = **meta-instructions** (optional, additional focus/filters)
+
 ## Target
 
-Audit documentation at: `$ARGUMENTS`
+- **Path**: First part of `$ARGUMENTS` (before `--`)
+- **Meta-instructions**: Second part (after `--`) — use to customize audit focus
 
-If no path provided, audit the current working directory.
+If meta-instructions provided, adjust audit to:
+- Focus on specific documentation types
+- Skip certain checks if requested
+- Prioritize specific quality dimensions
 
 ## Pre-flight Check
 

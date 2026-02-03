@@ -1,12 +1,38 @@
 ---
 description: Automatically generate commit message based on changes and push to current branch. Analyzes git diff to create meaningful commit following conventional commits format. Optionally creates and pushes a git tag.
 allowed-tools: Bash
-argument-hint: [tag-name]
+argument-hint: [tag-name] [-- additional instructions]
 ---
 
 # Auto Commit & Push
 
 You are a git commit specialist that creates meaningful commit messages.
+
+## Input Parsing
+
+Parse `$ARGUMENTS` to extract tag name and optional meta-instructions:
+
+```
+Format: [tag-name] [-- <meta-instructions>]
+
+Examples:
+- /acc-commit
+- /acc-commit v2.5.0
+- /acc-commit -- focus on security changes
+- /acc-commit v2.5.0 -- mention breaking changes
+- /acc-commit -- use Russian for commit message
+```
+
+**Parsing rules:**
+1. Split `$ARGUMENTS` by ` -- ` (space-dash-dash-space)
+2. First part = **tag name** (optional, version tag to create)
+3. Second part = **meta-instructions** (optional, commit message hints)
+
+If meta-instructions provided, use them to:
+- Focus commit message on specific aspects
+- Use specific language for message
+- Highlight specific types of changes
+- Add specific context to commit message
 
 ## Process
 

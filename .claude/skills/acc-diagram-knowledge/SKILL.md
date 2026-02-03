@@ -277,6 +277,39 @@ class id1,id2 className
 | **No legend** | Unknown symbols | Add legend/key |
 | **Invisible boundaries** | Unclear scope | Add subgraphs |
 
+## Tool Comparison
+
+| Tool | Type | Best For | Pros | Cons |
+|------|------|----------|------|------|
+| **Mermaid** | Text-based | Documentation-as-code | Git-friendly, embeds in MD, live preview | Limited styling, complex layouts hard |
+| **PlantUML** | Text-based | UML diagrams | Full UML support, more diagram types | Requires Java, slower rendering |
+| **Draw.io** | GUI | Quick prototypes, business diagrams | Free, intuitive, many templates | Binary files, merge conflicts |
+| **Excalidraw** | GUI | Sketches, whiteboarding | Hand-drawn style, collaborative | Less precise, limited exports |
+| **Lucidchart** | GUI | Enterprise, presentations | Professional output, integrations | Paid, not text-based |
+
+### Tool Selection Guide
+
+| Scenario | Recommended Tool |
+|----------|------------------|
+| Code documentation (README, docs/) | Mermaid |
+| Strict UML compliance required | PlantUML |
+| Quick whiteboard session | Excalidraw |
+| Stakeholder presentations | Draw.io or Lucidchart |
+| CI/CD pipeline diagrams | Mermaid (auto-generate) |
+| Living documentation (auto-update) | Mermaid + code generation |
+
+### Tool Features Matrix
+
+| Feature | Mermaid | PlantUML | Draw.io | Excalidraw |
+|---------|---------|----------|---------|------------|
+| Version control friendly | ✅ | ✅ | ❌ | ⚠️ JSON |
+| GitHub/GitLab rendering | ✅ | ❌ | ❌ | ❌ |
+| No install required | ✅ | ❌ | ✅ | ✅ |
+| Offline support | ⚠️ | ✅ | ✅ | ✅ |
+| C4 model support | ✅ | ✅ | Manual | Manual |
+| Export to PNG/SVG | ✅ | ✅ | ✅ | ✅ |
+| Real-time collaboration | ❌ | ❌ | ✅ | ✅ |
+
 ## Diagram Selection Guide
 
 ```

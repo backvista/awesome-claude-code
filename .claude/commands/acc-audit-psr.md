@@ -1,17 +1,36 @@
 ---
 description: Audit PSR compliance. Checks PSR-1/PSR-12 coding style, PSR-4 autoloading, and PSR interface implementations. Use for PHP standards compliance review.
 allowed-tools: Task
-argument-hint: <path-to-project>
+argument-hint: <path> [-- additional instructions]
 ---
 
 # PSR Compliance Audit
 
 Invoke the `acc-psr-auditor` agent to perform a comprehensive PSR compliance audit.
 
+## Input Parsing
+
+Parse `$ARGUMENTS` to extract path and optional meta-instructions:
+
+```
+Format: <path> [-- <meta-instructions>]
+
+Examples:
+- /acc-audit-psr ./src
+- /acc-audit-psr ./src -- focus on PSR-12 only
+- /acc-audit-psr ./src -- skip autoloading, check interfaces
+- /acc-audit-psr ./src -- check PSR-7 and PSR-15 implementations
+```
+
+**Parsing rules:**
+1. Split `$ARGUMENTS` by ` -- ` (space-dash-dash-space)
+2. First part = **path** (required, default: current directory)
+3. Second part = **meta-instructions** (optional, additional focus/filters)
+
 ## Usage
 
 ```
-/acc-audit-psr [path-to-project]
+/acc-audit-psr [path] [-- instructions]
 ```
 
 ## What It Checks

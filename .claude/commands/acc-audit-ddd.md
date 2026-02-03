@@ -2,18 +2,42 @@
 description: DDD architecture audit with pattern recommendations. Analyzes layer separation, domain model richness, and architectural violations. Provides actionable recommendations with links to generation skills.
 allowed-tools: Read, Grep, Glob, Bash, Task
 model: opus
-argument-hint: <path-to-project>
+argument-hint: <path> [-- additional instructions]
 ---
 
 # DDD Architecture Audit
 
 Perform a comprehensive DDD architecture audit with actionable pattern recommendations.
 
+## Input Parsing
+
+Parse `$ARGUMENTS` to extract path and optional meta-instructions:
+
+```
+Format: <path> [-- <meta-instructions>]
+
+Examples:
+- /acc-audit-ddd ./src
+- /acc-audit-ddd ./src -- focus on Order bounded context
+- /acc-audit-ddd ./src -- skip Infrastructure, check aggregates only
+- /acc-audit-ddd ./src -- особое внимание на Event Sourcing паттерны
+```
+
+**Parsing rules:**
+1. Split `$ARGUMENTS` by ` -- ` (space-dash-dash-space)
+2. First part = **path** (required, default: current directory)
+3. Second part = **meta-instructions** (optional, additional focus/filters)
+
 ## Target
 
-Analyze the project at: `$ARGUMENTS`
+- **Path**: First part of `$ARGUMENTS` (before `--`)
+- **Meta-instructions**: Second part (after `--`) — use to customize audit focus
 
-If no path provided, analyze the current working directory.
+If meta-instructions provided, adjust audit to:
+- Focus on specific areas mentioned
+- Skip areas if requested
+- Apply additional checks
+- Modify output format if requested
 
 ## Pre-flight Check
 

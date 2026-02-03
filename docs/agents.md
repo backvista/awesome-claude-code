@@ -4,20 +4,48 @@ Subagents for specialized tasks. Agents are autonomous workers that handle compl
 
 ## Overview
 
+### Coordinators (0-2 skills, delegate via Task tool)
+
 | Agent | Purpose | Invoked By |
 |-------|---------|------------|
-| `acc-claude-code-expert` | Create Claude Code components | `/acc-claude-code` |
-| `acc-architecture-auditor` | Multi-pattern architecture analysis | `/acc-audit-architecture` |
-| `acc-architecture-generator` | Generate architecture components | `acc-architecture-auditor` (Task) |
-| `acc-ddd-auditor` | DDD compliance analysis | `/acc-audit-ddd` |
-| `acc-ddd-generator` | Generate DDD components | `acc-ddd-auditor` (Task) |
-| `acc-pattern-auditor` | Design patterns analysis | `/acc-audit-architecture` |
-| `acc-pattern-generator` | Generate design patterns | `acc-architecture-auditor` (Task) |
-| `acc-psr-auditor` | PSR compliance analysis | `/acc-audit-psr` |
-| `acc-psr-generator` | Generate PSR implementations | `acc-psr-auditor` (Skill) |
-| `acc-documentation-writer` | Generate documentation | `/acc-write-documentation` |
-| `acc-documentation-auditor` | Audit documentation quality | `/acc-audit-documentation` |
-| `acc-diagram-designer` | Create Mermaid diagrams | `acc-documentation-writer` (Task) |
+| `acc-architecture-auditor` | Architecture audit coordinator | `/acc-audit-architecture` |
+| `acc-pattern-auditor` | Design patterns audit coordinator | `acc-architecture-auditor` (Task) |
+| `acc-pattern-generator` | Design patterns generation coordinator | `acc-architecture-auditor` (Task) |
+
+### Auditors (3-12 skills)
+
+| Agent | Purpose | Skills | Invoked By |
+|-------|---------|--------|------------|
+| `acc-structural-auditor` | Structural patterns analysis | 12 | `acc-architecture-auditor` (Task) |
+| `acc-behavioral-auditor` | Behavioral patterns analysis | 12 | `acc-architecture-auditor`, `acc-pattern-auditor` (Task) |
+| `acc-integration-auditor` | Integration patterns analysis | 12 | `acc-architecture-auditor`, `acc-pattern-auditor` (Task) |
+| `acc-stability-auditor` | Stability patterns analysis | 5 | `acc-pattern-auditor` (Task) |
+| `acc-creational-auditor` | Creational patterns analysis | 3 | `acc-pattern-auditor` (Task) |
+| `acc-ddd-auditor` | DDD compliance analysis | 3 | `/acc-audit-ddd` |
+| `acc-psr-auditor` | PSR compliance analysis | 3 | `/acc-audit-psr` |
+| `acc-documentation-auditor` | Audit documentation quality | 3 | `/acc-audit-documentation` |
+| `acc-test-auditor` | Test quality analysis | 3 | `/acc-audit-test` |
+
+### Generators (3-14 skills)
+
+| Agent | Purpose | Skills | Invoked By |
+|-------|---------|--------|------------|
+| `acc-architecture-generator` | Generate architecture components | 7 | `acc-architecture-auditor` (Task) |
+| `acc-ddd-generator` | Generate DDD components | 14 | `acc-ddd-auditor` (Task) |
+| `acc-stability-generator` | Generate stability patterns | 5 | `acc-pattern-generator` (Task) |
+| `acc-behavioral-generator` | Generate behavioral patterns | 5 | `acc-pattern-generator` (Task) |
+| `acc-creational-generator` | Generate creational patterns | 3 | `acc-pattern-generator` (Task) |
+| `acc-integration-generator` | Generate integration patterns | 7 | `acc-pattern-generator` (Task) |
+| `acc-psr-generator` | Generate PSR implementations | 14 | `acc-psr-auditor` (Skill) |
+| `acc-documentation-writer` | Generate documentation | 9 | `/acc-write-documentation` |
+| `acc-diagram-designer` | Create Mermaid diagrams | 2 | `acc-documentation-writer` (Task) |
+| `acc-test-generator` | Generate PHP tests | 6 | `/acc-write-test` |
+
+### Experts
+
+| Agent | Purpose | Invoked By |
+|-------|---------|------------|
+| `acc-claude-code-expert` | Create Claude Code components | `/acc-write-claude-component` |
 
 ## How Agents Work
 
@@ -30,7 +58,7 @@ Subagents for specialized tasks. Agents are autonomous workers that handle compl
 
 ## `acc-claude-code-expert`
 
-**Path:** `agents/acc-claude-code-expert.md`
+**Path:** `agents/acc-write-claude-component-expert.md`
 
 Expert in creating Claude Code commands, agents, and skills.
 
@@ -48,19 +76,124 @@ skills: acc-claude-code-knowledge
 
 **Path:** `agents/acc-architecture-auditor.md`
 
-Multi-pattern architecture auditor.
+Architecture audit coordinator. Orchestrates three specialized auditors for comprehensive reviews.
 
 **Configuration:**
 ```yaml
 name: acc-architecture-auditor
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Task
 model: opus
-skills: acc-ddd-knowledge, acc-cqrs-knowledge, acc-clean-arch-knowledge,
-        acc-hexagonal-knowledge, acc-layer-arch-knowledge,
-        acc-event-sourcing-knowledge, acc-eda-knowledge,
-        acc-outbox-pattern-knowledge, acc-saga-pattern-knowledge,
-        acc-stability-patterns-knowledge
+# No skills - delegates to specialized auditors
 ```
+
+**Workflow:**
+1. Pattern Detection (Glob/Grep for structural, behavioral, integration patterns)
+2. Parallel Task delegation to 3 auditors
+3. Cross-Pattern Analysis (detect conflicts between patterns)
+4. Report Aggregation (unified markdown report)
+
+---
+
+## `acc-structural-auditor`
+
+**Path:** `agents/acc-structural-auditor.md`
+
+Structural architecture auditor for DDD, Clean Architecture, Hexagonal, Layered, SOLID, GRASP.
+
+**Configuration:**
+```yaml
+name: acc-structural-auditor
+tools: Read, Grep, Glob
+model: sonnet
+skills: acc-ddd-knowledge, acc-clean-arch-knowledge, acc-hexagonal-knowledge,
+        acc-layer-arch-knowledge, acc-solid-knowledge, acc-grasp-knowledge,
+        acc-analyze-solid-violations, acc-detect-code-smells, acc-check-bounded-contexts,
+        acc-check-immutability, acc-check-leaky-abstractions, acc-check-encapsulation
+```
+
+**Skills:** 12 (6 knowledge + 6 analyzer)
+
+---
+
+## `acc-behavioral-auditor`
+
+**Path:** `agents/acc-behavioral-auditor.md`
+
+Behavioral patterns auditor for CQRS, Event Sourcing, EDA, and GoF behavioral patterns (Strategy, State, Chain of Responsibility, Decorator, Null Object).
+
+**Configuration:**
+```yaml
+name: acc-behavioral-auditor
+tools: Read, Grep, Glob
+model: sonnet
+skills: acc-cqrs-knowledge, acc-event-sourcing-knowledge, acc-eda-knowledge,
+        acc-create-command, acc-create-query, acc-create-domain-event,
+        acc-create-read-model, acc-create-strategy, acc-create-state,
+        acc-create-chain-of-responsibility, acc-create-decorator,
+        acc-create-null-object
+```
+
+**Skills:** 12 (3 knowledge + 9 generators)
+
+---
+
+## `acc-integration-auditor`
+
+**Path:** `agents/acc-integration-auditor.md`
+
+Integration patterns auditor for Outbox, Saga, Stability, and ADR.
+
+**Configuration:**
+```yaml
+name: acc-integration-auditor
+tools: Read, Grep, Glob
+model: sonnet
+skills: acc-outbox-pattern-knowledge, acc-saga-pattern-knowledge,
+        acc-stability-patterns-knowledge, acc-adr-knowledge,
+        acc-create-outbox-pattern, acc-create-saga-pattern,
+        acc-create-circuit-breaker, acc-create-retry-pattern,
+        acc-create-rate-limiter, acc-create-bulkhead,
+        acc-create-action, acc-create-responder
+```
+
+**Skills:** 12 (4 knowledge + 8 generators)
+
+---
+
+## `acc-stability-auditor`
+
+**Path:** `agents/acc-stability-auditor.md`
+
+Stability patterns auditor for Circuit Breaker, Retry, Rate Limiter, and Bulkhead.
+
+**Configuration:**
+```yaml
+name: acc-stability-auditor
+tools: Read, Grep, Glob
+model: sonnet
+skills: acc-stability-patterns-knowledge, acc-create-circuit-breaker,
+        acc-create-retry-pattern, acc-create-rate-limiter, acc-create-bulkhead
+```
+
+**Skills:** 5 (1 knowledge + 4 generators)
+
+---
+
+## `acc-creational-auditor`
+
+**Path:** `agents/acc-creational-auditor.md`
+
+Creational patterns auditor for Builder, Object Pool, and Factory patterns.
+
+**Configuration:**
+```yaml
+name: acc-creational-auditor
+tools: Read, Grep, Glob
+model: sonnet
+skills: acc-create-builder, acc-create-object-pool, acc-create-factory
+```
+
+**Skills:** 3 (generators only)
 
 ---
 
@@ -73,10 +206,12 @@ Specialized DDD compliance auditor.
 **Configuration:**
 ```yaml
 name: acc-ddd-auditor
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Bash, Task
 model: opus
-skills: acc-ddd-knowledge
+skills: acc-ddd-knowledge, acc-solid-knowledge, acc-grasp-knowledge
 ```
+
+**Skills:** 3 (knowledge only, generation delegated to `acc-ddd-generator` via Task)
 
 ---
 
@@ -104,16 +239,23 @@ skills: acc-ddd-knowledge, acc-create-value-object, acc-create-entity,
 
 **Path:** `agents/acc-pattern-auditor.md`
 
-Design patterns auditor (Integration, Stability, Behavioral, Creational, Enterprise).
+Design patterns audit coordinator. Orchestrates stability, behavioral, creational, and integration auditors.
 
 **Configuration:**
 ```yaml
 name: acc-pattern-auditor
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Task
 model: opus
-skills: acc-outbox-pattern-knowledge, acc-saga-pattern-knowledge,
-        acc-stability-patterns-knowledge, acc-eda-knowledge
+skills: acc-solid-knowledge, acc-grasp-knowledge
 ```
+
+**Skills:** 2 (knowledge only, delegates to 4 specialized auditors via Task)
+
+**Delegation:**
+- `acc-stability-auditor` — Circuit Breaker, Retry, Rate Limiter, Bulkhead
+- `acc-behavioral-auditor` — Strategy, State, Chain, Decorator, Null Object
+- `acc-creational-auditor` — Builder, Object Pool, Factory
+- `acc-integration-auditor` — Outbox, Saga, ADR
 
 ---
 
@@ -121,22 +263,99 @@ skills: acc-outbox-pattern-knowledge, acc-saga-pattern-knowledge,
 
 **Path:** `agents/acc-pattern-generator.md`
 
-Creates integration and design pattern components.
+Design patterns generation coordinator. Orchestrates stability, behavioral, creational, and integration generators.
 
 **Configuration:**
 ```yaml
 name: acc-pattern-generator
-tools: Read, Write, Glob, Grep, Edit
+tools: Read, Write, Glob, Grep, Edit, Task
 model: opus
-skills: acc-outbox-pattern-knowledge, acc-saga-pattern-knowledge,
-        acc-stability-patterns-knowledge, acc-create-outbox-pattern,
-        acc-create-saga-pattern, acc-create-circuit-breaker,
-        acc-create-retry-pattern, acc-create-rate-limiter,
-        acc-create-bulkhead, acc-create-strategy, acc-create-state,
-        acc-create-decorator, acc-create-chain-of-responsibility,
-        acc-create-null-object, acc-create-builder, acc-create-object-pool,
-        acc-create-read-model, acc-create-policy
+skills: acc-adr-knowledge
 ```
+
+**Skills:** 1 (delegates to 4 specialized generators via Task)
+
+**Delegation:**
+- `acc-stability-generator` — Circuit Breaker, Retry, Rate Limiter, Bulkhead
+- `acc-behavioral-generator` — Strategy, State, Chain, Decorator, Null Object
+- `acc-creational-generator` — Builder, Object Pool, Factory
+- `acc-integration-generator` — Outbox, Saga, Action, Responder
+
+---
+
+## `acc-stability-generator`
+
+**Path:** `agents/acc-stability-generator.md`
+
+Generates stability patterns (Circuit Breaker, Retry, Rate Limiter, Bulkhead).
+
+**Configuration:**
+```yaml
+name: acc-stability-generator
+tools: Read, Write, Glob, Grep, Edit
+model: sonnet
+skills: acc-stability-patterns-knowledge, acc-create-circuit-breaker,
+        acc-create-retry-pattern, acc-create-rate-limiter, acc-create-bulkhead
+```
+
+**Skills:** 5
+
+---
+
+## `acc-behavioral-generator`
+
+**Path:** `agents/acc-behavioral-generator.md`
+
+Generates behavioral patterns (Strategy, State, Chain of Responsibility, Decorator, Null Object).
+
+**Configuration:**
+```yaml
+name: acc-behavioral-generator
+tools: Read, Write, Glob, Grep, Edit
+model: sonnet
+skills: acc-create-strategy, acc-create-state, acc-create-chain-of-responsibility,
+        acc-create-decorator, acc-create-null-object
+```
+
+**Skills:** 5
+
+---
+
+## `acc-creational-generator`
+
+**Path:** `agents/acc-creational-generator.md`
+
+Generates creational patterns (Builder, Object Pool, Factory).
+
+**Configuration:**
+```yaml
+name: acc-creational-generator
+tools: Read, Write, Glob, Grep, Edit
+model: sonnet
+skills: acc-create-builder, acc-create-object-pool, acc-create-factory
+```
+
+**Skills:** 3
+
+---
+
+## `acc-integration-generator`
+
+**Path:** `agents/acc-integration-generator.md`
+
+Generates integration patterns (Outbox, Saga, Action, Responder).
+
+**Configuration:**
+```yaml
+name: acc-integration-generator
+tools: Read, Write, Glob, Grep, Edit
+model: sonnet
+skills: acc-outbox-pattern-knowledge, acc-saga-pattern-knowledge, acc-adr-knowledge,
+        acc-create-outbox-pattern, acc-create-saga-pattern,
+        acc-create-action, acc-create-responder
+```
+
+**Skills:** 7
 
 ---
 
@@ -255,6 +474,53 @@ tools: Read, Write, Edit, Glob, Grep
 model: opus
 skills: acc-diagram-knowledge, acc-mermaid-template
 ```
+
+---
+
+## `acc-test-auditor`
+
+**Path:** `agents/acc-test-auditor.md`
+
+Test quality auditor for PHP projects.
+
+**Configuration:**
+```yaml
+name: acc-test-auditor
+tools: Read, Bash, Grep, Glob
+model: opus
+skills: acc-testing-knowledge, acc-analyze-test-coverage, acc-detect-test-smells
+```
+
+**Analysis Phases:**
+1. Project discovery (framework, PHPUnit/Pest)
+2. Coverage analysis (untested classes, methods, branches)
+3. Test smell detection (15 antipatterns)
+4. Quality metrics (naming, isolation)
+5. Report generation with skill recommendations
+
+---
+
+## `acc-test-generator`
+
+**Path:** `agents/acc-test-generator.md`
+
+Test generator for DDD/CQRS PHP projects.
+
+**Configuration:**
+```yaml
+name: acc-test-generator
+tools: Read, Write, Glob, Grep
+model: opus
+skills: acc-testing-knowledge, acc-create-unit-test, acc-create-integration-test,
+        acc-create-test-builder, acc-create-mock-repository, acc-create-test-double
+```
+
+**Generation Process:**
+1. Analyze source code (class type, dependencies)
+2. Classify test type (unit/integration)
+3. Prepare infrastructure (builders, fakes)
+4. Generate tests using appropriate skill
+5. Verify quality rules compliance
 
 ---
 
