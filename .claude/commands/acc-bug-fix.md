@@ -7,7 +7,7 @@ argument-hint: <bug-description|file:line|stack-trace>
 
 # Bug Fix Command
 
-You are executing the `/acc-fix-bug` command. Your task is to diagnose and fix a bug using the bug fix system.
+You are executing the `/acc-bug-fix` command. Your task is to diagnose and fix a bug using the bug fix system.
 
 ## Input Received
 
@@ -37,83 +37,36 @@ Determine the input type:
    - Search codebase for relevant code
    - Use Grep to find mentioned classes/methods
 
-### Step 2: Diagnose Bug
+### Step 2: Invoke Bug Fix Coordinator
 
-Invoke `acc-bug-hunter` agent to diagnose:
-
-```
-Task → acc-bug-hunter
-
-Analyze this code for bugs:
-[code context]
-
-User description: [bug description]
-
-Provide:
-1. Bug category (logic/null/boundary/race/resource/exception/type/sql/infinite)
-2. Severity (Critical/Major/Minor)
-3. Exact location (file:line)
-4. Root cause hypothesis
-5. Fix recommendations
-```
-
-### Step 3: Generate Fix
-
-Invoke `acc-bug-fixer` agent:
+Use the `acc-bug-fix-coordinator` agent to orchestrate the full bug fix workflow:
 
 ```
-Task → acc-bug-fixer
+Task tool with subagent_type="acc-bug-fix-coordinator"
 
-Diagnosis from acc-bug-hunter:
-[diagnosis]
+prompt: |
+  Fix the following bug:
 
-Code context:
-[relevant code]
+  Input: [parsed input from Step 1]
+  Code context: [relevant code]
+  Meta-instructions: [any -- options]
 
-Generate:
-1. Root cause analysis (5 Whys)
-2. Impact analysis (blast radius)
-3. Minimal fix code
-4. Quality verification
-5. Regression prevention checklist
+  Execute full workflow:
+  1. Diagnose with acc-bug-hunter
+  2. Generate fix with acc-bug-fixer
+  3. Create regression test with acc-test-generator (unless skip-tests)
+  4. Apply changes (unless dry-run)
+  5. Run tests and verify
 ```
 
-### Step 4: Generate Regression Test
+The coordinator orchestrates:
+- `acc-bug-hunter` → Diagnose bug (category, severity, location, root cause)
+- `acc-bug-fixer` → Generate minimal fix (5 Whys, impact analysis, fix code)
+- `acc-test-generator` → Create regression test (unless `-- skip tests`)
 
-Unless `-- skip tests` specified, invoke `acc-test-generator`:
+### Step 3: Report Results
 
-```
-Task → acc-test-generator
-
-Bug: [description]
-Fix: [the fix code]
-Location: [file:line]
-
-Create a regression test that:
-1. Fails before the fix
-2. Passes after the fix
-3. Covers edge cases
-```
-
-### Step 5: Apply Changes
-
-Unless `-- dry-run` specified:
-
-1. **Apply fix** using Edit tool
-2. **Create test file** using Write tool
-3. **Run tests** using Bash:
-   ```bash
-   # Try common test commands
-   make test
-   # or
-   ./vendor/bin/phpunit
-   # or
-   docker exec app php vendor/bin/phpunit
-   ```
-
-### Step 6: Report Results
-
-Output a comprehensive report:
+Output the comprehensive report from coordinator:
 
 ```markdown
 # Bug Fix Report
@@ -170,27 +123,27 @@ Output a comprehensive report:
 
 ### Example 1: Text Description
 ```
-/acc-fix-bug "NullPointerException in OrderService::process()"
+/acc-bug-fix "NullPointerException in OrderService::process()"
 ```
 
 ### Example 2: File Reference
 ```
-/acc-fix-bug src/Domain/Order/OrderService.php:45 "off-by-one error in loop"
+/acc-bug-fix src/Domain/Order/OrderService.php:45 "off-by-one error in loop"
 ```
 
 ### Example 3: With Meta-Instructions
 ```
-/acc-fix-bug "Payment validation fails for amounts > 1000" -- focus on validation
+/acc-bug-fix "Payment validation fails for amounts > 1000" -- focus on validation
 ```
 
 ### Example 4: From Log File
 ```
-/acc-fix-bug @storage/logs/laravel.log -- skip tests
+/acc-bug-fix @storage/logs/laravel.log -- skip tests
 ```
 
 ### Example 5: Dry Run
 ```
-/acc-fix-bug src/Application/UseCase/CreateOrder.php:78 -- dry-run
+/acc-bug-fix src/Application/UseCase/CreateOrder.php:78 -- dry-run
 ```
 
 ## Error Handling

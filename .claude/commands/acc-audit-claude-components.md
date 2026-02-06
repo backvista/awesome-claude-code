@@ -332,6 +332,36 @@ For each agent, calculate:
 | Responsibilities | 1-3 | 4-5 | >5 |
 | Lines | <200 | 200-400 | >400 |
 
+#### 9.3 Coordinator Progress Tracking Check
+
+For agents with "coordinator" in name or description containing "orchestrates/coordinates":
+
+| Check | ✅ Good | ⚠️ Missing |
+|-------|---------|------------|
+| TaskCreate in tools | Listed in frontmatter | Not listed |
+| TaskUpdate in tools | Listed in frontmatter | Not listed |
+| Progress section | Has "Progress Tracking" section | Missing section |
+| Phase count | 3-5 phases defined | <3 or >5 phases |
+| acc-task-progress-knowledge | In skills list | Missing |
+
+**Detection:**
+```bash
+# Check if coordinator has TaskCreate
+Grep: "TaskCreate" --glob ".claude/agents/*coordinator*.md"
+Grep: "Progress Tracking" --glob ".claude/agents/*coordinator*.md"
+Grep: "acc-task-progress-knowledge" --glob ".claude/agents/*coordinator*.md"
+```
+
+**Coordinator Progress Report:**
+```
+📊 Coordinator Progress Tracking
+├── Coordinators found: X
+├── With progress tracking: Y (Z%)
+├── Missing TaskCreate:
+│   └── ❌ acc-foo-coordinator — no Progress Tracking section
+└── Recommendation: Add TaskCreate/TaskUpdate to coordinators
+```
+
 #### 9.3 Responsibility Extraction
 
 Parse description for action verbs:

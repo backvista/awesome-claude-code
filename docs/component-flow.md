@@ -82,7 +82,7 @@ COMMANDS                    AGENTS                      SKILLS
                                 │                      2 test analyze skills
                                 └──→ (Task) acc-test-generator
 
-/acc-fix-bug ──────────→ acc-bug-fix-coordinator
+/acc-bug-fix ──────────→ acc-bug-fix-coordinator
                                 │
                                 ├──→ (Task) acc-bug-hunter ─────────→ 9 detection skills
                                 │           └── logic, null, boundary, race, resource, exception, type, sql, infinite
@@ -92,6 +92,28 @@ COMMANDS                    AGENTS                      SKILLS
                                 │           └── code-smells, memory, solid, encapsulation, side-effects, immutability
                                 │
                                 └──→ (Task) acc-test-generator ─────→ 6 test skills
+
+/acc-ci-setup ────────→ acc-ci-coordinator (mode: SETUP)
+/acc-ci-fix ──────────→       │
+/acc-ci-optimize ─────→       │
+/acc-audit-ci ────────→       │
+                              │
+                              ├── SETUP ────→ acc-pipeline-architect ──→ 3 knowledge skills
+                              │                        │                   └── ci-pipeline, ci-tools, deployment
+                              │                        └──→ (Task) acc-docker-agent ──→ 2 docker skills
+                              │                        └──→ (Task) acc-static-analysis-agent ─→ 4 config skills
+                              │                        └──→ (Task) acc-test-pipeline-agent ───→ testing skills
+                              │
+                              ├── FIX ─────→ acc-ci-debugger ──────────→ 2 analyzer skills
+                              │                        │                   └── analyze-ci-config, analyze-ci-logs
+                              │                        └──→ (Task) acc-ci-fixer ──→ generate-ci-fix skill
+                              │
+                              ├── OPTIMIZE → acc-pipeline-optimizer ───→ 3 skills
+                              │                                          └── detect-ci-antipatterns, estimate-pipeline-time, optimize-docker-layers
+                              │
+                              └── AUDIT ───→ acc-ci-security-agent ────→ deployment-knowledge
+                                             acc-deployment-agent ──────→ 2 deploy skills
+                                                                          └── deploy-strategy, feature-flags
 ```
 
 ## Audit → Generate Workflow

@@ -2,116 +2,55 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Composer plugin providing Claude Code extensions for PHP development with DDD, CQRS, and Clean Architecture patterns.
+## Project Overview
 
-## Build & Validate
+Composer plugin providing Claude Code extensions for PHP development with DDD, CQRS, and Clean Architecture patterns. Installs to target projects via `composer require dykyi-roman/awesome-claude-code`.
+
+## Commands
 
 ```bash
-make help              # Show all available commands
-make validate-claude   # Validate .claude structure (run before commits)
-make list-commands     # List slash commands
-make list-agents       # List agents
-make list-skills       # List skills
-make test              # Install in Docker test environment
-make test-clear        # Clean up test environment
-./bin/acc upgrade      # Force upgrade components (creates backup)
+make validate-claude        # Validate structure (run before commits)
+make list-commands          # List all slash commands
+make list-agents            # List all agents
+make list-skills            # List all skills
+./bin/acc upgrade           # Force upgrade components (creates backup)
+make test                   # Install in Docker test environment
+make test-clear             # Clear test environment
+make release                # Prepare release
 ```
 
 ## Architecture
 
 ```
 .claude/
-├── commands/     # Slash commands (user-invocable)
-├── agents/       # Subagents (Task tool targets)
-├── skills/       # Skills (knowledge, generators, analyzers, templates)
+├── commands/     # Slash commands (user-invocable, 20+)
+├── agents/       # Subagents (Task tool targets, 40+)
+├── skills/       # Skills (knowledge, generators, analyzers, 150+)
 └── settings.json # Hooks and permissions
 ```
 
-`src/ComposerPlugin.php` subscribes to Composer's `POST_PACKAGE_INSTALL` and `POST_PACKAGE_UPDATE` events. On install/update, it copies commands, agents, skills directories to the target project's `.claude/` folder. Existing files are never overwritten — use `./bin/acc upgrade` to force update.
-
-### Component Flow
-
+**Execution Flow:**
 ```
-COMMANDS                      AGENTS                        SKILLS
-────────                      ──────                        ──────
-/acc-commit ──────────────→ (direct Bash)
-
-/acc-write-claude-component ─────────→ acc-claude-code-expert ─────→ acc-claude-code-knowledge
-
-/acc-audit-ddd ───────────→ acc-ddd-auditor ────────────→ 4 knowledge skills
-                                  │
-                                  └──→ (Task) acc-ddd-generator
-
-/acc-audit-architecture ──→ acc-architecture-auditor (coordinator)
-                                  │
-                                  ├──→ (Task) acc-structural-auditor ──→ 12 skills
-                                  │           └── DDD, Clean, Hexagonal, Layered, SOLID, GRASP (6 knowledge)
-                                  │           └── solid-violations, code-smells, bounded-contexts, immutability, leaky-abstractions, encapsulation (6 analyzers)
-                                  │
-                                  ├──→ (Task) acc-behavioral-auditor ──→ 13 skills
-                                  │           └── CQRS, Event Sourcing, EDA, Strategy, State, etc.
-                                  │
-                                  ├──→ (Task) acc-integration-auditor ─→ 12 skills
-                                  │           └── Outbox, Saga, Stability, ADR
-                                  │
-                                  ├──→ (Task) acc-ddd-generator
-                                  └──→ (Task) acc-pattern-generator (coordinator)
-                                                     │
-                                                     ├──→ (Task) acc-stability-generator ──→ 5 skills
-                                                     ├──→ (Task) acc-behavioral-generator ─→ 5 skills
-                                                     ├──→ (Task) acc-creational-generator ─→ 3 skills
-                                                     └──→ (Task) acc-integration-generator → 7 skills
-
-/acc-audit-claude-components → (direct Read/Glob/Grep) ───→ audits .claude/ folder
-
-/acc-audit-psr ───────────→ acc-psr-auditor ────────────→ PSR knowledge skills
-                                  │
-                                  └──→ PSR create-* skills
-
-/acc-write-documentation ─→ acc-documentation-writer ───→ template skills
-                                  │
-                                  └──→ (Task) acc-diagram-designer
-
-/acc-audit-documentation ─→ acc-documentation-auditor ──→ QA knowledge skills
-
-/acc-write-test ──────────→ acc-test-generator ─────────→ acc-testing-knowledge
-                                                          test create-* skills
-
-/acc-audit-test ──────────→ acc-test-auditor ───────────→ acc-testing-knowledge
-                                  │                       test analyze skills
-                                  └──→ (Task) acc-test-generator
-
-/acc-code-review ────────→ acc-code-review-coordinator ─→ 3 skills (direct)
-                                  │
-                                  ├──→ LOW: acc-psr-auditor, acc-test-auditor
-                                  ├──→ MEDIUM: acc-bug-hunter, acc-readability-reviewer
-                                  └──→ HIGH: acc-security-reviewer, acc-performance-reviewer,
-                                             acc-testability-reviewer, acc-ddd-auditor,
-                                             acc-architecture-auditor
+User Input → Command → Coordinator Agent → Specialized Agents (parallel via Task) → Skills → Output
 ```
 
-## Key Conventions
+**Composer Plugin:** `src/ComposerPlugin.php` subscribes to `POST_PACKAGE_INSTALL` and `POST_PACKAGE_UPDATE` events. Copies `.claude/` components to target project. Existing files never overwritten.
 
-- **`acc-` prefix** — all components use this to avoid conflicts
-- **`--` separator** — pass meta-instructions to any command:
-  - `/acc-audit-ddd ./src -- focus on aggregates`
-  - `/acc-code-review feature/auth high -- implement OAuth2`
-  - `/acc-commit -- use Russian for commit message`
-- **Skills < 500 lines** — extract details to `references/` folder
-- **Max 15 skills per agent** — exceeding indicates God-Agent antipattern
+## Adding Components
 
-### YAML Frontmatter (required at file start)
+Integration chain: **Skill → Agent (skills: frontmatter) → Command (Task tool)**
 
-**Command** (`.claude/commands/name.md`):
+### Command (`.claude/commands/name.md`)
 ```yaml
 ---
 description: Required
 allowed-tools: Optional
 model: Optional (sonnet/haiku/opus)
+argument-hint: Optional (e.g. "<path> [-- instructions]")
 ---
 ```
 
-**Agent** (`.claude/agents/name.md`):
+### Agent (`.claude/agents/name.md`)
 ```yaml
 ---
 name: Required
@@ -121,7 +60,9 @@ skills: Optional (list skill names)
 ---
 ```
 
-**Skill** (`.claude/skills/name/SKILL.md`):
+For coordinators (3+ phases), add `TaskCreate, TaskUpdate` to tools and include `acc-task-progress-knowledge` skill.
+
+### Skill (`.claude/skills/name/SKILL.md`)
 ```yaml
 ---
 name: Required (lowercase, hyphens)
@@ -129,20 +70,46 @@ description: Required (max 1024 chars)
 ---
 ```
 
-## Adding Components
+Max 500 lines — extract large content to `references/` folder.
 
-Integration chain: **Skill → Agent (skills: frontmatter) → Command (Task tool)**
+## Key Rules
 
-When adding components:
-1. Create component with correct YAML frontmatter
-2. Wire to parent (skill→agent, agent→command)
-3. Update docs: `README.md`, `docs/*.md`, `CHANGELOG.md`
-4. Run `make validate-claude`
+- **`acc-` prefix** — all components use this to avoid conflicts
+- **`--` separator** — pass meta-instructions: `/acc-audit-ddd ./src -- focus on aggregates`
+- **After changes** — run `make validate-claude`, update `docs/*.md` and `CHANGELOG.md`
+- **New components** — update corresponding `docs/commands.md`, `docs/agents.md`, or `docs/skills.md`
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| `docs/commands.md` | All slash commands with examples |
+| `docs/agents.md` | All agents with descriptions |
+| `docs/skills.md` | All skills by category |
+| `docs/hooks.md` | Available hooks |
+| `docs/component-flow.md` | Full architecture diagram |
+
+## CI/CD Commands
+
+```bash
+/acc-ci-setup               # Setup CI pipeline from scratch
+/acc-ci-fix                 # Fix CI pipeline issues
+/acc-ci-optimize            # Optimize CI pipeline performance
+/acc-audit-ci               # Audit CI configuration
+```
+
+## Versioning
+
+When releasing new version:
+1. Update `CHANGELOG.md` with new features
+2. Run `make validate-claude`
+3. Update component counts in `README.md`, `docs/*.md` if significantly changed
+4. Run `make release`
 
 ## Troubleshooting
 
-| Issue              | Solution                                                    |
-|--------------------|-------------------------------------------------------------|
-| Skill not loading  | Check `skills:` in agent frontmatter                        |
-| Agent not invoked  | Check command uses `Task` tool with correct `subagent_type` |
-| Validation fails   | Ensure frontmatter starts with `---`                        |
+| Issue | Solution |
+|-------|----------|
+| Skill not loading | Check `skills:` in agent frontmatter |
+| Agent not invoked | Check command uses `Task` tool with correct `subagent_type` |
+| Validation fails | Ensure frontmatter starts with `---` |

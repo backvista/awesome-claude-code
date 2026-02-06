@@ -34,12 +34,23 @@ Meta-instructions allow you to:
 | `/acc-audit-architecture` | `<path> [-- instructions]` | Multi-pattern architecture audit |
 | `/acc-audit-ddd` | `<path> [-- instructions]` | DDD compliance analysis |
 | `/acc-audit-psr` | `<path> [-- instructions]` | PSR compliance audit |
+| `/acc-audit-security` | `<path> [-- instructions]` | OWASP Top 10 + PHP security audit |
+| `/acc-audit-performance` | `<path> [-- instructions]` | N+1, memory, caching, complexity audit |
+| `/acc-audit-patterns` | `<path> [-- instructions]` | Design patterns + SOLID/GRASP audit |
+| `/acc-generate-ddd` | `<type> <name> [-- instructions]` | Generate DDD components (entity, VO, aggregate, etc.) |
+| `/acc-generate-psr` | `<psr> <name> [-- instructions]` | Generate PSR-compliant components |
+| `/acc-generate-patterns` | `<pattern> <name> [-- instructions]` | Generate design pattern implementations |
+| `/acc-refactor` | `<path> [-- instructions]` | Guided refactoring with analysis |
 | `/acc-write-documentation` | `<path> [-- instructions]` | Generate documentation |
 | `/acc-audit-documentation` | `<path> [-- instructions]` | Audit documentation quality |
 | `/acc-write-test` | `<path> [-- instructions]` | Generate tests for PHP code |
 | `/acc-audit-test` | `<path> [-- instructions]` | Audit test quality and coverage |
 | `/acc-code-review` | `[branch] [level] [-- task]` | Multi-level code review with task matching |
-| `/acc-fix-bug` | `<description\|file:line\|trace>` | Diagnose and fix bug with regression testing |
+| `/acc-bug-fix` | `<description\|file:line\|trace>` | Diagnose and fix bug with regression testing |
+| `/acc-ci-setup` | `<platform> [path] [-- instructions]` | Setup CI pipeline from scratch |
+| `/acc-ci-fix` | `<pipeline-url\|log-file\|description> [-- instructions]` | Fix CI pipeline issues with interactive approval |
+| `/acc-ci-optimize` | `[path] [-- focus areas]` | Optimize CI pipeline performance |
+| `/acc-audit-ci` | `[path] [-- focus areas]` | Comprehensive CI/CD audit |
 
 ---
 
@@ -413,15 +424,15 @@ Multi-level code review with git diff analysis and task matching.
 
 ---
 
-## `/acc-fix-bug`
+## `/acc-bug-fix`
 
-**Path:** `commands/acc-fix-bug.md`
+**Path:** `commands/acc-bug-fix.md`
 
 Automated bug diagnosis, fix generation, and regression testing.
 
 **Arguments:**
 ```
-/acc-fix-bug <description|file:line|stack-trace> [-- instructions]
+/acc-bug-fix <description|file:line|stack-trace> [-- instructions]
 ```
 
 | Argument | Required | Description |
@@ -437,12 +448,12 @@ Automated bug diagnosis, fix generation, and regression testing.
 
 **Examples:**
 ```bash
-/acc-fix-bug "NullPointerException in OrderService::process()"
-/acc-fix-bug src/Domain/Order.php:45 "off-by-one error in loop"
-/acc-fix-bug @storage/logs/laravel.log
-/acc-fix-bug "Payment fails for amounts > 1000" -- focus on validation
-/acc-fix-bug src/Service/Auth.php:78 -- skip tests
-/acc-fix-bug "Race condition in inventory" -- dry-run
+/acc-bug-fix "NullPointerException in OrderService::process()"
+/acc-bug-fix src/Domain/Order.php:45 "off-by-one error in loop"
+/acc-bug-fix @storage/logs/laravel.log
+/acc-bug-fix "Payment fails for amounts > 1000" -- focus on validation
+/acc-bug-fix src/Service/Auth.php:78 -- skip tests
+/acc-bug-fix "Race condition in inventory" -- dry-run
 ```
 
 **Meta-Instructions:**
@@ -466,6 +477,457 @@ Automated bug diagnosis, fix generation, and regression testing.
 - Diff of applied fix
 - Regression test file
 - Test execution results
+
+---
+
+## `/acc-audit-security`
+
+**Path:** `commands/acc-audit-security.md`
+
+Security audit covering OWASP Top 10 and PHP-specific vulnerabilities.
+
+**Arguments:**
+```
+/acc-audit-security <path> [-- instructions]
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `path` | **Yes** | Path to project or folder to audit |
+| `-- instructions` | No | Focus on specific security aspects |
+
+**Examples:**
+```bash
+/acc-audit-security ./src
+/acc-audit-security ./src/Api -- focus on OWASP A01-A03
+/acc-audit-security ./src/Payment -- check SQL injection and CSRF
+/acc-audit-security ./src -- skip A06 (vulnerable components)
+```
+
+**Checks:**
+- OWASP Top 10 (2021): Access Control, Crypto, Injection, etc.
+- PHP-specific: `unserialize()`, `eval()`, `shell_exec()`, type juggling
+- CWE identifiers and attack vectors
+- Remediation code examples
+
+---
+
+## `/acc-audit-performance`
+
+**Path:** `commands/acc-audit-performance.md`
+
+Performance audit focusing on database, memory, and algorithm efficiency.
+
+**Arguments:**
+```
+/acc-audit-performance <path> [-- instructions]
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `path` | **Yes** | Path to project or folder to audit |
+| `-- instructions` | No | Focus on specific performance aspects |
+
+**Examples:**
+```bash
+/acc-audit-performance ./src
+/acc-audit-performance ./src/Repository -- check N+1 queries
+/acc-audit-performance ./src -- focus on memory and caching
+/acc-audit-performance ./src/Domain -- analyze algorithm complexity
+```
+
+**Checks:**
+- N+1 query problems
+- Query efficiency (SELECT *, missing indexes)
+- Memory issues (large arrays, missing generators)
+- Caching opportunities
+- Algorithm complexity (O(n²) patterns)
+- Batch processing gaps
+- Connection pool issues
+- Serialization overhead
+
+---
+
+## `/acc-audit-patterns`
+
+**Path:** `commands/acc-audit-patterns.md`
+
+Design patterns audit with SOLID/GRASP compliance analysis.
+
+**Arguments:**
+```
+/acc-audit-patterns <path> [-- instructions]
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `path` | **Yes** | Path to project or folder to audit |
+| `-- instructions` | No | Focus on specific pattern categories |
+
+**Examples:**
+```bash
+/acc-audit-patterns ./src
+/acc-audit-patterns ./src/Infrastructure -- focus on stability patterns
+/acc-audit-patterns ./src -- check behavioral patterns only
+/acc-audit-patterns ./src -- skip SOLID analysis
+```
+
+**Checks:**
+- **Stability Patterns**: Circuit Breaker, Retry, Rate Limiter, Bulkhead
+- **Behavioral Patterns**: Strategy, State, Chain of Responsibility, Decorator, Null Object
+- **Creational Patterns**: Builder, Object Pool, Factory
+- **Integration Patterns**: Outbox, Saga, ADR
+- **SOLID Principles**: SRP, OCP, LSP, ISP, DIP
+- **GRASP Principles**: Information Expert, Creator, Controller, etc.
+
+---
+
+## `/acc-generate-ddd`
+
+**Path:** `commands/acc-generate-ddd.md`
+
+Generate DDD components for PHP 8.5 with tests and proper layer placement.
+
+**Arguments:**
+```
+/acc-generate-ddd <component-type> <ComponentName> [-- instructions]
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `component-type` | **Yes** | Component to generate (see list below) |
+| `ComponentName` | **Yes** | Name for the component |
+| `-- instructions` | No | Customize generation |
+
+**Examples:**
+```bash
+/acc-generate-ddd entity Order
+/acc-generate-ddd vo Email -- with DNS validation
+/acc-generate-ddd aggregate ShoppingCart -- with CartItem child
+/acc-generate-ddd command CreateOrder
+/acc-generate-ddd query GetUserOrders -- with pagination
+/acc-generate-ddd use-case ProcessPayment -- with retry logic
+/acc-generate-ddd repository Order -- Doctrine implementation
+/acc-generate-ddd dto OrderRequest -- for REST API
+/acc-generate-ddd acl StripePayment
+```
+
+**Supported Components:**
+
+| Component | Aliases | Layer |
+|-----------|---------|-------|
+| `entity` | `ent` | Domain |
+| `value-object` | `vo`, `valueobject` | Domain |
+| `aggregate` | `agg`, `aggregate-root` | Domain |
+| `domain-event` | `event`, `de` | Domain |
+| `repository` | `repo` | Domain + Infrastructure |
+| `domain-service` | `service`, `ds` | Domain |
+| `factory` | `fact` | Domain |
+| `specification` | `spec` | Domain |
+| `command` | `cmd` | Application |
+| `query` | `qry` | Application |
+| `use-case` | `usecase`, `uc` | Application |
+| `dto` | `data-transfer` | Application |
+| `acl` | `anti-corruption` | Infrastructure |
+
+---
+
+## `/acc-generate-psr`
+
+**Path:** `commands/acc-generate-psr.md`
+
+Generate PSR-compliant PHP components with tests.
+
+**Arguments:**
+```
+/acc-generate-psr <psr-number> <ComponentName> [-- instructions]
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `psr-number` | **Yes** | PSR standard: `psr-3`, `psr-6`, `psr-7`, etc. |
+| `ComponentName` | No | Name for the implementation |
+| `-- instructions` | No | Customize generation |
+
+**Examples:**
+```bash
+/acc-generate-psr psr-3 FileLogger
+/acc-generate-psr psr-15 AuthMiddleware
+/acc-generate-psr psr-6 RedisCache -- with TTL support
+/acc-generate-psr psr-7 -- generate full HTTP stack
+/acc-generate-psr psr-20 FrozenClock -- for testing
+```
+
+**Supported PSRs:**
+- PSR-3 (Logger), PSR-6 (Cache), PSR-7 (HTTP Message)
+- PSR-11 (Container), PSR-13 (Links), PSR-14 (Events)
+- PSR-15 (Middleware), PSR-16 (Simple Cache)
+- PSR-17 (HTTP Factories), PSR-18 (HTTP Client), PSR-20 (Clock)
+
+---
+
+## `/acc-generate-patterns`
+
+**Path:** `commands/acc-generate-patterns.md`
+
+Generate design pattern implementations with DI configuration.
+
+**Arguments:**
+```
+/acc-generate-patterns <pattern-name> <ComponentName> [-- instructions]
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `pattern-name` | **Yes** | Pattern to generate (see list below) |
+| `ComponentName` | **Yes** | Context/component name |
+| `-- instructions` | No | Customize generation |
+
+**Examples:**
+```bash
+/acc-generate-patterns circuit-breaker PaymentGateway
+/acc-generate-patterns strategy PaymentProcessor
+/acc-generate-patterns saga CheckoutWorkflow
+/acc-generate-patterns builder UserProfile -- with validation
+/acc-generate-patterns outbox Order -- with Doctrine integration
+```
+
+**Supported Patterns:**
+- **Stability**: `circuit-breaker`, `retry`, `rate-limiter`, `bulkhead`
+- **Behavioral**: `strategy`, `state`, `chain-of-responsibility`, `decorator`, `null-object`
+- **Creational**: `builder`, `object-pool`, `factory`
+- **Integration**: `outbox`, `saga`, `action`, `responder`
+
+---
+
+## `/acc-refactor`
+
+**Path:** `commands/acc-refactor.md`
+
+Guided refactoring with analysis and pattern application.
+
+**Arguments:**
+```
+/acc-refactor <path> [-- instructions]
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `path` | **Yes** | Path to file or folder to refactor |
+| `-- instructions` | No | Focus or customize refactoring |
+
+**Examples:**
+```bash
+/acc-refactor ./src/Domain/OrderService.php
+/acc-refactor ./src/Application -- focus on SOLID violations
+/acc-refactor ./src -- extract value objects only
+/acc-refactor ./src/Service -- analyze testability, skip style
+/acc-refactor ./src -- quick wins only
+```
+
+**Analyzes:**
+- Code smells (God Class, Long Method, Primitive Obsession, etc.)
+- SOLID violations
+- Testability issues (DI, side effects, coverage)
+- Readability (naming, complexity, magic values)
+
+**Provides:**
+- Prioritized refactoring roadmap
+- Generator commands for automated fixes
+- Quick wins for immediate application
+- Test coverage warnings
+- Safety guidelines
+
+---
+
+## `/acc-ci-setup`
+
+**Path:** `commands/acc-ci-setup.md`
+
+Setup CI pipeline from scratch for PHP projects.
+
+**Arguments:**
+```
+/acc-ci-setup <platform> [path] [-- instructions]
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `platform` | **Yes** | CI platform: `github` or `gitlab` |
+| `path` | No | Project path (default: `./`) |
+| `-- instructions` | No | Customize pipeline generation |
+
+**Examples:**
+```bash
+/acc-ci-setup github
+/acc-ci-setup gitlab ./my-project
+/acc-ci-setup github -- include Docker, blue-green deploy
+/acc-ci-setup gitlab -- focus on testing, high coverage
+/acc-ci-setup github -- minimal, only lint and tests
+```
+
+**Generates:**
+- CI workflow (`.github/workflows/ci.yml` or `.gitlab-ci.yml`)
+- Static analysis configs (PHPStan, Psalm, PHP-CS-Fixer, DEPTRAC)
+- Test configuration (PHPUnit)
+- Docker files (if requested)
+- Deployment configuration (if requested)
+
+---
+
+## `/acc-ci-fix`
+
+**Path:** `commands/acc-ci-fix.md`
+
+Diagnose and fix CI pipeline issues with interactive approval.
+
+**Arguments:**
+```
+/acc-ci-fix <pipeline-url|log-file|description> [-- instructions]
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `pipeline-url` | No | GitHub/GitLab pipeline URL |
+| `log-file` | No | Path to log file |
+| `description` | No | Text description of the issue |
+| `-- instructions` | No | Meta-instructions for fix process |
+
+**Input Formats:**
+- Pipeline URL: `https://github.com/org/repo/actions/runs/123`
+- Log file: `./ci-error.log` or `@storage/logs/ci.log`
+- Description: `"PHPStan fails with memory error"`
+
+**Examples:**
+```bash
+# Interactive mode (default) - diagnoses, shows fix, asks approval
+/acc-ci-fix "PHPStan memory exhausted"
+/acc-ci-fix https://github.com/org/repo/actions/runs/12345
+/acc-ci-fix ./ci-error.log
+
+# Dry run - show diagnosis and fix without applying or asking
+/acc-ci-fix ./ci.log -- dry-run
+
+# Auto-apply - apply fix without asking (for scripts/CI)
+/acc-ci-fix ./ci.log -- auto-apply
+
+# With additional options
+/acc-ci-fix ./logs/ci.txt -- verbose, skip-validation
+/acc-ci-fix "Tests timeout" -- focus on Docker
+```
+
+**Meta-Instructions:**
+| Instruction | Effect |
+|-------------|--------|
+| `-- dry-run` | Show diagnosis and fix without applying or asking |
+| `-- auto-apply` | Apply fix without asking (for CI/scripts) |
+| `-- skip-validation` | Don't run local syntax checks |
+| `-- verbose` | Include detailed diagnosis output |
+| `-- focus on <area>` | Prioritize specific area (tests, lint, docker) |
+
+**Supported Issue Types:**
+
+| Issue Type | Auto-Fix Support |
+|------------|------------------|
+| Memory exhausted | ✅ Full |
+| Composer conflict | ✅ Full |
+| PHPStan baseline | ✅ Full |
+| Service not ready | ✅ Full |
+| Docker build fail | ⚠️ Partial |
+| Timeout | ✅ Full |
+| Permission denied | ✅ Full |
+| Cache miss | ✅ Full |
+| PHP extension | ✅ Full |
+| Env variable | ✅ Full |
+
+**Workflow:**
+1. **Parse Input** — URL, log file, or description
+2. **Diagnose** — `acc-ci-debugger` identifies failure type and root cause
+3. **Generate Fix** — `acc-ci-fixer` creates fix preview
+4. **Ask Approval** — Unless `-- dry-run` or `-- auto-apply`
+5. **Apply or Skip** — Based on user response
+6. **Validate** — Run local syntax checks (unless `-- skip-validation`)
+7. **Report** — Summary with diff and rollback instructions
+
+---
+
+## `/acc-ci-optimize`
+
+**Path:** `commands/acc-ci-optimize.md`
+
+Optimize CI/CD pipeline performance.
+
+**Arguments:**
+```
+/acc-ci-optimize [path] [-- focus areas]
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `path` | No | Project path (default: `./`) |
+| `-- focus areas` | No | Specific optimization targets |
+
+**Examples:**
+```bash
+/acc-ci-optimize
+/acc-ci-optimize -- focus on caching, reduce cache misses
+/acc-ci-optimize -- optimize Docker build time
+/acc-ci-optimize -- split tests into parallel jobs
+/acc-ci-optimize ./my-project -- target 10 min total
+```
+
+**Optimizes:**
+- Caching (Composer, Docker layers, artifacts)
+- Parallelization (independent jobs, test splitting)
+- Docker builds (multi-stage, layer ordering)
+- Job dependencies (fail fast, timeouts)
+
+**Output:**
+- Before/after metrics comparison
+- Specific changes to apply
+- Estimated time savings
+
+---
+
+## `/acc-audit-ci`
+
+**Path:** `commands/acc-audit-ci.md`
+
+Comprehensive CI/CD audit for PHP projects.
+
+**Arguments:**
+```
+/acc-audit-ci [path] [-- focus areas]
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `path` | No | Project path (default: `./`) |
+| `-- focus areas` | No | Focus on specific audit areas |
+
+**Examples:**
+```bash
+/acc-audit-ci
+/acc-audit-ci -- focus on security
+/acc-audit-ci -- performance only
+/acc-audit-ci ./my-project -- security and testing, skip deployment
+/acc-audit-ci -- quick audit
+```
+
+**Audit Categories:**
+- **Pipeline**: Stage organization, dependencies, triggers
+- **Static Analysis**: PHPStan level, Psalm, DEPTRAC rules
+- **Testing**: Coverage thresholds, test organization
+- **Security**: Secrets handling, permissions, dependencies
+- **Performance**: Caching efficiency, parallelization
+- **Docker**: Image size, layer optimization, security
+- **Deployment**: Zero-downtime, health checks, rollback
+
+**Output:**
+- Executive summary with scores
+- Issues by severity (Critical/High/Medium/Low)
+- Prioritized recommendations
+- Action items
 
 ---
 

@@ -25,7 +25,7 @@ Then in Claude Code:
 
 ```bash
 /acc-code-review                    # Review current branch
-/acc-fix-bug "NullPointerException" # Diagnose and fix bug
+/acc-bug-fix "NullPointerException" # Diagnose and fix bug
 /acc-audit-architecture ./src       # Full architecture audit
 /acc-write-documentation            # Write documentation
 /acc-write-test                     # Write test
@@ -101,20 +101,18 @@ Backups are stored in `.claude.backup.YYYY-MM-DD-HHMMSS/`.
 3. Move domain logic from Application to Domain layer
 ```
 
-### Code Generation
+### Claude Component Generation
 
 ```bash
 /acc-write-claude-component
-> What would you like to create? Aggregate
-> Aggregate name? Order
-> Root entity properties? id:OrderId, customer:CustomerId, items:OrderItem[], status:OrderStatus
+> What would you like to create? command
+> Command name? validate-order
+> What should it do? Validate Order aggregate invariants
+> Should it use agents? Yes, acc-ddd-auditor
 ```
 
 Generates:
-- `src/Domain/Order/Order.php` — Aggregate root with invariants
-- `src/Domain/Order/OrderRepositoryInterface.php` — Repository interface
-- `src/Domain/Order/Event/OrderCreated.php` — Domain event
-- `tests/Unit/Domain/Order/OrderTest.php` — Unit tests
+- `.claude/commands/validate-order.md` — Custom slash command
 
 ## Features
 
@@ -123,9 +121,9 @@ Generates:
 Automated bug diagnosis, fix generation, and regression testing:
 
 ```bash
-/acc-fix-bug "NullPointerException in OrderService::process()"
-/acc-fix-bug src/Domain/Order.php:45 "off-by-one error"
-/acc-fix-bug @storage/logs/error.log -- focus on validation
+/acc-bug-fix "NullPointerException in OrderService::process()"
+/acc-bug-fix src/Domain/Order.php:45 "off-by-one error"
+/acc-bug-fix @storage/logs/error.log -- focus on validation
 ```
 
 | Phase | Agent | What It Does |
@@ -224,7 +222,7 @@ COMMAND ───────→ COORDINATOR ───────→ AGENTS ─
                                               ├──→ creational-generator ─→ builder, factory, object-pool
                                               └──→ integration-generator → saga, outbox, acl
 
-/acc-fix-bug ─────────────→ bug-fix-coordinator
+/acc-bug-fix ─────────────→ bug-fix-coordinator
                                     │
                                     ├──→ bug-hunter ────────────→ detection-skills ─────→ (9 analyzers)
                                     ├──→ bug-fixer ─────────────→ fix-knowledge ────────→ generate-bug-fix
@@ -243,7 +241,7 @@ COMMAND ───────→ COORDINATOR ───────→ AGENTS ─
 /acc-docker ──────────────→ (direct generation) ────────→ docker-knowledge ─────→ dockerfile-template
                                                                                    compose-template
 
-/acc-fix-ci ──────────────→ ci-coordinator
+/acc-ci-fix ──────────────→ ci-coordinator
                                     │
                                     ├──→ bug-hunter ────────────→ detection-skills
                                     ├──→ bug-fixer ─────────────→ fix-knowledge ────────→ generate-bug-fix
@@ -266,24 +264,29 @@ See [Component Flow](docs/component-flow.md) for the complete dependency graph.
 
 | Document | Description |
 |----------|-------------|
-| [Commands](docs/commands.md) | 12 slash commands with examples |
-| [Agents](docs/agents.md) | 31 specialized subagents |
-| [Skills](docs/skills.md) | 139 skills (knowledge, generators, analyzers) |
+| [Commands](docs/commands.md) | 23 slash commands with examples |
+| [Agents](docs/agents.md) | 42 specialized subagents |
+| [Skills](docs/skills.md) | 157 skills (knowledge, generators, analyzers) |
 | [Hooks](docs/hooks.md) | 21 PHP/DDD hooks |
 | [Component Flow](docs/component-flow.md) | Architecture and dependency graph |
 | [Quick Reference](docs/quick-reference.md) | Paths, formats, best practices |
 
 ## Use Cases
 
-| Scenario | Command | Result |
-|----------|---------|--------|
-| Fix a bug | `/acc-fix-bug "NullPointerException"` | Diagnosis + fix + regression test |
-| Review PR before merge | `/acc-code-review feature/auth high` | Security, performance, DDD compliance report |
-| Audit legacy codebase | `/acc-audit-architecture ./src` | Pattern detection + compliance score |
-| Create DDD Aggregate | `/acc-write-claude-component` → Aggregate | Root + events + repository + tests |
-| Generate stability pattern | `/acc-write-claude-component` → Circuit Breaker | Full implementation with tests |
-| Audit test quality | `/acc-audit-test ./tests` | Coverage gaps, test smells, recommendations |
-| Generate documentation | `/acc-write-documentation ./src` | README + ARCHITECTURE.md + diagrams |
+| Scenario               | Command                               | Result                                       |
+|------------------------|---------------------------------------|----------------------------------------------|
+| Fix a bug              | `/acc-bug-fix "NullPointerException"` | Diagnosis + fix + regression test            |
+| Review PR before merge | `/acc-code-review feature/auth high`  | Security, performance, DDD compliance report |
+| Audit legacy codebase  | `/acc-audit-architecture ./src`       | Pattern detection + compliance score         |
+| Security audit         | `/acc-audit-security ./src`           | OWASP Top 10 + PHP-specific vulnerabilities  |
+| Performance audit      | `/acc-audit-performance ./src`        | N+1 queries, memory issues, caching gaps     |
+| Design patterns audit  | `/acc-audit-patterns ./src`           | Stability, behavioral, creational patterns   |
+| Generate PSR component | `/acc-generate-psr psr-15 Auth`       | PSR-compliant implementation with tests      |
+| Generate design pattern| `/acc-generate-patterns strategy Pay` | Pattern implementation with DI configuration |
+| Refactor code          | `/acc-refactor ./src/OrderService`    | Analysis + prioritized roadmap + generators  |
+| Create Claude command  | `/acc-write-claude-component`         | Create command, agent, skills                |
+| Audit test quality     | `/acc-audit-test ./tests`             | Coverage gaps, test smells, recommendations  |
+| Generate documentation | `/acc-write-documentation ./src`      | README + ARCHITECTURE.md + diagrams          |
 
 ## Supported Patterns
 

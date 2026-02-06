@@ -1,5 +1,4 @@
 Features:
-* CI Fixes command
 * Docker сommand
 
 ## Structural Patterns (GoF)

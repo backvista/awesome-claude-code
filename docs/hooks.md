@@ -2,6 +2,47 @@
 
 Hooks execute shell commands in response to Claude Code events. Copy the hooks you need to your `.claude/settings.json`.
 
+## Table of Contents
+
+- [Available Hooks](#available-hooks)
+  - [PSR & Code Style](#psr--code-style)
+  - [DDD & Architecture](#ddd--architecture)
+  - [Code Quality](#code-quality)
+  - [Security & Safety](#security--safety)
+  - [Git & Workflow](#git--workflow)
+- [Hook Types](#hook-types)
+- [Hooks Reference](#hooks-reference)
+  - [Auto-format PHP](#auto-format-php)
+  - [Require strict_types](#require-strict_types)
+  - [Protect vendor/](#protect-vendor)
+  - [PHP Syntax Check](#php-syntax-check)
+  - [Auto-run Tests](#auto-run-tests)
+  - [Final Domain Classes](#final-domain-classes)
+  - [File Size Check](#file-size-check)
+  - [PHPDoc Required](#phpdoc-required)
+- [DDD & Architecture Hooks](#ddd--architecture-hooks)
+  - [Readonly Classes Check](#readonly-classes-check)
+  - [Value Object Immutability](#value-object-immutability)
+  - [Aggregate Protection](#aggregate-protection)
+  - [No Direct SQL](#no-direct-sql)
+- [Code Quality Hooks](#code-quality-hooks)
+  - [Constructor Injection Only](#constructor-injection-only)
+  - [No Public Properties](#no-public-properties)
+  - [No Sleep/Exit](#no-sleepexit)
+- [Security & Safety Hooks](#security--safety-hooks)
+  - [No var_dump/print_r](#no-var_dumpprint_r)
+  - [No Hardcoded Paths](#no-hardcoded-paths)
+  - [No Global State](#no-global-state)
+- [PreToolUse Hooks](#pretooluse-hooks)
+  - [No Direct Commits](#no-direct-commits)
+  - [Protect Migrations](#protect-migrations)
+  - [Test Without Source](#test-without-source)
+- [Installation](#installation)
+- [Environment Variables](#environment-variables)
+- [Tips](#tips)
+
+---
+
 ## Available Hooks
 
 ### PSR & Code Style

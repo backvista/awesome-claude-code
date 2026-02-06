@@ -110,6 +110,10 @@ Depending on the choice, ask:
 - What tasks does it solve?
 - What tools are needed?
 - Which model (sonnet/haiku/opus/inherit)?
+- Is it a coordinator (orchestrates other agents)?
+  - If yes: add TaskCreate, TaskUpdate to tools
+  - Add acc-task-progress-knowledge to skills
+  - Add "Progress Tracking" section with 3-5 phases
 
 **For skill:**
 - Skill name
@@ -127,6 +131,35 @@ Depending on the choice, ask:
 Use the acc-claude-code-expert agent to create a quality component.
 
 Load the acc-claude-code-knowledge skill for access to formats and best practices.
+
+**For coordinator agents (orchestrates multiple agents):**
+
+1. Add `TaskCreate, TaskUpdate` to tools in frontmatter
+2. Add `acc-task-progress-knowledge` to skills
+3. Add "Progress Tracking" section with pattern:
+
+```markdown
+## Progress Tracking
+
+Before executing workflow, create tasks for user visibility:
+
+```
+TaskCreate: subject="Phase 1 name", description="What happens", activeForm="Doing phase 1..."
+TaskCreate: subject="Phase 2 name", description="What happens", activeForm="Doing phase 2..."
+TaskCreate: subject="Phase 3 name", description="What happens", activeForm="Doing phase 3..."
+```
+
+For each phase:
+1. `TaskUpdate(taskId, status: in_progress)` — before starting
+2. ... execute phase work ...
+3. `TaskUpdate(taskId, status: completed)` — after finishing
+```
+
+**Phase naming guidelines:**
+- 3-5 major phases per coordinator
+- `subject` — imperative form (e.g., "Diagnose bug")
+- `activeForm` — present continuous (e.g., "Diagnosing bug...")
+- `description` — brief explanation of what happens
 
 ### Step 4: Validation
 

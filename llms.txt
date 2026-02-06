@@ -4,7 +4,7 @@
 
 ## Quick Facts
 
-- 12 commands, 31 agents, 139 skills, 10 hooks
+- 23 commands, 42 agents, 157 skills, 21 hooks
 - PHP 8.5, PSR-12, readonly classes
 - DDD/CQRS/Hexagonal patterns
 - Testing, Documentation generation and audit
@@ -33,7 +33,7 @@ Components auto-copy to `.claude/` directory.
 | `/acc-write-test <path>` | Generate tests for file/folder |
 | `/acc-audit-test <path>` | Audit test quality |
 | `/acc-code-review [branch] [level]` | Multi-level code review |
-| `/acc-fix-bug <target>` | Automated bug diagnosis and fix |
+| `/acc-bug-fix <target>` | Automated bug diagnosis and fix |
 
 ## Agents
 
@@ -122,7 +122,7 @@ Components auto-copy to `.claude/` directory.
 /acc-audit-test ./tests
 
 # Fix bug by description or file reference
-/acc-fix-bug ./src/Domain/Order/Order.php:42
+/acc-bug-fix ./src/Domain/Order/Order.php:42
 ```
 
 ## Links

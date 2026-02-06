@@ -68,63 +68,48 @@ allowed-tools: Optional
 
 ```
 .claude/
-├── commands/
-│   ├── acc-audit-architecture.md
-│   ├── acc-audit-claude-components.md
-│   ├── acc-audit-ddd.md
-│   ├── acc-audit-documentation.md
-│   ├── acc-audit-psr.md
-│   ├── acc-audit-test.md
-│   ├── acc-write-claude-component.md
-│   ├── acc-commit.md
-│   ├── acc-write-documentation.md
-│   ├── acc-write-test.md
+├── commands/                     # 23 commands
+│   ├── acc-audit-*.md            # Audit commands (8): architecture, ci, claude-components,
+│   │                             #   ddd, documentation, patterns, performance, psr, security, test
+│   ├── acc-bug-fix.md
+│   ├── acc-ci-*.md               # CI commands (3): setup, fix, optimize
 │   ├── acc-code-review.md
-│   └── acc-fix-bug.md
-├── agents/
-│   ├── acc-architecture-auditor.md
-│   ├── acc-architecture-generator.md
-│   ├── acc-behavioral-auditor.md
-│   ├── acc-behavioral-generator.md
-│   ├── acc-claude-code-expert.md
-│   ├── acc-creational-auditor.md
-│   ├── acc-creational-generator.md
-│   ├── acc-ddd-auditor.md
-│   ├── acc-ddd-generator.md
-│   ├── acc-documentation-auditor.md
-│   ├── acc-documentation-writer.md
-│   ├── acc-diagram-designer.md
-│   ├── acc-integration-auditor.md
-│   ├── acc-integration-generator.md
-│   ├── acc-pattern-auditor.md
-│   ├── acc-pattern-generator.md
-│   ├── acc-psr-auditor.md
-│   ├── acc-psr-generator.md
-│   ├── acc-stability-auditor.md
-│   ├── acc-stability-generator.md
-│   ├── acc-structural-auditor.md
-│   ├── acc-test-auditor.md
-│   ├── acc-test-generator.md
-│   ├── acc-code-review-coordinator.md
-│   ├── acc-bug-hunter.md
-│   ├── acc-security-reviewer.md
-│   ├── acc-performance-reviewer.md
-│   ├── acc-readability-reviewer.md
-│   ├── acc-testability-reviewer.md
-│   ├── acc-bug-fix-coordinator.md
-│   └── acc-bug-fixer.md
-├── skills/
-│   ├── acc-*-knowledge/          # 22 knowledge skills
+│   ├── acc-commit.md
+│   ├── acc-generate-*.md         # Generate commands (3): ddd, patterns, psr
+│   ├── acc-refactor.md
+│   ├── acc-write-*.md            # Write commands (3): claude-component, documentation, test
+│   └── ...
+├── agents/                       # 42 agents
+│   ├── acc-*-auditor.md          # Auditors (12): architecture, behavioral, creational,
+│   │                             #   ddd, documentation, integration, pattern, psr,
+│   │                             #   stability, structural, test
+│   ├── acc-*-generator.md        # Generators (7): architecture, behavioral, creational,
+│   │                             #   ddd, integration, pattern, psr, stability
+│   ├── acc-*-coordinator.md      # Coordinators (4): bug-fix, ci, code-review, refactor
+│   ├── acc-*-reviewer.md         # Reviewers (4): performance, readability, security, testability
+│   ├── acc-ci-*.md               # CI agents (9): ci-coordinator, ci-debugger, ci-fixer,
+│   │                             #   ci-security-agent, deployment-agent, docker-agent,
+│   │                             #   pipeline-architect, pipeline-optimizer,
+│   │                             #   static-analysis-agent, test-pipeline-agent
+│   └── ...
+├── skills/                       # 157 skills
+│   ├── acc-*-knowledge/          # 25 knowledge skills
 │   ├── acc-check-*/              # 55 analyzer skills
-│   ├── acc-create-*/             # 49 generator skills
-│   └── acc-*-template/           # 9 template skills
+│   ├── acc-find-*/               # 9 bug detection skills
+│   ├── acc-detect-*/             # 6 detection skills
+│   ├── acc-analyze-*/            # 4 analysis skills
+│   ├── acc-create-*/             # 57 generator skills
+│   ├── acc-*-template/           # 9 template skills
+│   └── acc-*/                    # 7 other skills (estimate, suggest, bug-*)
 └── settings.json
 
-docs/                       # Documentation (root level)
+docs/                             # Documentation (root level)
 ├── commands.md
 ├── agents.md
 ├── skills.md
 ├── component-flow.md
+├── hooks.md
+├── mcp.md
 └── quick-reference.md
 ```
 
@@ -132,14 +117,14 @@ docs/                       # Documentation (root level)
 
 | Component | Count |
 |-----------|-------|
-| Commands | 12 |
-| Agents | 31 |
-| Knowledge Skills | 22 |
-| Analyzer Skills | 55 |
-| Generator Skills | 49 |
+| Commands | 23 |
+| Agents | 42 |
+| Knowledge Skills | 25 |
+| Analyzer Skills | 59 |
+| Generator Skills | 57 |
 | Template Skills | 9 |
-| Other Skills | 4 |
-| **Total Skills** | **139** |
+| Other Skills | 7 |
+| **Total Skills** | **157** |
 
 ---
 

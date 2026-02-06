@@ -1,0 +1,209 @@
+---
+description: Performance audit. Detects N+1 queries, memory issues, caching gaps, inefficient loops, batch processing problems, algorithm complexity, connection pools, serialization overhead.
+allowed-tools: Read, Grep, Glob, Task
+model: sonnet
+argument-hint: <path> [-- additional instructions]
+---
+
+# Performance Audit
+
+Perform a comprehensive performance audit focusing on database queries, memory usage, caching, and algorithm efficiency.
+
+## Input Parsing
+
+Parse `$ARGUMENTS` to extract path and optional meta-instructions:
+
+```
+Format: <path> [-- <meta-instructions>]
+
+Examples:
+- /acc-audit-performance ./src
+- /acc-audit-performance ./src/Repository -- check N+1 queries
+- /acc-audit-performance ./src -- focus on memory and caching
+- /acc-audit-performance ./src/Domain -- analyze algorithm complexity
+```
+
+**Parsing rules:**
+1. Split `$ARGUMENTS` by ` -- ` (space-dash-dash-space)
+2. First part = **path** (required, default: current directory)
+3. Second part = **meta-instructions** (optional, focus areas)
+
+## Target
+
+- **Path**: First part of `$ARGUMENTS` (before `--`)
+- **Meta-instructions**: Second part (after `--`) — customize audit focus
+
+If meta-instructions provided, adjust audit to:
+- Focus on specific performance categories
+- Skip categories if requested
+- Apply additional depth to specific areas
+- Modify output verbosity
+
+## Pre-flight Check
+
+1. Verify the path exists:
+   - If `$ARGUMENTS` is empty, ask user for the project path
+   - If path doesn't exist, report error and stop
+
+2. Verify it's a PHP project:
+   - Check for `composer.json` or `*.php` files
+   - If not a PHP project, report and stop
+
+## Instructions
+
+Use the `acc-performance-reviewer` agent to perform a comprehensive performance audit:
+
+```
+Task tool with subagent_type="acc-performance-reviewer"
+prompt: "Perform performance audit on [PATH]. [META-INSTRUCTIONS if provided]
+
+Analyze for:
+1. N+1 Query Problems — queries inside loops, missing eager loading
+2. Query Efficiency — SELECT *, missing indexes, full table scans
+3. Memory Issues — large arrays, missing generators, unbounded loading
+4. Caching Strategy — missing cache opportunities, repeated expensive operations
+5. Unnecessary Loops — nested loop inefficiency, redundant iterations
+6. Lazy Loading Problems — premature loading, missing pagination
+7. Batch Processing — single-item vs bulk operations, transaction overhead
+8. Algorithm Complexity — O(n²) patterns, exponential growth
+9. Connection Pool Issues — leaks, connections in loops, missing cleanup
+10. Serialization Overhead — large objects, N+1 during serialization
+
+Provide:
+- Severity classification (Critical/Major/Minor)
+- Performance impact estimates
+- Current vs optimal complexity
+- Code examples (problematic and optimized)"
+```
+
+## Analysis Scope
+
+### Performance Categories
+
+| Category | Impact | Common Issues |
+|----------|--------|---------------|
+| N+1 Queries | Database overload | Queries in foreach, lazy loading |
+| Query Efficiency | Slow responses | SELECT *, missing indexes |
+| Memory Issues | OOM errors | Large collections, no generators |
+| Caching | Repeated work | No cache, cache stampede |
+| Unnecessary Loops | CPU waste | O(n²), redundant iterations |
+| Lazy Loading | Memory bloat | Load everything, no pagination |
+| Batch Processing | I/O overhead | Single inserts in loops |
+| Algorithm Complexity | Timeouts | Exponential algorithms |
+| Connection Pool | Resource exhaustion | Leaks, no cleanup |
+| Serialization | API latency | Large JSON, circular refs |
+
+### Detection Patterns
+
+```php
+// N+1 Query (Critical)
+foreach ($orders as $order) {
+    $customer = $customerRepo->find($order->customerId); // Query per iteration
+}
+
+// Memory Issue (Major)
+$allUsers = $userRepo->findAll(); // Loads millions into memory
+
+// Algorithm Complexity (Major)
+foreach ($items as $item) {
+    if (in_array($item->id, $processedIds)) { ... } // O(n) inside O(n) = O(n²)
+}
+
+// Missing Batch (Major)
+foreach ($entities as $entity) {
+    $em->persist($entity);
+    $em->flush(); // Should batch outside loop
+}
+```
+
+## Expected Output
+
+A structured markdown report containing:
+
+### 1. Executive Summary
+- Total issues found by severity
+- Estimated performance impact
+- Critical hot paths identified
+
+### 2. Performance Dashboard
+
+| Category | Issues | Impact | Priority |
+|----------|--------|--------|----------|
+| 🔴 N+1 Queries | 5 | High DB load | Critical |
+| 🟠 Memory Issues | 3 | OOM risk | High |
+| 🟡 Caching Gaps | 8 | Latency | Medium |
+
+### 3. Critical Performance Issues
+
+For each critical issue:
+
+```markdown
+### [Category]: [Brief Description]
+
+**Severity:** 🔴 Critical
+**Location:** `file.php:line`
+**Impact:** [Estimated performance impact]
+
+**Issue:**
+[Detailed description]
+
+**Current Complexity:** O(n²)
+**Optimal Complexity:** O(n)
+
+**Problematic Code:**
+```php
+// Slow code
+```
+
+**Optimized Solution:**
+```php
+// Fast code
+```
+
+**Expected Improvement:**
+[Estimated improvement: queries, latency, memory]
+```
+
+### 4. Major Issues
+
+[Same format as Critical]
+
+### 5. Minor Issues / Suggestions
+
+[Condensed list format]
+
+### 6. Hot Path Analysis
+
+```
+Request Flow: Controller → Service → Repository → Database
+                  │           │           │
+                  │           │           └─ 5 queries (N+1)
+                  │           └─ 200ms (caching opportunity)
+                  └─ Total: 450ms (target: 100ms)
+```
+
+### 7. Optimization Roadmap
+
+| Priority | Action | Location | Expected Gain |
+|----------|--------|----------|---------------|
+| 1 | Add eager loading | `OrderRepository.php:45` | -50 queries |
+| 2 | Implement Redis cache | `ProductService.php:78` | -200ms |
+| 3 | Use generator | `ReportGenerator.php:120` | -500MB RAM |
+
+### 8. Performance Metrics Targets
+
+| Metric | Current | Target | Status |
+|--------|---------|--------|--------|
+| Queries per request | 50 | <10 | ❌ |
+| Memory peak | 256MB | <64MB | ❌ |
+| Response time | 450ms | <100ms | ❌ |
+| Cache hit ratio | 20% | >80% | ❌ |
+
+## Usage Examples
+
+```bash
+/acc-audit-performance ./src
+/acc-audit-performance ./src/Repository -- focus on N+1 and query efficiency
+/acc-audit-performance ./src/Application -- check memory and batch processing
+/acc-audit-performance . -- comprehensive analysis with profiling suggestions
+```

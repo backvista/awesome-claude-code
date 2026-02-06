@@ -2,15 +2,47 @@
 
 Knowledge bases and code generators. Skills provide domain expertise and code generation templates for agents.
 
+## Table of Contents
+
+- [Skill Types](#skill-types)
+- [How Skills Work](#how-skills-work)
+- [Knowledge Skills](#knowledge-skills)
+- [Analyzer Skills](#analyzer-skills)
+  - [Architecture Analyzers](#architecture-analyzers)
+  - [Bug Detection Skills](#bug-detection-skills)
+  - [Bug Fix Skills](#bug-fix-skills)
+  - [Security Review Skills](#security-review-skills)
+  - [Performance Review Skills](#performance-review-skills)
+  - [Readability Review Skills](#readability-review-skills)
+  - [Testability Review Skills](#testability-review-skills)
+  - [CI/CD Analyzer Skills](#cicd-analyzer-skills)
+  - [Other Skills](#other-skills)
+- [Generator Skills](#generator-skills)
+  - [DDD Components](#ddd-components)
+  - [CQRS Components](#cqrs-components)
+  - [Stability Patterns](#stability-patterns)
+  - [Integration Patterns](#integration-patterns)
+  - [Behavioral Patterns](#behavioral-patterns)
+  - [Creational Patterns](#creational-patterns)
+  - [Presentation Patterns (ADR)](#presentation-patterns-adr)
+  - [PSR Implementations](#psr-implementations)
+  - [Testing](#testing)
+  - [CI/CD Config Generators](#cicd-config-generators)
+  - [Docker Skills](#docker-skills)
+  - [Deployment Skills](#deployment-skills)
+  - [Documentation Templates](#documentation-templates)
+
+---
+
 ## Skill Types
 
 | Type | Count | Purpose | Example |
 |------|-------|---------|---------|
-| **Knowledge** | 22 | Provide expertise and best practices | `acc-ddd-knowledge` |
-| **Analyzer** | 55 | Detect violations and antipatterns | `acc-analyze-solid-violations` |
-| **Generator** | 49 | Generate PHP code with tests | `acc-create-entity` |
+| **Knowledge** | 26 | Provide expertise and best practices | `acc-ddd-knowledge` |
+| **Analyzer** | 59 | Detect violations and antipatterns | `acc-analyze-solid-violations` |
+| **Generator** | 57 | Generate PHP code with tests | `acc-create-entity` |
 | **Template** | 9 | Documentation templates | `acc-readme-template` |
-| **Other** | 4 | Estimation, suggestions, regression prevention | `acc-estimate-complexity` |
+| **Other** | 7 | Estimation, suggestions, regression prevention | `acc-estimate-complexity` |
 
 ## How Skills Work
 
@@ -48,6 +80,10 @@ Knowledge bases for architecture audits and best practices.
 | `acc-diagram-knowledge` | `skills/acc-diagram-knowledge/` | Mermaid syntax, C4 model, diagram types |
 | `acc-documentation-qa-knowledge` | `skills/acc-documentation-qa-knowledge/` | Quality checklists, audit criteria |
 | `acc-testing-knowledge` | `skills/acc-testing-knowledge/` | Testing pyramid, AAA, naming, isolation, DDD testing |
+| `acc-ci-pipeline-knowledge` | `skills/acc-ci-pipeline-knowledge/` | CI/CD platforms, stages, caching, parallelization |
+| `acc-ci-tools-knowledge` | `skills/acc-ci-tools-knowledge/` | PHPStan levels, Psalm, CS-Fixer, DEPTRAC, Rector |
+| `acc-deployment-knowledge` | `skills/acc-deployment-knowledge/` | Zero-downtime, blue-green, canary, rollback, feature flags |
+| `acc-task-progress-knowledge` | `skills/acc-task-progress-knowledge/` | TaskCreate pattern for coordinator progress tracking |
 
 ## Analyzer Skills
 
@@ -144,6 +180,14 @@ Knowledge bases for architecture audits and best practices.
 | `acc-check-side-effects` | `skills/acc-check-side-effects/` | Checks state mutation, global access |
 | `acc-check-test-quality` | `skills/acc-check-test-quality/` | Checks test structure, assertions, isolation |
 
+### CI/CD Analyzer Skills
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-analyze-ci-config` | `skills/acc-analyze-ci-config/` | Analyze existing CI configuration |
+| `acc-analyze-ci-logs` | `skills/acc-analyze-ci-logs/` | Parse CI logs for failures |
+| `acc-detect-ci-antipatterns` | `skills/acc-detect-ci-antipatterns/` | Detect CI antipatterns |
+
 ### Other Skills
 
 | Skill | Path | Description |
@@ -151,6 +195,7 @@ Knowledge bases for architecture audits and best practices.
 | `acc-estimate-complexity` | `skills/acc-estimate-complexity/` | Analyzes O(n²) algorithms, exponential growth |
 | `acc-suggest-simplification` | `skills/acc-suggest-simplification/` | Suggests extract method, introduce variable |
 | `acc-suggest-testability-improvements` | `skills/acc-suggest-testability-improvements/` | Suggests DI refactoring, mock opportunities |
+| `acc-estimate-pipeline-time` | `skills/acc-estimate-pipeline-time/` | Estimate and optimize CI pipeline time |
 
 ## Generator Skills
 
@@ -248,6 +293,31 @@ Code generators for DDD and architecture components (PHP 8.5).
 | `acc-create-test-builder` | `skills/acc-create-test-builder/` | Test Data Builder / Object Mother patterns |
 | `acc-create-mock-repository` | `skills/acc-create-mock-repository/` | InMemory repository implementations |
 | `acc-create-test-double` | `skills/acc-create-test-double/` | Mocks, Stubs, Fakes, Spies |
+
+### CI/CD Config Generators
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-create-github-actions` | `skills/acc-create-github-actions/` | GitHub Actions workflow generation |
+| `acc-create-gitlab-ci` | `skills/acc-create-gitlab-ci/` | GitLab CI configuration |
+| `acc-create-phpstan-config` | `skills/acc-create-phpstan-config/` | PHPStan neon configuration |
+| `acc-create-psalm-config` | `skills/acc-create-psalm-config/` | Psalm XML configuration |
+| `acc-create-deptrac-config` | `skills/acc-create-deptrac-config/` | DEPTRAC YAML for DDD layers |
+| `acc-create-rector-config` | `skills/acc-create-rector-config/` | Rector PHP configuration |
+
+### Docker Skills
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-create-dockerfile-ci` | `skills/acc-create-dockerfile-ci/` | Multi-stage Dockerfiles for CI |
+| `acc-optimize-docker-layers` | `skills/acc-optimize-docker-layers/` | Docker layer caching optimization |
+
+### Deployment Skills
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-create-deploy-strategy` | `skills/acc-create-deploy-strategy/` | Blue-green, canary, rolling configs |
+| `acc-create-feature-flags` | `skills/acc-create-feature-flags/` | Feature flag PHP implementation |
 
 ### Documentation Templates
 
