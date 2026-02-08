@@ -1,9 +1,9 @@
 ---
 name: acc-stability-auditor
-description: Stability patterns auditor. Analyzes Circuit Breaker, Retry, Rate Limiter, and Bulkhead patterns. Called by acc-pattern-auditor coordinator.
+description: Stability patterns auditor. Analyzes Circuit Breaker, Retry, Rate Limiter, Bulkhead, Timeout, Cascading Failures, and Fallback patterns. Called by acc-pattern-auditor coordinator.
 tools: Read, Grep, Glob
 model: sonnet
-skills: acc-stability-patterns-knowledge, acc-create-circuit-breaker, acc-create-retry-pattern, acc-create-rate-limiter, acc-create-bulkhead
+skills: acc-stability-patterns-knowledge, acc-create-circuit-breaker, acc-create-retry-pattern, acc-create-rate-limiter, acc-create-bulkhead, acc-check-timeout-strategy, acc-check-cascading-failures, acc-check-fallback-strategy
 ---
 
 # Stability Patterns Auditor
@@ -20,6 +20,9 @@ This auditor focuses on **stability patterns** that provide resilience:
 | Retry | Backoff strategy, jitter, max attempts |
 | Rate Limiter | Algorithm, limits, overflow handling |
 | Bulkhead | Isolation, queue configuration, rejection |
+| Timeout | Connect/read/processing timeouts across I/O boundaries |
+| Cascading Failures | Shared resources, unbounded queues, failure propagation |
+| Fallback | Graceful degradation, cache fallback, feature flags |
 
 ## Audit Process
 
@@ -146,7 +149,60 @@ Grep: "activeCount|queuedCount|metrics" --glob "**/Bulkhead/**/*.php"
 Grep: "name|identifier|pool" --glob "**/Bulkhead/**/*.php"
 ```
 
-### Phase 6: Cross-Pattern Analysis
+### Phase 6: Timeout Strategy Analysis
+
+```bash
+# HTTP clients without timeout
+Grep: "new.*Client\(\)|new.*GuzzleHttp|new.*HttpClient" --glob "**/*.php"
+Grep: "connect_timeout|timeout.*=>" --glob "**/Infrastructure/**/*.php"
+
+# Database connections without timeout
+Grep: "new PDO\(|DriverManager::getConnection" --glob "**/*.php"
+Grep: "ATTR_TIMEOUT|wait_timeout" --glob "**/*.php"
+
+# Queue consumers blocking
+Grep: "->consume\(|->get\(|->receive\(" --glob "**/Consumer/**/*.php"
+
+# Lock without timeout
+Grep: "->acquire\(|->lock\(|flock\(" --glob "**/*.php"
+```
+
+### Phase 7: Cascading Failure Detection
+
+```bash
+# Shared static resources
+Grep: "private static.*\$.*=.*\[\]|protected static.*pool" --glob "**/*.php"
+
+# Unbounded queues
+Grep: "\$this->.*\[\].*=|\[\].*events" --glob "**/Infrastructure/**/*.php"
+
+# Synchronous chains
+Grep: "\$this->.*Service->.*\n.*\$this->.*Service->" --glob "**/Application/**/*.php"
+
+# Fixed retry delays (no jitter)
+Grep: "sleep\([0-9]+\)|usleep\([0-9]+\)" --glob "**/*.php"
+
+# Missing health checks
+Grep: "class.*HealthCheck|function.*health|/health" --glob "**/*.php"
+```
+
+### Phase 8: Fallback Strategy Analysis
+
+```bash
+# External calls without try-catch fallback
+Grep: "->fetch\(|->call\(|->request\(|->send\(" --glob "**/Infrastructure/**/*.php"
+
+# Cache without stale fallback
+Grep: "cache->get|cache->set" --glob "**/*.php"
+
+# Circuit breaker without fallback
+Grep: "circuitBreaker->call\(" --glob "**/*.php"
+
+# Feature flags without defaults
+Grep: "isEnabled\(|featureFlag" --glob "**/*.php"
+```
+
+### Phase 9: Cross-Pattern Analysis
 
 ```bash
 # Circuit Breaker + Retry integration
@@ -235,6 +291,9 @@ If violations found, suggest using appropriate create-* skills:
 - Missing Retry → acc-create-retry-pattern
 - Missing Rate Limiter → acc-create-rate-limiter
 - Missing Bulkhead → acc-create-bulkhead
+- Missing Timeouts → acc-check-timeout-strategy
+- Cascading Failure Risk → acc-check-cascading-failures
+- Missing Fallback → acc-check-fallback-strategy
 ```
 
 ## Output

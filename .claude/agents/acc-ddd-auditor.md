@@ -3,7 +3,7 @@ name: acc-ddd-auditor
 description: DDD architecture auditor for PHP projects. Analyzes layer separation, domain model, dependencies. Use PROACTIVELY for DDD audit, architecture review, or when analyzing PHP project structure.
 tools: Read, Bash, Grep, Glob, Task, TaskCreate, TaskUpdate
 model: opus
-skills: acc-ddd-knowledge, acc-solid-knowledge, acc-grasp-knowledge, acc-check-bounded-contexts, acc-task-progress-knowledge
+skills: acc-ddd-knowledge, acc-solid-knowledge, acc-grasp-knowledge, acc-check-bounded-contexts, acc-task-progress-knowledge, acc-check-aggregate-consistency, acc-check-cqrs-alignment, acc-check-context-communication
 ---
 
 # DDD Architecture Auditor
@@ -146,7 +146,65 @@ Grep: "use.*Presentation|use.*Controller|use.*Action" --glob "**/Application/**/
 **Cyclic Dependencies:**
 Check for bidirectional imports between layers.
 
-### Phase 7: Report Generation
+### Phase 7: Aggregate Consistency Analysis
+
+Check DDD aggregate design rules:
+
+```bash
+# Cross-aggregate transaction
+Grep: "beginTransaction|->flush\(\)" --glob "**/UseCase/**/*.php"
+Grep: "->save\(.*\n.*->save\(" --glob "**/UseCase/**/*.php"
+
+# Direct child entity repository (bypassing root)
+Grep: "interface.*Item.*Repository|interface.*Line.*Repository" --glob "**/Domain/**/*.php"
+
+# Public setters on aggregates
+Grep: "public function set[A-Z]" --glob "**/Domain/**/*Entity*.php"
+
+# Object reference between aggregates (should be ID)
+Grep: "private.*[A-Z][a-z]+Entity \$" --glob "**/Domain/**/*.php"
+
+# Invariants outside aggregate
+Grep: "count\(.*->items\(\)\)" --glob "**/UseCase/**/*.php"
+```
+
+### Phase 8: CQRS & Event Sourcing Alignment
+
+Check CQRS separation compliance:
+
+```bash
+# Command returning data (should return void/ID)
+Grep: "CommandHandler.*return.*DTO|CommandHandler.*return.*Response" --glob "**/*.php"
+
+# Query with side effects
+Grep: "->save\(|->persist\(|->flush\(" --glob "**/*QueryHandler*.php"
+
+# Non-idempotent projection
+Grep: "->insert\(" --glob "**/*Projection*.php"
+
+# Missing event metadata
+Grep: "occurredAt|aggregateVersion|eventId" --glob "**/Domain/**/*Event*.php"
+```
+
+### Phase 9: Context Communication Analysis
+
+Check Bounded Context communication patterns:
+
+```bash
+# Cross-context imports (detect by namespace analysis)
+Grep: "use App\\\\[A-Z][a-z]+\\\\Domain" --glob "**/Application/**/*.php"
+
+# External models in domain
+Grep: "use Stripe\\\\|use Twilio\\\\|use AWS\\\\" --glob "**/Domain/**/*.php"
+
+# Full aggregate in events
+Grep: "public.*Entity.*\$|public.*Aggregate.*\$" --glob "**/Domain/**/*Event*.php"
+
+# Shared Kernel size
+Glob: **/Shared/Domain/**/*.php
+```
+
+### Phase 10: Report Generation
 
 Load the report template from `acc-ddd-knowledge/assets/report-template.md` and generate structured report with skill recommendations.
 

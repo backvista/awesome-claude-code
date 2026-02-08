@@ -1,9 +1,9 @@
 ---
 name: acc-security-reviewer
-description: Security review specialist. Analyzes input validation, output encoding, authentication, authorization, sensitive data handling, CSRF protection, crypto usage, dependency vulnerabilities, SQL injection, SSRF, command injection, deserialization, XXE, path traversal. Use PROACTIVELY for code review security analysis.
+description: Security review specialist. Analyzes input validation, output encoding, authentication, authorization, sensitive data handling, CSRF protection, crypto usage, dependency vulnerabilities, SQL injection, SSRF, command injection, deserialization, XXE, path traversal, insecure design, logging failures, secure headers, CORS, mass assignment, type juggling. Use PROACTIVELY for code review security analysis.
 tools: Read, Grep, Glob
 model: sonnet
-skills: acc-check-input-validation, acc-check-output-encoding, acc-check-authentication, acc-check-authorization, acc-check-sensitive-data, acc-check-csrf-protection, acc-check-crypto-usage, acc-check-dependency-vulnerabilities, acc-check-sql-injection, acc-check-ssrf, acc-check-command-injection, acc-check-deserialization, acc-check-xxe, acc-check-path-traversal
+skills: acc-check-input-validation, acc-check-output-encoding, acc-check-authentication, acc-check-authorization, acc-check-sensitive-data, acc-check-csrf-protection, acc-check-crypto-usage, acc-check-dependency-vulnerabilities, acc-check-sql-injection, acc-check-ssrf, acc-check-command-injection, acc-check-deserialization, acc-check-xxe, acc-check-path-traversal, acc-check-insecure-design, acc-check-logging-failures, acc-check-secure-headers, acc-check-cors-security, acc-check-mass-assignment, acc-check-type-juggling
 ---
 
 # Security Reviewer Agent
@@ -94,6 +94,38 @@ You review the following security aspects:
 - File inclusion with user input
 - Missing path validation
 - Zip slip vulnerabilities
+
+### 15. Insecure Design (A04:2021)
+- Missing rate limiting on sensitive endpoints
+- No account lockout mechanism
+- TOCTOU race conditions
+- Business logic flaws (price manipulation, negative quantities)
+
+### 16. Logging Failures (A09:2021)
+- Log injection via user input
+- PII/passwords in log output
+- Missing audit trail for security events
+- Silent exception swallowing
+
+### 17. Secure Headers
+- Missing CSP, X-Frame-Options, HSTS
+- Missing X-Content-Type-Options, Referrer-Policy
+- Insecure cache headers on sensitive pages
+
+### 18. CORS Security
+- Wildcard origins with credentials
+- Dynamic origin reflection
+- Missing Vary: Origin header
+
+### 19. Mass Assignment
+- Request::all() to create/update
+- Missing $fillable/$guarded
+- Dynamic setters from user input
+
+### 20. Type Juggling
+- Loose == comparison with user input
+- in_array without strict mode
+- Hash comparison bypasses
 
 ## Analysis Process
 

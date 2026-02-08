@@ -42,8 +42,8 @@ Knowledge bases and code generators. Skills provide domain expertise and code ge
 | Type | Count | Purpose | Example |
 |------|-------|---------|---------|
 | **Knowledge** | 38 | Provide expertise and best practices | `acc-ddd-knowledge` |
-| **Analyzer** | 82 | Detect violations and antipatterns | `acc-analyze-solid-violations` |
-| **Generator** | 85 | Generate PHP code with tests | `acc-create-entity` |
+| **Analyzer** | 100 | Detect violations and antipatterns | `acc-analyze-solid-violations` |
+| **Generator** | 86 | Generate PHP code with tests | `acc-create-entity` |
 | **Template** | 10 | Documentation and output templates | `acc-readme-template` |
 | **Other** | 7 | Estimation, suggestions, regression prevention | `acc-estimate-complexity` |
 
@@ -115,6 +115,12 @@ Knowledge bases for architecture audits and best practices.
 | `acc-check-leaky-abstractions` | `skills/acc-check-leaky-abstractions/` | Detects leaky abstractions, framework leakage |
 | `acc-check-encapsulation` | `skills/acc-check-encapsulation/` | Detects public state, Tell Don't Ask violations |
 | `acc-analyze-coupling-cohesion` | `skills/acc-analyze-coupling-cohesion/` | Coupling/cohesion metrics (Ca/Ce, LCOM) |
+| `acc-check-aggregate-consistency` | `skills/acc-check-aggregate-consistency/` | Aggregate rules: single tx boundary, identity by root |
+| `acc-check-cqrs-alignment` | `skills/acc-check-cqrs-alignment/` | CQRS/ES: commands no return, projections idempotent |
+| `acc-check-context-communication` | `skills/acc-check-context-communication/` | Context Map: Shared Kernel, ACL, event vs direct calls |
+| `acc-check-doc-links` | `skills/acc-check-doc-links/` | Broken relative links, missing anchor targets |
+| `acc-check-doc-examples` | `skills/acc-check-doc-examples/` | Code examples match actual class/method names |
+| `acc-check-version-consistency` | `skills/acc-check-version-consistency/` | Version sync: composer.json, README, CHANGELOG, docs |
 
 ### Bug Detection Skills
 
@@ -158,6 +164,12 @@ Knowledge bases for architecture audits and best practices.
 | `acc-check-deserialization` | `skills/acc-check-deserialization/` | Checks unserialize, allowed_classes, Phar attacks |
 | `acc-check-xxe` | `skills/acc-check-xxe/` | Checks XML parsing, entity protection, XSLT attacks |
 | `acc-check-path-traversal` | `skills/acc-check-path-traversal/` | Checks directory traversal, file inclusion, Zip slip |
+| `acc-check-insecure-design` | `skills/acc-check-insecure-design/` | OWASP A04: missing rate limiting, account lockout, TOCTOU |
+| `acc-check-logging-failures` | `skills/acc-check-logging-failures/` | OWASP A09: log injection, PII in logs, missing audit trail |
+| `acc-check-secure-headers` | `skills/acc-check-secure-headers/` | CSP, X-Frame-Options, HSTS, Referrer-Policy |
+| `acc-check-cors-security` | `skills/acc-check-cors-security/` | Wildcard origins, dynamic reflection, credentials misconfig |
+| `acc-check-mass-assignment` | `skills/acc-check-mass-assignment/` | Request::all() to create, missing $fillable/$guarded |
+| `acc-check-type-juggling` | `skills/acc-check-type-juggling/` | Loose == with user input, in_array without strict, hash bypass |
 
 ### Performance Review Skills
 
@@ -172,6 +184,9 @@ Knowledge bases for architecture audits and best practices.
 | `acc-check-batch-processing` | `skills/acc-check-batch-processing/` | Checks single-item vs bulk operations |
 | `acc-check-connection-pool` | `skills/acc-check-connection-pool/` | Checks connection leaks, pool exhaustion, timeouts |
 | `acc-check-serialization` | `skills/acc-check-serialization/` | Checks JSON overhead, N+1 serialization, hydration |
+| `acc-check-index-usage` | `skills/acc-check-index-usage/` | Missing DB indexes on WHERE/JOIN, composite index order |
+| `acc-check-async-patterns` | `skills/acc-check-async-patterns/` | Sync ops that should be async: email, API calls in request |
+| `acc-check-file-io` | `skills/acc-check-file-io/` | File I/O: streaming vs readAll, missing locks, temp cleanup |
 
 ### Readability Review Skills
 
@@ -281,6 +296,9 @@ Code generators for DDD and architecture components (PHP 8.5).
 | `acc-create-retry-pattern` | `skills/acc-create-retry-pattern/` | Retry with exponential backoff |
 | `acc-create-rate-limiter` | `skills/acc-create-rate-limiter/` | Rate limiting (Token Bucket, Sliding Window) |
 | `acc-create-bulkhead` | `skills/acc-create-bulkhead/` | Bulkhead isolation pattern |
+| `acc-check-timeout-strategy` | `skills/acc-check-timeout-strategy/` | Timeout config: HTTP, DB, queue, cache, locks |
+| `acc-check-cascading-failures` | `skills/acc-check-cascading-failures/` | Shared resources, unbounded queues, failure propagation |
+| `acc-check-fallback-strategy` | `skills/acc-check-fallback-strategy/` | Graceful degradation, cache fallback, feature flags |
 
 ### Integration Patterns
 
@@ -323,6 +341,9 @@ Code generators for DDD and architecture components (PHP 8.5).
 | `acc-create-object-pool` | `skills/acc-create-object-pool/` | Object Pool pattern |
 | `acc-create-di-container` | `skills/acc-create-di-container/` | DI Container configuration |
 | `acc-create-mediator` | `skills/acc-create-mediator/` | Mediator pattern |
+| `acc-create-prototype` | `skills/acc-create-prototype/` | Prototype pattern (deep/shallow copy) |
+| `acc-check-singleton-antipattern` | `skills/acc-check-singleton-antipattern/` | Singleton anti-pattern: global state, static instances |
+| `acc-check-abstract-factory` | `skills/acc-check-abstract-factory/` | Abstract Factory: family consistency, product hierarchy |
 
 ### Presentation Patterns (ADR)
 

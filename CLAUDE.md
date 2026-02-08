@@ -31,7 +31,7 @@ make release                # Run validate-claude, then print release instructio
 .claude/
 ├── commands/     # Slash commands (26) — user-invokable via /acc-*
 ├── agents/       # Subagents (56) — invoked via Task tool with subagent_type
-├── skills/       # Skills (222) — knowledge bases, generators, analyzers
+├── skills/       # Skills (243) — knowledge bases, generators, analyzers
 └── settings.json # Hooks and permission allowlist (NOT copied by plugin)
 
 src/

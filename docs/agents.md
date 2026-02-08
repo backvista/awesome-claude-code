@@ -26,20 +26,20 @@ Subagents for specialized tasks. Agents are autonomous workers that handle compl
 | `acc-behavioral-auditor` | Behavioral patterns analysis | 17 | `acc-architecture-auditor`, `acc-pattern-auditor` (Task) |
 | `acc-gof-structural-auditor` | GoF Structural patterns analysis | 6 | `acc-pattern-auditor` (Task) |
 | `acc-integration-auditor` | Integration patterns analysis | 12 | `acc-architecture-auditor`, `acc-pattern-auditor` (Task) |
-| `acc-stability-auditor` | Stability patterns analysis | 5 | `acc-pattern-auditor` (Task) |
-| `acc-creational-auditor` | Creational patterns analysis | 3 | `acc-pattern-auditor` (Task) |
-| `acc-ddd-auditor` | DDD compliance analysis | 3 | `/acc-audit-ddd` |
+| `acc-stability-auditor` | Stability patterns analysis | 8 | `acc-pattern-auditor` (Task) |
+| `acc-creational-auditor` | Creational patterns analysis | 6 | `acc-pattern-auditor` (Task) |
+| `acc-ddd-auditor` | DDD compliance analysis | 8 | `/acc-audit-ddd` |
 | `acc-psr-auditor` | PSR compliance analysis | 3 | `/acc-audit-psr` |
-| `acc-documentation-auditor` | Audit documentation quality | 3 | `/acc-audit-documentation` |
+| `acc-documentation-auditor` | Audit documentation quality | 6 | `/acc-audit-documentation` |
 | `acc-test-auditor` | Test quality analysis | 3 | `/acc-audit-test` |
 
-### Reviewers (7-14 skills, code review specialists)
+### Reviewers (7-20 skills, code review specialists)
 
 | Agent | Purpose | Skills | Invoked By |
 |-------|---------|--------|------------|
 | `acc-bug-hunter` | Bug detection specialist | 9 | `acc-code-review-coordinator`, `acc-bug-fix-coordinator` (Task) |
-| `acc-security-reviewer` | Security review specialist | 14 | `/acc-audit-security`, `acc-code-review-coordinator` (Task) |
-| `acc-performance-reviewer` | Performance review specialist | 10 | `/acc-audit-performance`, `acc-code-review-coordinator` (Task) |
+| `acc-security-reviewer` | Security review specialist | 20 | `/acc-audit-security`, `acc-code-review-coordinator` (Task) |
+| `acc-performance-reviewer` | Performance review specialist | 13 | `/acc-audit-performance`, `acc-code-review-coordinator` (Task) |
 | `acc-readability-reviewer` | Readability review specialist | 9 | `acc-code-review-coordinator`, `acc-refactor-coordinator` (Task) |
 | `acc-testability-reviewer` | Testability review specialist | 7 | `acc-code-review-coordinator`, `acc-refactor-coordinator` (Task) |
 

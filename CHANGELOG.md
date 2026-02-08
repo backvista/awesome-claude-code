@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.10.0] - 2026-02-09
+
+### Added
+- Creational auditor skills (+3): `acc-check-singleton-antipattern` (Singleton anti-pattern detection), `acc-check-abstract-factory` (Abstract Factory audit), `acc-create-prototype` (Prototype pattern generator)
+- Stability auditor skills (+3): `acc-check-timeout-strategy` (timeout configuration audit), `acc-check-cascading-failures` (cascading failure detection), `acc-check-fallback-strategy` (fallback/graceful degradation audit)
+- DDD auditor skills (+3): `acc-check-aggregate-consistency` (aggregate rules audit), `acc-check-cqrs-alignment` (CQRS/ES alignment), `acc-check-context-communication` (Context Map patterns)
+- Documentation auditor skills (+3): `acc-check-doc-links` (link validation), `acc-check-doc-examples` (code example verification), `acc-check-version-consistency` (version sync audit)
+- Security reviewer skills (+6): `acc-check-insecure-design` (A04:2021), `acc-check-logging-failures` (A09:2021), `acc-check-secure-headers` (CSP/HSTS/X-Frame), `acc-check-cors-security` (CORS misconfiguration), `acc-check-mass-assignment` (mass assignment), `acc-check-type-juggling` (PHP type juggling)
+- Performance reviewer skills (+3): `acc-check-index-usage` (missing DB indexes), `acc-check-async-patterns` (sync ops that should be async), `acc-check-file-io` (file I/O patterns)
+
+### Changed
+- `acc-creational-auditor` expanded: 3 → 6 skills, added Abstract Factory, Singleton anti-pattern, Prototype phases
+- `acc-stability-auditor` expanded: 5 → 8 skills, added Timeout, Cascading Failures, Fallback phases
+- `acc-ddd-auditor` expanded: 5 → 8 skills, added Aggregate Consistency, CQRS Alignment, Context Communication phases
+- `acc-documentation-auditor` expanded: 3 → 6 skills, added link validation, example verification, version consistency
+- `acc-security-reviewer` expanded: 14 → 20 skills, added OWASP A04 Insecure Design, A09 Logging Failures, Secure Headers, CORS, Mass Assignment, Type Juggling
+- `acc-performance-reviewer` expanded: 10 → 13 skills, added Index Usage, Async Patterns, File I/O
+- `acc-pattern-auditor` coordinator updated delegation table (stability 5→8, creational 3→6)
+- Updated component counts: 26 commands, 56 agents, 243 skills
+
+---
+
 ## [2.9.0] - 2026-02-08
 
 ### Added
@@ -179,7 +201,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial release
 - Project structure and Composer package setup
 
-[Unreleased]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.9.0...HEAD
+[Unreleased]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.11.0...HEAD
+[2.10.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.9.0...v2.10.0
 [2.9.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.8.0...v2.9.0
 [2.8.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.7.0...v2.8.0
 [2.7.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.6.0...v2.7.0

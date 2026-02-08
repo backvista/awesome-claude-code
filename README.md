@@ -278,7 +278,7 @@ See [Component Flow](docs/component-flow.md) for the complete dependency graph.
 |--------------------------------------------|-----------------------------------------------|
 | [Commands](docs/commands.md)               | 26 slash commands with examples               |
 | [Agents](docs/agents.md)                   | 56 specialized subagents                      |
-| [Skills](docs/skills.md)                   | 222 skills (knowledge, generators, analyzers) |
+| [Skills](docs/skills.md)                   | 243 skills (knowledge, generators, analyzers) |
 | [Hooks](docs/hooks.md)                     | 21 PHP/DDD hooks                              |
 | [Component Flow](docs/component-flow.md)   | Architecture and dependency graph             |
 | [MCP](docs/mcp.md)                         | MCP server configuration                      |

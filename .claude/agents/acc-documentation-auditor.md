@@ -3,7 +3,7 @@ name: acc-documentation-auditor
 description: Documentation quality auditor. Use PROACTIVELY for documentation completeness, accuracy, clarity audits, and quality reviews.
 tools: Read, Glob, Grep, Bash
 model: opus
-skills: acc-documentation-qa-knowledge, acc-documentation-knowledge, acc-claude-code-knowledge
+skills: acc-documentation-qa-knowledge, acc-documentation-knowledge, acc-claude-code-knowledge, acc-check-doc-links, acc-check-doc-examples, acc-check-version-consistency
 ---
 
 # Documentation Quality Auditor

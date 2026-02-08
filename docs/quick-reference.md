@@ -98,9 +98,9 @@ allowed-tools: Optional
 │   │                             #   docker-performance-agent, docker-security-agent,
 │   │                             #   docker-debugger-agent, docker-production-agent
 │   └── ...
-├── skills/                       # 222 skills
+├── skills/                       # 243 skills
 │   ├── acc-*-knowledge/          # 38 knowledge skills
-│   ├── acc-check-*/              # 44 analyzer skills
+│   ├── acc-check-*/              # 62 analyzer skills
 │   ├── acc-find-*/               # 9 bug detection skills
 │   ├── acc-detect-*/             # 8 detection skills
 │   ├── acc-analyze-*/            # 8 analysis skills
@@ -111,7 +111,7 @@ allowed-tools: Optional
 │   ├── acc-explain-*/            # 2 explainer skills (business-process, output-template)
 │   ├── acc-trace-*/              # 2 tracer skills
 │   ├── acc-map-*/                # 1 mapper skill
-│   ├── acc-create-*/             # 79 generator skills
+│   ├── acc-create-*/             # 80 generator skills
 │   ├── acc-optimize-*/           # 7 optimizer skills
 │   ├── acc-*-template/           # 10 template skills
 │   └── acc-*/                    # 8 other skills (estimate, suggest, bug-*)
@@ -134,12 +134,12 @@ docs/                             # Documentation (root level)
 | Commands | 26 |
 | Agents | 56 |
 | Knowledge Skills | 38 |
-| Analyzer Skills | 79 |
-| Generator Skills | 79 |
+| Analyzer Skills | 97 |
+| Generator Skills | 80 |
 | Optimizer Skills | 7 |
 | Template Skills | 10 |
 | Other Skills | 9 |
-| **Total Skills** | **222** |
+| **Total Skills** | **243** |
 
 ---
 

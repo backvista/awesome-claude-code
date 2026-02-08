@@ -33,10 +33,10 @@ This agent delegates to specialized auditors:
 
 | Auditor | Patterns | Skills |
 |---------|----------|--------|
-| `acc-stability-auditor` | Circuit Breaker, Retry, Rate Limiter, Bulkhead | 5 skills |
+| `acc-stability-auditor` | Circuit Breaker, Retry, Rate Limiter, Bulkhead, Timeout, Cascading Failures, Fallback | 8 skills |
 | `acc-behavioral-auditor` | Strategy, State, Chain of Responsibility, Decorator, Null Object, Template Method, Visitor, Iterator, Memento | 17 skills |
 | `acc-gof-structural-auditor` | Adapter, Facade, Proxy, Composite, Bridge, Flyweight | 6 skills |
-| `acc-creational-auditor` | Builder, Object Pool, Factory | 3 skills |
+| `acc-creational-auditor` | Builder, Object Pool, Factory, Abstract Factory, Singleton (anti), Prototype | 6 skills |
 | `acc-integration-auditor` | Outbox, Saga, ADR | 12 skills |
 
 ## Audit Process
