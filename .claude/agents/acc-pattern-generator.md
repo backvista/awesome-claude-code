@@ -17,7 +17,8 @@ This agent delegates to specialized generators:
 | Generator | Patterns | Skills |
 |-----------|----------|--------|
 | `acc-stability-generator` | Circuit Breaker, Retry, Rate Limiter, Bulkhead | 5 skills |
-| `acc-behavioral-generator` | Strategy, State, Chain of Responsibility, Decorator, Null Object | 5 skills |
+| `acc-behavioral-generator` | Strategy, State, Chain of Responsibility, Decorator, Null Object, Template Method, Visitor, Iterator, Memento | 10 skills |
+| `acc-gof-structural-generator` | Adapter, Facade, Proxy, Composite, Bridge, Flyweight | 6 skills |
 | `acc-creational-generator` | Builder, Object Pool, Factory | 3 skills |
 | `acc-integration-generator` | Outbox, Saga, Action, Responder | 7 skills |
 
@@ -37,6 +38,18 @@ Analyze user request to determine which generator to invoke:
 - "chain of responsibility", "middleware", "handler chain"
 - "decorator", "wrapper", "dynamic behavior"
 - "null object", "null check elimination"
+- "template method", "algorithm skeleton", "hooks"
+- "visitor", "double dispatch", "accept method"
+- "iterator", "collection traversal", "sequential access"
+- "memento", "undo/redo", "state snapshot"
+
+### GoF Structural Patterns → acc-gof-structural-generator
+- "adapter", "wrapper", "convert interface", "legacy integration"
+- "facade", "simplified interface", "subsystem entry point"
+- "proxy", "lazy loading", "access control", "caching proxy"
+- "composite", "tree structure", "hierarchy", "part-whole"
+- "bridge", "decouple abstraction", "multiple implementations"
+- "flyweight", "memory optimization", "shared state"
 
 ### Creational Patterns → acc-creational-generator
 - "builder", "fluent builder", "step-by-step construction"
@@ -71,6 +84,10 @@ prompt: "Generate [PATTERN] for [CONTEXT]. Target path: [PATH]"
 
 # For behavioral patterns
 Task tool with subagent_type="acc-behavioral-generator"
+prompt: "Generate [PATTERN] for [CONTEXT]. Target path: [PATH]"
+
+# For GoF structural patterns
+Task tool with subagent_type="acc-gof-structural-generator"
 prompt: "Generate [PATTERN] for [CONTEXT]. Target path: [PATH]"
 
 # For creational patterns
@@ -175,6 +192,16 @@ Ensure all generated code follows:
 | Chain of Responsibility | acc-behavioral-generator | acc-create-chain-of-responsibility |
 | Decorator | acc-behavioral-generator | acc-create-decorator |
 | Null Object | acc-behavioral-generator | acc-create-null-object |
+| Template Method | acc-behavioral-generator | acc-create-template-method |
+| Visitor | acc-behavioral-generator | acc-create-visitor |
+| Iterator | acc-behavioral-generator | acc-create-iterator |
+| Memento | acc-behavioral-generator | acc-create-memento |
+| Adapter | acc-gof-structural-generator | acc-create-adapter |
+| Facade | acc-gof-structural-generator | acc-create-facade |
+| Proxy | acc-gof-structural-generator | acc-create-proxy |
+| Composite | acc-gof-structural-generator | acc-create-composite |
+| Bridge | acc-gof-structural-generator | acc-create-bridge |
+| Flyweight | acc-gof-structural-generator | acc-create-flyweight |
 | Builder | acc-creational-generator | acc-create-builder |
 | Object Pool | acc-creational-generator | acc-create-object-pool |
 | Factory | acc-creational-generator | acc-create-factory |

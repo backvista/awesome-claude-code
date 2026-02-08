@@ -1,5 +1,5 @@
 ---
-description: Comprehensive architecture audit with pattern recommendations. Detects DDD, CQRS, Clean/Hexagonal/Layered Architecture, Event Sourcing, EDA, Outbox, Saga, and Stability patterns. Provides actionable recommendations with links to generation skills.
+description: Comprehensive architecture audit with pattern recommendations. Detects DDD, CQRS, Clean/Hexagonal/Layered Architecture, Event Sourcing, EDA, Outbox, Saga, Stability, GoF Structural (Adapter, Facade, Proxy, Composite, Bridge, Flyweight), and Behavioral (Strategy, State, Chain, Decorator, Null Object, Template Method, Visitor, Iterator, Memento) patterns. Provides actionable recommendations with links to generation skills.
 allowed-tools: Read, Grep, Glob, Bash, Task
 model: opus
 argument-hint: <path> [-- additional instructions]
@@ -71,7 +71,8 @@ Use the `acc-architecture-auditor` agent to analyze:
 
 Use the `acc-pattern-auditor` agent to analyze:
 - Stability Patterns (Circuit Breaker, Retry, Rate Limiter, Bulkhead)
-- Behavioral Patterns (Strategy, State, Chain of Responsibility, Decorator, Null Object)
+- Behavioral Patterns (Strategy, State, Chain of Responsibility, Decorator, Null Object, Template Method, Visitor, Iterator, Memento)
+- GoF Structural Patterns (Adapter, Facade, Proxy, Composite, Bridge, Flyweight)
 - Creational Patterns (Builder, Object Pool)
 - Enterprise Patterns (Read Model, Policy)
 
@@ -99,6 +100,16 @@ Based on detected issues, map problems to solutions:
 | Request pipelines | Chain of Responsibility | `acc-create-chain-of-responsibility` |
 | Dynamic behavior | Decorator | `acc-create-decorator` |
 | Null checks | Null Object | `acc-create-null-object` |
+| Algorithm skeleton | Template Method | `acc-create-template-method` |
+| Operations on structure | Visitor | `acc-create-visitor` |
+| Collection traversal | Iterator | `acc-create-iterator` |
+| Undo/redo, snapshots | Memento | `acc-create-memento` |
+| Interface incompatibility | Adapter | `acc-create-adapter` |
+| Complex subsystem access | Facade | `acc-create-facade` |
+| Lazy loading, caching | Proxy | `acc-create-proxy` |
+| Tree structures | Composite | `acc-create-composite` |
+| Class explosion | Bridge | `acc-create-bridge` |
+| Repeated immutable objects | Flyweight | `acc-create-flyweight` |
 | Complex construction | Builder | `acc-create-builder` |
 | Expensive resources | Object Pool | `acc-create-object-pool` |
 | Query optimization | Read Model | `acc-create-read-model` |

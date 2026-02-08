@@ -29,9 +29,9 @@ make release                # Run validate-claude, then print release instructio
 
 ```
 .claude/
-├── commands/     # Slash commands (25) — user-invokable via /acc-*
-├── agents/       # Subagents (50) — invoked via Task tool with subagent_type
-├── skills/       # Skills (200) — knowledge bases, generators, analyzers
+├── commands/     # Slash commands (26) — user-invokable via /acc-*
+├── agents/       # Subagents (56) — invoked via Task tool with subagent_type
+├── skills/       # Skills (222) — knowledge bases, generators, analyzers
 └── settings.json # Hooks and permission allowlist (NOT copied by plugin)
 
 src/
@@ -56,9 +56,9 @@ User → /acc-command → Coordinator Agent (opus) → Specialized Agents (sonne
 
 ### Agent Categories
 
-- **Coordinators** (5): orchestrate multi-agent workflows via Task delegation, use `model: opus`, have `TaskCreate/TaskUpdate` for progress tracking — `bug-fix-coordinator`, `ci-coordinator`, `code-review-coordinator`, `docker-coordinator`, `refactor-coordinator`
+- **Coordinators** (6): orchestrate multi-agent workflows via Task delegation, use `model: opus`, have `TaskCreate/TaskUpdate` for progress tracking — `bug-fix-coordinator`, `ci-coordinator`, `code-review-coordinator`, `docker-coordinator`, `explain-coordinator`, `refactor-coordinator`
 - **Auditor-coordinators** (3): audit via sub-agent delegation, use `model: opus` — `architecture-auditor`, `pattern-auditor`, `ddd-auditor`
-- **Specialists** (42): perform focused tasks, use `model: sonnet` — auditors, generators, reviewers, CI/Docker agents
+- **Specialists** (47): perform focused tasks, use `model: sonnet` — auditors, generators, reviewers, CI/Docker/Explainer agents
 
 ### Composer Plugin
 
@@ -111,7 +111,7 @@ Max 500 lines in SKILL.md — extract large content to `references/` subfolder.
 - **`acc-` prefix** on all components to avoid naming conflicts with other extensions
 - **`--` separator** in commands for meta-instructions: `/acc-audit-ddd ./src -- focus on aggregates`
 - **After any change**: run `make validate-claude`, update the matching `docs/*.md` file and `CHANGELOG.md`
-- **Component counts** appear in 5 places — keep all in sync: `README.md` (Documentation table), `docs/quick-reference.md` (Statistics + file tree), `composer.json` (description), `llms.txt` (Quick Facts), `CHANGELOG.md`
+- **Component counts** appear in 6 places — keep all in sync: `README.md` (Documentation table), `docs/quick-reference.md` (Statistics + file tree), `composer.json` (description), `llms.txt` (Quick Facts + Project Structure + Skills by Category), `CHANGELOG.md`, `CLAUDE.md` (Architecture section)
 - **File renames**: always use `git mv` instead of delete + create to preserve git history
 - **CI/CD `acc-docker-agent`** (for CI pipelines) is separate from Docker Expert System agents (`acc-docker-coordinator`, `acc-docker-*-agent`) — do not merge them
 - **`settings.json`** is project-specific (NOT copied by plugin). Contains: PostToolUse hook (`php -l` on `.php` files after Write), permissions allowlist (make, git read-only, composer validate, WebSearch)

@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+---
+
+## [2.9.0] - 2026-02-08
+
+### Added
+- `/acc-explain` command — code explanation with 5 modes (quick, deep, onboarding, business, qa), accepts files, directories, HTTP routes, console commands
+- Explain agents (4): explain-coordinator, codebase-navigator, business-logic-analyst, data-flow-analyst
+- Explain skills (12): codebase scanning, entry-point resolution, architecture detection, business rules/processes/domain extraction, state machines, request lifecycle tracing, data transformation, async flows, output templates
+- GoF Structural patterns (6): Adapter, Facade, Proxy, Composite, Bridge, Flyweight — auditor + generator agents, 6 skills with templates/examples
+- GoF Behavioral patterns (4): Template Method, Visitor, Iterator, Memento — 4 skills with templates/examples
+
+### Changed
+- `acc-behavioral-generator/auditor` expanded with 4 new GoF behavioral patterns
+- `acc-pattern-generator/auditor` coordinators now delegate to 5 sub-agents (added `acc-gof-structural-*`)
+- `/acc-generate-patterns` supports 26 patterns (was 16), `/acc-audit-patterns` audits GoF structural category
+- `docs/mcp.md` expanded with 6 MCP server configurations: Redis, RabbitMQ, Elasticsearch, Kafka, GitHub, Docker Hub
+- Updated component counts: 26 commands, 56 agents, 222 skills
+
+---
+
 ## [2.8.0] - 2026-02-07
 
 ### Added
@@ -159,7 +179,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial release
 - Project structure and Composer package setup
 
-[Unreleased]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.8.0...HEAD
+[Unreleased]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.9.0...HEAD
+[2.9.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.8.0...v2.9.0
 [2.8.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.7.0...v2.8.0
 [2.7.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.6.0...v2.7.0
 [2.6.0]: https://github.com/dykyi-roman/awesome-claude-code/compare/v2.5.0...v2.6.0

@@ -1,6 +1,6 @@
 ---
 name: acc-pattern-auditor
-description: Design patterns audit coordinator. Orchestrates stability, behavioral, creational, and integration pattern auditors. Use PROACTIVELY for distributed systems, resilience, and design pattern audits.
+description: Design patterns audit coordinator. Orchestrates stability, behavioral, creational, integration, and GoF structural pattern auditors. Use PROACTIVELY for distributed systems, resilience, and design pattern audits.
 tools: Read, Grep, Glob, Task, TaskCreate, TaskUpdate
 model: opus
 skills: acc-solid-knowledge, acc-grasp-knowledge, acc-analyze-coupling-cohesion, acc-task-progress-knowledge
@@ -16,7 +16,8 @@ Before executing workflow, create tasks for user visibility:
 
 ```
 TaskCreate: subject="Audit stability patterns", description="Circuit Breaker, Retry, Rate Limiter, Bulkhead", activeForm="Auditing stability..."
-TaskCreate: subject="Audit behavioral patterns", description="Strategy, State, Chain, Decorator, Null Object", activeForm="Auditing behavioral..."
+TaskCreate: subject="Audit behavioral patterns", description="Strategy, State, Chain, Decorator, Null Object, Template Method, Visitor, Iterator, Memento", activeForm="Auditing behavioral..."
+TaskCreate: subject="Audit GoF structural patterns", description="Adapter, Facade, Proxy, Composite, Bridge, Flyweight", activeForm="Auditing GoF structural..."
 TaskCreate: subject="Audit creational patterns", description="Builder, Object Pool, Factory", activeForm="Auditing creational..."
 TaskCreate: subject="Audit integration patterns", description="Outbox, Saga, ADR", activeForm="Auditing integration..."
 ```
@@ -33,7 +34,8 @@ This agent delegates to specialized auditors:
 | Auditor | Patterns | Skills |
 |---------|----------|--------|
 | `acc-stability-auditor` | Circuit Breaker, Retry, Rate Limiter, Bulkhead | 5 skills |
-| `acc-behavioral-auditor` | Strategy, State, Chain of Responsibility, Decorator, Null Object | 6 skills |
+| `acc-behavioral-auditor` | Strategy, State, Chain of Responsibility, Decorator, Null Object, Template Method, Visitor, Iterator, Memento | 17 skills |
+| `acc-gof-structural-auditor` | Adapter, Facade, Proxy, Composite, Bridge, Flyweight | 6 skills |
 | `acc-creational-auditor` | Builder, Object Pool, Factory | 3 skills |
 | `acc-integration-auditor` | Outbox, Saga, ADR | 12 skills |
 
@@ -48,7 +50,10 @@ Before delegating, perform quick detection to determine which auditors to invoke
 Grep: "CircuitBreaker|Retry|RateLimiter|Bulkhead" --glob "**/*.php"
 
 # Behavioral Patterns
-Grep: "Strategy|State|Handler|Decorator|NullObject" --glob "**/*.php"
+Grep: "Strategy|State|Handler|Decorator|NullObject|TemplateMethod|Visitor|Iterator|Memento" --glob "**/*.php"
+
+# GoF Structural Patterns
+Grep: "Adapter|Facade|Proxy|Composite|Bridge|Flyweight" --glob "**/*.php"
 
 # Creational Patterns
 Grep: "Builder|ObjectPool|Factory" --glob "**/*.php"
@@ -68,7 +73,11 @@ prompt: "Audit stability patterns (Circuit Breaker, Retry, Rate Limiter, Bulkhea
 
 # If behavioral patterns detected
 Task tool with subagent_type="acc-behavioral-auditor"
-prompt: "Audit behavioral patterns (CQRS, Event Sourcing, EDA) in [TARGET_PATH]."
+prompt: "Audit behavioral patterns (CQRS, Event Sourcing, EDA, Strategy, State, Chain of Responsibility, Decorator, Null Object, Template Method, Visitor, Iterator, Memento) in [TARGET_PATH]."
+
+# If GoF structural patterns detected or direct SDK usage found
+Task tool with subagent_type="acc-gof-structural-auditor"
+prompt: "Audit GoF structural patterns (Adapter, Facade, Proxy, Composite, Bridge, Flyweight) in [TARGET_PATH]. Check for direct SDK usage, missing abstractions, and pattern opportunities."
 
 # If creational patterns detected or complex object construction found
 Task tool with subagent_type="acc-creational-auditor"
@@ -112,7 +121,8 @@ Combine reports from all delegated auditors into a unified report.
 | Category | Patterns Checked | Issues Found | Compliance |
 |----------|-----------------|--------------|------------|
 | Stability | 4 | 3 | 60% |
-| Behavioral | 5 | 2 | 85% |
+| Behavioral | 9 | 2 | 85% |
+| GoF Structural | 6 | 3 | 75% |
 | Creational | 3 | 1 | 90% |
 | Integration | 3 | 4 | 70% |
 | SOLID | 5 | 2 | 80% |
@@ -127,6 +137,9 @@ Combine reports from all delegated auditors into a unified report.
 
 ### From Behavioral Auditor
 1. [Issue from acc-behavioral-auditor]
+
+### From GoF Structural Auditor
+1. [Issue from acc-gof-structural-auditor]
 
 ### From Creational Auditor
 1. [Issue from acc-creational-auditor]
@@ -160,6 +173,9 @@ Combine reports from all delegated auditors into a unified report.
 ### Behavioral Patterns
 [Include full report from acc-behavioral-auditor]
 
+### GoF Structural Patterns
+[Include full report from acc-gof-structural-auditor]
+
 ### Creational Patterns
 [Include full report from acc-creational-auditor]
 
@@ -181,6 +197,16 @@ Based on the audit findings, use these skills to fix issues:
 |----------------|----------|----------------|---------|
 | Type switch | `PaymentHandler.php:34` | Strategy | `acc-create-strategy Payment` |
 | Complex conditionals | `Order.php:89` | State | `acc-create-state Order` |
+
+### Missing GoF Structural Patterns
+| Gap Identified | Location | Pattern Needed | Command |
+|----------------|----------|----------------|---------|
+| Direct SDK usage | `StripeClient.php:12` | Adapter | `acc-create-adapter Stripe` |
+| Complex subsystem | `OrderService.php:45` | Facade | `acc-create-facade Order` |
+| Heavy initialization | `ReportService.php:30` | Proxy | `acc-create-proxy Report` |
+| Recursive structure | `MenuItem.php:15` | Composite | `acc-create-composite Menu` |
+| Class explosion | `Notification.php:8` | Bridge | `acc-create-bridge Notification` |
+| Repeated objects | `Currency.php:22` | Flyweight | `acc-create-flyweight Currency` |
 
 ### Missing Creational Patterns
 | Gap Identified | Location | Pattern Needed | Command |

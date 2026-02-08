@@ -24,6 +24,11 @@
       "Bash(tree:*)",
       "WebSearch"
     ],
-    "deny": []
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean -f:*)"
+    ]
   }
 }

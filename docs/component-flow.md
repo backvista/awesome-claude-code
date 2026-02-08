@@ -47,7 +47,8 @@ COMMANDS                    AGENTS                      SKILLS
                                 └──→ (Task) acc-pattern-generator (coordinator)
                                                   │
                                                   ├──→ (Task) acc-stability-generator ──→ 5 skills
-                                                  ├──→ (Task) acc-behavioral-generator ─→ 5 skills
+                                                  ├──→ (Task) acc-behavioral-generator ─→ 10 skills
+                                                  ├──→ (Task) acc-gof-structural-generator → 6 skills
                                                   ├──→ (Task) acc-creational-generator ─→ 3 skills
                                                   └──→ (Task) acc-integration-generator → 7 skills
 
@@ -56,8 +57,12 @@ COMMANDS                    AGENTS                      SKILLS
                                 ├──→ (Task) acc-stability-auditor ───→ 5 skills
                                 │           └── Circuit Breaker, Retry, Rate Limiter, Bulkhead
                                 │
-                                ├──→ (Task) acc-behavioral-auditor ──→ 12 skills
-                                │           └── Strategy, State, Chain, Decorator, Null Object
+                                ├──→ (Task) acc-behavioral-auditor ──→ 17 skills
+                                │           └── Strategy, State, Chain, Decorator, Null Object,
+                                │               Template Method, Visitor, Iterator, Memento
+                                │
+                                ├──→ (Task) acc-gof-structural-auditor → 6 skills
+                                │           └── Adapter, Facade, Proxy, Composite, Bridge, Flyweight
                                 │
                                 ├──→ (Task) acc-creational-auditor ──→ 3 skills
                                 │           └── Builder, Object Pool, Factory
@@ -117,23 +122,40 @@ COMMANDS                    AGENTS                      SKILLS
 
 /acc-audit-docker ─────→ acc-docker-coordinator (opus, 4 skills)
                                 │
-                                ├──→ (Task) acc-docker-architect-agent ──→ 8 skills
-                                │           └── multi-stage builds, .dockerignore, antipatterns
+                                ├──→ (Task) acc-docker-architect-agent ──→ 5 skills
+                                │           └── multi-stage builds, BuildKit, Dockerfile production/dev
                                 │
-                                ├──→ (Task) acc-docker-image-builder ───→ 6 skills
-                                │           └── base images, PHP extensions, php.ini
+                                ├──→ (Task) acc-docker-image-builder ───→ 5 skills
+                                │           └── base images, PHP extensions, Dockerfile, dockerignore
                                 │
-                                ├──→ (Task) acc-docker-compose-agent ───→ 4 skills
-                                │           └── Compose config, resources, networking
+                                ├──→ (Task) acc-docker-compose-agent ───→ 6 skills
+                                │           └── Compose config, networking, dev/production, env template
                                 │
-                                ├──→ (Task) acc-docker-performance-agent → 8 skills
-                                │           └── build time, image size, OPcache, PHP-FPM
+                                ├──→ (Task) acc-docker-performance-agent → 6 skills
+                                │           └── build time, image size, OPcache, PHP-FPM, startup
                                 │
-                                ├──→ (Task) acc-docker-security-agent ──→ 5 skills
-                                │           └── secrets, permissions, scanning
+                                ├──→ (Task) acc-docker-security-agent ──→ 6 skills
+                                │           └── secrets, permissions, scanning, antipatterns
                                 │
-                                └──→ (Task) acc-docker-production-agent → 7 skills
+                                └──→ (Task) acc-docker-production-agent → 6 skills
                                             └── health checks, entrypoint, nginx, supervisor
+
+/acc-explain ──────────→ acc-explain-coordinator (opus, 2 skills)
+                                │
+                                ├──→ (Task) acc-codebase-navigator ────→ 3 skills
+                                │           └── scan-codebase-structure, identify-entry-points, detect-architecture-pattern
+                                │
+                                ├──→ (Task) acc-business-logic-analyst → 4 skills
+                                │           └── extract-business-rules, explain-business-process,
+                                │               extract-domain-concepts, extract-state-machine
+                                │
+                                ├──→ (Task) acc-data-flow-analyst ─────→ 3 skills
+                                │           └── trace-request-lifecycle, trace-data-transformation, map-async-flows
+                                │
+                                ├──→ (Task) acc-structural-auditor [REUSED, deep/onboarding]
+                                ├──→ (Task) acc-behavioral-auditor [REUSED, deep/onboarding]
+                                ├──→ (Task) acc-diagram-designer [REUSED, deep/onboarding/business]
+                                └──→ (Task) acc-documentation-writer [REUSED, deep/onboarding/business]
 
 /acc-generate-docker ──→ acc-docker-coordinator (opus, 4 skills)
                                 │
@@ -173,12 +195,13 @@ Skill generates PHP code with tests
 |------------|-----------------|-------------|
 | DDD components | `acc-ddd-generator` | 13 acc-create-* skills |
 | Stability patterns | `acc-stability-generator` | 5 acc-create-* skills |
-| Behavioral patterns | `acc-behavioral-generator` | 5 acc-create-* skills |
+| Behavioral patterns | `acc-behavioral-generator` | 10 acc-create-* skills |
+| GoF Structural patterns | `acc-gof-structural-generator` | 6 acc-create-* skills |
 | Creational patterns | `acc-creational-generator` | 3 acc-create-* skills |
 | Integration patterns | `acc-integration-generator` | 7 acc-create-* skills |
 | PSR implementations | `acc-psr-generator` | 11 acc-create-psr* skills |
 | Architecture | `acc-architecture-generator` | Coordinator (delegates) |
-| Design patterns | `acc-pattern-generator` | Coordinator (delegates to 4 generators) |
+| Design patterns | `acc-pattern-generator` | Coordinator (delegates to 5 generators) |
 | Bug fixes | `acc-bug-fixer` | 5 acc-bug-* skills + 6 quality skills |
 
 ## Generator Skills by Category
@@ -211,13 +234,27 @@ Skill generates PHP code with tests
 - `acc-create-outbox-pattern` — Transactional Outbox
 - `acc-create-saga-pattern` — Saga orchestration
 
-### Behavioral Patterns (5 skills)
+### Behavioral Patterns (10 skills)
 
 - `acc-create-strategy` — Strategy pattern
 - `acc-create-state` — State machine
 - `acc-create-chain-of-responsibility` — Handler chains
 - `acc-create-decorator` — Decorator pattern
 - `acc-create-null-object` — Null Object pattern
+- `acc-create-policy` — Policy pattern
+- `acc-create-template-method` — Template Method pattern
+- `acc-create-visitor` — Visitor pattern
+- `acc-create-iterator` — Iterator pattern
+- `acc-create-memento` — Memento pattern
+
+### GoF Structural Patterns (6 skills)
+
+- `acc-create-adapter` — Adapter pattern
+- `acc-create-facade` — Facade pattern
+- `acc-create-proxy` — Proxy pattern
+- `acc-create-composite` — Composite pattern
+- `acc-create-bridge` — Bridge pattern
+- `acc-create-flyweight` — Flyweight pattern
 
 ### Creational Patterns (2 skills)
 

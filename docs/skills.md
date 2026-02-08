@@ -17,13 +17,15 @@ Knowledge bases and code generators. Skills provide domain expertise and code ge
   - [Testability Review Skills](#testability-review-skills)
   - [CI/CD Analyzer Skills](#cicd-analyzer-skills)
   - [Docker Analyzer Skills](#docker-analyzer-skills)
-  - [Other Skills](#other-skills)
+  - [Code Explainer Skills](#code-explainer-skills)
+- [Other Skills](#other-skills)
 - [Generator Skills](#generator-skills)
   - [DDD Components](#ddd-components)
   - [CQRS Components](#cqrs-components)
   - [Stability Patterns](#stability-patterns)
   - [Integration Patterns](#integration-patterns)
   - [Behavioral Patterns](#behavioral-patterns)
+  - [Structural Patterns (GoF)](#structural-patterns-gof)
   - [Creational Patterns](#creational-patterns)
   - [Presentation Patterns (ADR)](#presentation-patterns-adr)
   - [PSR Implementations](#psr-implementations)
@@ -40,9 +42,9 @@ Knowledge bases and code generators. Skills provide domain expertise and code ge
 | Type | Count | Purpose | Example |
 |------|-------|---------|---------|
 | **Knowledge** | 38 | Provide expertise and best practices | `acc-ddd-knowledge` |
-| **Analyzer** | 71 | Detect violations and antipatterns | `acc-analyze-solid-violations` |
-| **Generator** | 75 | Generate PHP code with tests | `acc-create-entity` |
-| **Template** | 9 | Documentation templates | `acc-readme-template` |
+| **Analyzer** | 82 | Detect violations and antipatterns | `acc-analyze-solid-violations` |
+| **Generator** | 85 | Generate PHP code with tests | `acc-create-entity` |
+| **Template** | 10 | Documentation and output templates | `acc-readme-template` |
 | **Other** | 7 | Estimation, suggestions, regression prevention | `acc-estimate-complexity` |
 
 ## How Skills Work
@@ -218,6 +220,22 @@ Knowledge bases for architecture audits and best practices.
 | `acc-check-docker-php-config` | `skills/acc-check-docker-php-config/` | PHP config in Docker |
 | `acc-check-docker-healthcheck` | `skills/acc-check-docker-healthcheck/` | Health check verification |
 
+### Code Explainer Skills
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-scan-codebase-structure` | `skills/acc-scan-codebase-structure/` | Scans directory tree, identifies layers, detects framework |
+| `acc-identify-entry-points` | `skills/acc-identify-entry-points/` | Finds controllers, actions, CLI commands, event handlers |
+| `acc-detect-architecture-pattern` | `skills/acc-detect-architecture-pattern/` | Detects MVC/DDD/Hexagonal/CQRS patterns with confidence scores |
+| `acc-resolve-entry-point` | `skills/acc-resolve-entry-point/` | Resolves HTTP routes and console commands to handler files |
+| `acc-extract-business-rules` | `skills/acc-extract-business-rules/` | Extracts validation, invariants, authorization, policies |
+| `acc-explain-business-process` | `skills/acc-explain-business-process/` | Translates method chains into business process descriptions |
+| `acc-extract-domain-concepts` | `skills/acc-extract-domain-concepts/` | Maps entities, VOs, aggregates, builds ubiquitous language |
+| `acc-extract-state-machine` | `skills/acc-extract-state-machine/` | Detects states/transitions from enums, status fields |
+| `acc-trace-request-lifecycle` | `skills/acc-trace-request-lifecycle/` | Traces Router → Middleware → Controller → UseCase → Response |
+| `acc-trace-data-transformation` | `skills/acc-trace-data-transformation/` | Maps Request DTO → Command → Entity → Response DTO chain |
+| `acc-map-async-flows` | `skills/acc-map-async-flows/` | Finds queue publishing, event dispatching, webhooks |
+
 ### Other Skills
 
 | Skill | Path | Description |
@@ -281,6 +299,21 @@ Code generators for DDD and architecture components (PHP 8.5).
 | `acc-create-decorator` | `skills/acc-create-decorator/` | Decorator pattern |
 | `acc-create-null-object` | `skills/acc-create-null-object/` | Null Object pattern |
 | `acc-create-policy` | `skills/acc-create-policy/` | Policy pattern |
+| `acc-create-template-method` | `skills/acc-create-template-method/` | Template Method pattern |
+| `acc-create-visitor` | `skills/acc-create-visitor/` | Visitor pattern |
+| `acc-create-iterator` | `skills/acc-create-iterator/` | Iterator pattern |
+| `acc-create-memento` | `skills/acc-create-memento/` | Memento pattern |
+
+### Structural Patterns (GoF)
+
+| Skill | Path | Description |
+|-------|------|-------------|
+| `acc-create-adapter` | `skills/acc-create-adapter/` | Adapter pattern |
+| `acc-create-facade` | `skills/acc-create-facade/` | Facade pattern |
+| `acc-create-proxy` | `skills/acc-create-proxy/` | Proxy pattern |
+| `acc-create-composite` | `skills/acc-create-composite/` | Composite pattern |
+| `acc-create-bridge` | `skills/acc-create-bridge/` | Bridge pattern |
+| `acc-create-flyweight` | `skills/acc-create-flyweight/` | Flyweight pattern |
 
 ### Creational Patterns
 
@@ -381,6 +414,7 @@ Code generators for DDD and architecture components (PHP 8.5).
 | `acc-code-examples-template` | `skills/acc-code-examples-template/` | Code examples |
 | `acc-mermaid-template` | `skills/acc-mermaid-template/` | Mermaid diagram templates |
 | `acc-changelog-template` | `skills/acc-changelog-template/` | CHANGELOG format |
+| `acc-explain-output-template` | `skills/acc-explain-output-template/` | Output templates for 5 explain modes |
 
 ---
 

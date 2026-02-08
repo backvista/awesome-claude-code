@@ -4,7 +4,7 @@
 
 ## Quick Facts
 
-- 23 commands, 42 agents, 157 skills, 21 hooks
+- 26 commands, 56 agents, 222 skills, 21 hooks
 - PHP 8.5, PSR-12, readonly classes
 - DDD/CQRS/Hexagonal patterns
 - Testing, Documentation generation and audit
@@ -34,6 +34,7 @@ Components auto-copy to `.claude/` directory.
 | `/acc-audit-test <path>` | Audit test quality |
 | `/acc-code-review [branch] [level]` | Multi-level code review |
 | `/acc-bug-fix <target>` | Automated bug diagnosis and fix |
+| `/acc-explain <path> [mode]` | Explain code: structure, logic, data flows |
 
 ## Agents
 
@@ -51,46 +52,67 @@ Components auto-copy to `.claude/` directory.
 | `acc-test-generator` | Test generator |
 | `acc-bug-fix-coordinator` | Bug diagnosis → fix → test workflow |
 | `acc-bug-fixer` | Safe minimal bug fix generator |
+| `acc-explain-coordinator` | Code explanation (5 modes) |
+| `acc-codebase-navigator` | Structure scanning and pattern detection |
+| `acc-business-logic-analyst` | Business rules and process extraction |
+| `acc-data-flow-analyst` | Request lifecycle and data flow tracing |
 
 ## Skills by Category
 
-### Knowledge (22)
+### Knowledge (38)
 - Architecture: DDD, CQRS, Clean, Hexagonal, Layered, EDA, Event Sourcing
-- Patterns: Saga, Outbox, Stability (Circuit Breaker, Retry, Rate Limiter, Bulkhead)
-- Principles: SOLID, GRASP, ADR
+- Patterns: Saga, Outbox, Stability (Circuit Breaker, Retry, Rate Limiter, Bulkhead), ADR
+- Principles: SOLID, GRASP
 - Standards: PSR-1/4/12, PSR overview
 - Documentation: types, diagrams, QA
 - Testing: principles, pyramid, DDD testing
 - Bug Fix: categories, symptoms, fix patterns
+- CI/CD: pipeline, tools, deployment
+- Docker: core, multistage, base-images, php-extensions, compose, networking, security, buildkit, production, troubleshooting, orchestration, scanning
+- Task Progress: coordinator tracking guidelines
 
-### Analyzers (14)
-- SOLID violations, code smells, coupling/cohesion, bounded contexts, immutability, leaky abstractions, encapsulation, test coverage, test smells
-- Security: SSRF, Command Injection, Deserialization, XXE, Path Traversal
+### Analyzers (82)
+- Architecture: SOLID violations, code smells, coupling/cohesion, bounded contexts, immutability, leaky abstractions, encapsulation
+- Testing: test coverage, test smells
+- Bug Detection: logic errors, null pointers, boundary, race conditions, resource leaks, exceptions, types, SQL injection, infinite loops
+- Security: input validation, output encoding, authentication, authorization, sensitive data, CSRF, crypto, dependencies, SQL injection, SSRF, command injection, deserialization, XXE, path traversal
+- Performance: N+1, query efficiency, memory, caching, loops, lazy loading, batch processing, complexity, connection pool, serialization
+- Readability: naming, code style, method/class length, nesting, comments, magic values, consistency
+- Testability: DI, pure functions, side effects, test quality
+- CI/CD: CI config, CI logs, CI antipatterns
+- Docker: build errors, runtime errors, image size, security, secrets, user permissions, compose config, production readiness, antipatterns, layer efficiency, PHP config, healthcheck
+- Code Explainer: scan structure, identify entry points, detect architecture, resolve entry point, extract business rules, explain process, extract domain concepts, extract state machine, trace lifecycle, trace transformation, map async flows
 
-### Generators (49)
-- DDD: Value Objects, Entities, Aggregates, Domain Events, Repositories, etc.
+### Generators (85)
+- DDD: Value Objects, Entities, Aggregates, Domain Events, Repositories, Domain Services, Factories, Specifications, DTOs, Anti-Corruption Layer
 - CQRS: Commands, Queries, Use Cases, Read Models
 - Stability: Circuit Breaker, Retry, Rate Limiter, Bulkhead
 - Integration: Saga, Outbox
-- Behavioral: Strategy, State, Decorator, Chain of Responsibility, Null Object, Policy
+- Behavioral: Strategy, State, Decorator, Chain of Responsibility, Null Object, Policy, Template Method, Visitor, Iterator, Memento
+- GoF Structural: Adapter, Facade, Proxy, Composite, Bridge, Flyweight
 - Creational: Builder, Object Pool, DI Container, Mediator
 - ADR: Action, Responder
 - PSR: 3, 6, 7, 11, 13, 14, 15, 16, 17, 18, 20
 - Testing: Unit tests, Integration tests, Builders, Mocks, Test doubles
 - Bug Fix: minimal safe fix generator
+- CI/CD: GitHub Actions, GitLab CI, PHPStan, Psalm, DEPTRAC, Rector, CI fix
+- Docker: Dockerfile (production, dev, CI), dockerignore, Compose (dev, production), PHP config, healthcheck, entrypoint, nginx, makefile, env template, supervisor
+- Docker Optimizers: layers, build time, image size, PHP-FPM, Compose resources, OPcache, startup
+- Deployment: deploy strategy, feature flags
 
-### Templates (9)
+### Templates (10)
 - README, Architecture, ADR, API docs
 - Getting Started, Troubleshooting
 - Code Examples, Mermaid diagrams, Changelog
+- Explain output template
 
 ## Project Structure
 
 ```
 .claude/
-├── commands/        # Slash commands (12)
-├── agents/          # Subagents (31)
-├── skills/          # Knowledge + generators + analyzers (139)
+├── commands/        # Slash commands (26)
+├── agents/          # Subagents (56)
+├── skills/          # Knowledge + generators + analyzers (222)
 └── settings.json    # Hooks and permissions
 ```
 
@@ -133,4 +155,4 @@ Components auto-copy to `.claude/` directory.
 
 ## Version
 
-v2.6.0 - Bug Fix system, full OWASP Top 10 coverage
+v2.9.0 - Code Explanation system + GoF Structural & Behavioral design patterns

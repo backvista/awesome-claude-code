@@ -26,9 +26,10 @@ Then in Claude Code:
 ```bash
 /acc-code-review                    # Review current branch
 /acc-bug-fix "NullPointerException" # Diagnose and fix bug
+/acc-explain GET /api/orders        # Explain HTTP route
 /acc-audit-architecture ./src       # Full architecture audit
-/acc-generate-documentation            # Write documentation
-/acc-generate-test                     # Write test
+/acc-generate-documentation         # Write documentation
+/acc-generate-test                  # Write test
 ```
 
 Components are **automatically copied** to your project's `.claude/` directory. Existing files are never overwritten.
@@ -182,8 +183,7 @@ Generates:
 ## Component Flow
 
 ```
-COMMAND ───────→ COORDINATOR ───────→ AGENTS ───────→ KNOWLEDGE ──────→ GENERATORS
-───────────────────────────────────────────────────────
+COMMAND ───────→ COORDINATOR ───────→ AGENTS ───────→ KNOWLEDGE SKILLS ──────→ GENERATORS SKILLS
 
 /acc-code-review ──→ code-review-coordinator
                             │
@@ -217,7 +217,8 @@ COMMAND ───────→ COORDINATOR ───────→ AGENTS ─
                                     │
                                     └──→ pattern-generator ─────→ (coordinates generators)
                                               ├──→ stability-generator ──→ circuit-breaker, retry, rate-limiter
-                                              ├──→ behavioral-generator ─→ strategy, state, decorator
+                                              ├──→ behavioral-generator ─→ strategy, state, decorator, visitor, memento
+                                              ├──→ gof-structural-generator → adapter, facade, proxy, composite
                                               ├──→ creational-generator ─→ builder, factory, object-pool
                                               └──→ integration-generator → saga, outbox, acl
 
@@ -255,9 +256,8 @@ COMMAND ───────→ COORDINATOR ───────→ AGENTS ─
 
 /acc-ci-fix ──────────────→ ci-coordinator
                                     │
-                                    ├──→ bug-hunter ────────────→ detection-skills
-                                    ├──→ bug-fixer ─────────────→ fix-knowledge ────────→ generate-bug-fix
-                                    └──→ test-generator ────────→ testing-knowledge ────→ create-test-*
+                                    ├──→ ci-debugger ───────────→ analyze-ci-logs, ci-pipeline-knowledge
+                                    └──→ ci-fixer ──────────────→ generate-ci-fix, ci-tools-knowledge
 ```
 
 See [Component Flow](docs/component-flow.md) for the complete dependency graph.
@@ -274,15 +274,15 @@ See [Component Flow](docs/component-flow.md) for the complete dependency graph.
 
 ## Documentation
 
-| Document | Description |
-|----------|-------------|
-| [Commands](docs/commands.md) | 25 slash commands with examples |
-| [Agents](docs/agents.md) | 50 specialized subagents |
-| [Skills](docs/skills.md) | 200 skills (knowledge, generators, analyzers) |
-| [Hooks](docs/hooks.md) | 21 PHP/DDD hooks |
-| [Component Flow](docs/component-flow.md) | Architecture and dependency graph |
-| [MCP](docs/mcp.md) | MCP server configuration |
-| [Quick Reference](docs/quick-reference.md) | Paths, formats, best practices |
+| Document                                   | Description                                   |
+|--------------------------------------------|-----------------------------------------------|
+| [Commands](docs/commands.md)               | 26 slash commands with examples               |
+| [Agents](docs/agents.md)                   | 56 specialized subagents                      |
+| [Skills](docs/skills.md)                   | 222 skills (knowledge, generators, analyzers) |
+| [Hooks](docs/hooks.md)                     | 21 PHP/DDD hooks                              |
+| [Component Flow](docs/component-flow.md)   | Architecture and dependency graph             |
+| [MCP](docs/mcp.md)                         | MCP server configuration                      |
+| [Quick Reference](docs/quick-reference.md) | Paths, formats, best practices                |
 
 ## Use Cases
 
@@ -296,6 +296,8 @@ See [Component Flow](docs/component-flow.md) for the complete dependency graph.
 | Design patterns audit  | `/acc-audit-patterns ./src`           | Stability, behavioral, creational patterns   |
 | Generate PSR component | `/acc-generate-psr psr-15 Auth`       | PSR-compliant implementation with tests      |
 | Generate design pattern| `/acc-generate-patterns strategy Pay` | Pattern implementation with DI configuration |
+| Explain code           | `/acc-explain src/Domain/Order/`      | Structure, business logic, data flows        |
+| Onboard to project     | `/acc-explain .`                      | Project guide with glossary and diagrams     |
 | Audit Docker config    | `/acc-audit-docker ./`                | Dockerfile, Compose, security, performance   |
 | Generate Docker stack  | `/acc-generate-docker full`           | Dockerfile + Compose + Nginx + entrypoint    |
 | Refactor code          | `/acc-refactor ./src/OrderService`    | Analysis + prioritized roadmap + generators  |

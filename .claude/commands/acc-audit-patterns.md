@@ -1,5 +1,5 @@
 ---
-description: Design patterns audit. Analyzes stability (Circuit Breaker, Retry, Rate Limiter, Bulkhead), behavioral (Strategy, State, Chain, Decorator), creational (Builder, Factory, Pool), integration (Outbox, Saga, ADR), and SOLID/GRASP compliance.
+description: Design patterns audit. Analyzes stability (Circuit Breaker, Retry, Rate Limiter, Bulkhead), behavioral (Strategy, State, Chain, Decorator, Null Object, Template Method, Visitor, Iterator, Memento), GoF structural (Adapter, Facade, Proxy, Composite, Bridge, Flyweight), creational (Builder, Factory, Pool), integration (Outbox, Saga, ADR), and SOLID/GRASP compliance.
 allowed-tools: Read, Grep, Glob, Task
 model: opus
 argument-hint: <path> [-- additional instructions]
@@ -71,8 +71,20 @@ Analyze the following pattern categories:
    - Chain of Responsibility: handler pipelines
    - Decorator: dynamic behavior extension
    - Null Object: null check elimination
+   - Template Method: algorithm skeleton with hooks
+   - Visitor: operations without class modification
+   - Iterator: sequential collection access
+   - Memento: state saving/restoration
 
-3. CREATIONAL PATTERNS (object creation)
+3. GOF STRUCTURAL PATTERNS (class/object composition)
+   - Adapter: incompatible interface integration
+   - Facade: simplified subsystem interface
+   - Proxy: access control, lazy loading, caching
+   - Composite: tree structures, uniform treatment
+   - Bridge: abstraction-implementation decoupling
+   - Flyweight: memory optimization via sharing
+
+5. CREATIONAL PATTERNS (object creation)
    - Builder: step-by-step construction
    - Object Pool: connection/resource reuse
    - Factory: encapsulated instantiation
@@ -82,10 +94,10 @@ Analyze the following pattern categories:
    - Saga: distributed transaction coordination
    - ADR: Action-Domain-Responder for HTTP
 
-5. SOLID PRINCIPLES
+6. SOLID PRINCIPLES
    - SRP, OCP, LSP, ISP, DIP compliance
 
-6. GRASP PRINCIPLES
+7. GRASP PRINCIPLES
    - Information Expert, Creator, Controller, etc.
 
 Provide:
@@ -103,7 +115,8 @@ Provide:
 | Category | Patterns | Use Cases |
 |----------|----------|-----------|
 | **Stability** | Circuit Breaker, Retry, Rate Limiter, Bulkhead | External APIs, microservices |
-| **Behavioral** | Strategy, State, Chain, Decorator, Null Object | Business logic encapsulation |
+| **Behavioral** | Strategy, State, Chain, Decorator, Null Object, Template Method, Visitor, Iterator, Memento | Business logic encapsulation |
+| **GoF Structural** | Adapter, Facade, Proxy, Composite, Bridge, Flyweight | Interface compatibility, composition |
 | **Creational** | Builder, Object Pool, Factory | Complex object construction |
 | **Integration** | Outbox, Saga, ADR | Distributed systems, HTTP |
 
@@ -140,7 +153,8 @@ A structured markdown report containing:
 | Category | Patterns Checked | Issues Found | Compliance |
 |----------|-----------------|--------------|------------|
 | Stability | 4 | 3 | 60% |
-| Behavioral | 5 | 2 | 85% |
+| Behavioral | 9 | 2 | 85% |
+| GoF Structural | 6 | 3 | 75% |
 | Creational | 3 | 1 | 90% |
 | Integration | 3 | 4 | 70% |
 | SOLID | 5 | 2 | 80% |
@@ -167,7 +181,18 @@ A structured markdown report containing:
 | Decorator | ✅ | Good | Logger decorators |
 | Null Object | ❌ | Missing | 15 null checks |
 
-### 4. Creational Patterns Analysis
+### 4. GoF Structural Patterns Analysis
+
+| Pattern | Found | Status | Issues |
+|---------|-------|--------|--------|
+| Adapter | ❌ | Missing | 3 direct SDK usages in Domain |
+| Facade | ✅ | Good | Proper subsystem hiding |
+| Proxy | ❌ | Missing | Heavy initialization not lazy |
+| Composite | ⚠️ | Candidate | Recursive structures found |
+| Bridge | ❌ | Missing | Class explosion detected |
+| Flyweight | ❌ | Missing | Repeated immutable objects |
+
+### 5. Creational Patterns Analysis
 
 | Pattern | Found | Status | Issues |
 |---------|-------|--------|--------|
@@ -175,7 +200,7 @@ A structured markdown report containing:
 | Object Pool | ❌ | Missing | DB connections not pooled |
 | Factory | ✅ | Good | Domain factories present |
 
-### 5. Integration Patterns Analysis
+### 6. Integration Patterns Analysis
 
 | Pattern | Found | Status | Issues |
 |---------|-------|--------|--------|
@@ -183,7 +208,7 @@ A structured markdown report containing:
 | Saga | ❌ | Missing | Distributed tx needed |
 | ADR | ⚠️ | Partial | Fat controllers |
 
-### 6. SOLID/GRASP Compliance
+### 7. SOLID/GRASP Compliance
 
 #### SOLID Violations
 | Principle | Score | Issues |
@@ -201,7 +226,7 @@ A structured markdown report containing:
 | Creator | 85% | 3 violations |
 | Controller | 95% | 1 violation |
 
-### 7. Pattern Recommendations
+### 8. Pattern Recommendations
 
 | Gap Identified | Location | Pattern Needed | Generation Skill |
 |----------------|----------|----------------|------------------|
@@ -210,7 +235,7 @@ A structured markdown report containing:
 | 8 constructor params | `User.php:15` | Builder | `/acc-generate-patterns builder User` |
 | Direct publishing | `OrderService.php:120` | Outbox | `/acc-generate-patterns outbox Order` |
 
-### 8. Priority Actions
+### 9. Priority Actions
 
 1. **Critical** — Add Circuit Breaker to external API calls
 2. **Critical** — Implement Outbox pattern for message consistency

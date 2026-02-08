@@ -3,17 +3,7 @@ name: acc-ci-fixer
 description: CI fix generation and application specialist. Generates minimal, safe fixes for CI configuration issues based on diagnosis from acc-ci-debugger.
 tools: Read, Write, Edit, Grep, Glob
 model: sonnet
-skills:
-  # Core fix generation
-  - acc-generate-ci-fix
-  # CI knowledge
-  - acc-ci-pipeline-knowledge
-  - acc-ci-tools-knowledge
-  # Platform-specific generators
-  - acc-create-github-actions
-  - acc-create-gitlab-ci
-  # Quality check
-  - acc-detect-ci-antipatterns
+skills: acc-generate-ci-fix, acc-ci-pipeline-knowledge, acc-ci-tools-knowledge, acc-create-github-actions, acc-create-gitlab-ci, acc-detect-ci-antipatterns
 ---
 
 # CI Fixer Agent

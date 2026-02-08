@@ -53,6 +53,7 @@ Meta-instructions allow you to:
 | `/acc-audit-ci` | `[path] [-- focus areas]` | Comprehensive CI/CD audit |
 | `/acc-audit-docker` | `[path] [-- focus areas]` | Audit Docker config: Dockerfile, Compose, security, performance |
 | `/acc-generate-docker` | `<type> [name] [-- instructions]` | Generate Docker components (Dockerfile, Compose, Nginx, etc.) |
+| `/acc-explain` | `<path\|route\|command> [mode] [-- instructions]` | Explain code: structure, business logic, data flows, architecture |
 
 ---
 
@@ -187,7 +188,9 @@ Comprehensive multi-pattern architecture audit for PHP projects.
 - Event-Driven Architecture
 - Outbox Pattern
 - Saga Pattern
-- Stability Patterns
+- Stability Patterns (Circuit Breaker, Retry, Rate Limiter, Bulkhead)
+- Behavioral Patterns (Strategy, State, Chain, Decorator, Null Object, Template Method, Visitor, Iterator, Memento)
+- GoF Structural Patterns (Adapter, Facade, Proxy, Composite, Bridge, Flyweight)
 
 ---
 
@@ -576,7 +579,8 @@ Design patterns audit with SOLID/GRASP compliance analysis.
 
 **Checks:**
 - **Stability Patterns**: Circuit Breaker, Retry, Rate Limiter, Bulkhead
-- **Behavioral Patterns**: Strategy, State, Chain of Responsibility, Decorator, Null Object
+- **Behavioral Patterns**: Strategy, State, Chain of Responsibility, Decorator, Null Object, Template Method, Visitor, Iterator, Memento
+- **GoF Structural Patterns**: Adapter, Facade, Proxy, Composite, Bridge, Flyweight
 - **Creational Patterns**: Builder, Object Pool, Factory
 - **Integration Patterns**: Outbox, Saga, ADR
 - **SOLID Principles**: SRP, OCP, LSP, ISP, DIP
@@ -696,7 +700,8 @@ Generate design pattern implementations with DI configuration.
 
 **Supported Patterns:**
 - **Stability**: `circuit-breaker`, `retry`, `rate-limiter`, `bulkhead`
-- **Behavioral**: `strategy`, `state`, `chain-of-responsibility`, `decorator`, `null-object`
+- **Behavioral**: `strategy`, `state`, `chain-of-responsibility`, `decorator`, `null-object`, `template-method`, `visitor`, `iterator`, `memento`
+- **GoF Structural**: `adapter`, `facade`, `proxy`, `composite`, `bridge`, `flyweight`
 - **Creational**: `builder`, `object-pool`, `factory`
 - **Integration**: `outbox`, `saga`, `action`, `responder`
 
@@ -1005,6 +1010,79 @@ Generate Docker configuration components for PHP projects.
 | `env` | `environment` | Environment template |
 | `healthcheck` | `hc` | Health check script |
 | `full` | `all` | Complete Docker setup |
+
+---
+
+## `/acc-explain`
+
+**Path:** `commands/acc-explain.md`
+
+Explain code structure, business logic, data flows, and architecture patterns. Accepts file paths, directories, HTTP routes, or console commands.
+
+**Arguments:**
+```
+/acc-explain <path|route|command> [mode] [-- instructions]
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `input` | **Yes** | File, directory, `.`, HTTP route (`GET /api/orders`), or console command (`app:process-payments`) |
+| `mode` | No | `quick`, `deep`, `onboarding`, `business`, `qa` (auto-detected) |
+| `-- instructions` | No | Focus area or specific question |
+
+**Input Types (auto-detected):**
+
+| Input | Pattern | Example |
+|-------|---------|---------|
+| HTTP route | `METHOD /path` | `GET /api/orders`, `POST /api/orders/{id}/status` |
+| Console command | `namespace:name` | `app:process-payments`, `import:products` |
+| File path | Existing file | `src/Domain/Order/Order.php` |
+| Directory | Existing directory | `src/Domain/Order/` |
+| Project root | `.` | `.` |
+
+**Examples:**
+```bash
+# HTTP routes
+/acc-explain GET /api/orders                               # Resolve route → explain handler
+/acc-explain POST /api/orders/{id}/status deep             # Deep mode for route
+/acc-explain DELETE /api/users/{id} -- explain cascade deletion
+
+# Console commands
+/acc-explain app:process-payments                          # Resolve command → explain handler
+/acc-explain import:products -- explain data transformation pipeline
+
+# File/directory (existing behavior)
+/acc-explain src/Domain/Order/Order.php                    # Quick mode (auto)
+/acc-explain src/Domain/Order/                             # Deep mode (auto)
+/acc-explain .                                             # Onboarding mode (auto)
+/acc-explain src/Payment business                          # Business mode
+/acc-explain src/Domain qa -- how are discounts calculated? # QA mode
+/acc-explain src/Domain/Order/ deep -- focus on state transitions
+```
+
+**Modes:**
+
+| Mode | Auto-detect | Depth | Audience |
+|------|-------------|-------|----------|
+| `quick` | Single file, HTTP route, console command | 1-2 screens | Developer |
+| `deep` | Directory | Full analysis + diagrams | Senior dev / Architect |
+| `onboarding` | `.` (root) | Comprehensive guide | New team member |
+| `business` | Explicit only | Non-technical | PM / Stakeholder |
+| `qa` | Explicit only | Answer-focused | Any |
+
+**Workflow:**
+0. **Resolve** — If route/command input, resolve to handler file (Phase 0)
+1. **Navigate** — Scan structure, find entry points, detect patterns
+2. **Analyze** — Extract business logic, trace data flows, audit patterns
+3. **Visualize** — Generate Mermaid diagrams (deep/onboarding/business)
+4. **Present** — Aggregate results, suggest documentation
+
+**Output:**
+- Quick: Purpose, responsibilities, business rules, data flow, dependencies
+- Deep: Full analysis with Mermaid diagrams, domain model, state machines
+- Onboarding: Project guide with C4 diagrams, glossary, "How to navigate"
+- Business: Non-technical overview with simple flow diagrams
+- QA: Direct answer with code references
 
 ---
 

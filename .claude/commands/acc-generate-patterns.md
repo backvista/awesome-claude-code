@@ -1,5 +1,5 @@
 ---
-description: Generate design patterns. Creates Circuit Breaker, Retry, Rate Limiter, Bulkhead, Strategy, State, Chain of Responsibility, Decorator, Null Object, Builder, Object Pool, Factory, Outbox, Saga, ADR patterns.
+description: Generate design patterns. Creates Circuit Breaker, Retry, Rate Limiter, Bulkhead, Strategy, State, Chain of Responsibility, Decorator, Null Object, Template Method, Visitor, Iterator, Memento, Adapter, Facade, Proxy, Composite, Bridge, Flyweight, Builder, Object Pool, Factory, Outbox, Saga, ADR patterns.
 allowed-tools: Read, Write, Edit, Glob, Grep, Task
 model: opus
 argument-hint: <pattern-name> <ComponentName> [-- additional instructions]
@@ -48,6 +48,21 @@ Examples:
 | `chain-of-responsibility` | `chain`, `middleware` | Handler pipelines |
 | `decorator` | `wrapper` | Dynamic behavior extension |
 | `null-object` | `null` | Null check elimination |
+| `template-method` | `template` | Algorithm skeleton with hooks |
+| `visitor` | - | Operations without class modification |
+| `iterator` | `collection` | Sequential access to collections |
+| `memento` | `snapshot`, `undo` | State saving/restoration, undo/redo |
+
+### Structural Patterns (GoF)
+
+| Pattern | Alias | Use Case |
+|---------|-------|----------|
+| `adapter` | `wrapper` | Incompatible interface integration |
+| `facade` | - | Simplified subsystem interface |
+| `proxy` | `lazy-proxy`, `caching-proxy` | Access control, lazy loading, caching |
+| `composite` | `tree` | Tree structures, uniform treatment |
+| `bridge` | - | Abstraction-implementation decoupling |
+| `flyweight` | - | Memory optimization via shared state |
 
 ### Creational Patterns (Construction)
 
@@ -212,6 +227,119 @@ Generates:
 - Real implementation
 - Null implementation (no-op)
 
+#### Template Method
+```bash
+/acc-generate-patterns template-method DataImporter
+/acc-generate-patterns template ReportGenerator -- with CSV and PDF variants
+```
+
+Generates:
+- Abstract class with final template method
+- Hook methods for customization
+- Concrete implementations
+
+#### Visitor
+```bash
+/acc-generate-patterns visitor PriceCalculator
+/acc-generate-patterns visitor ExportFormatter -- with JSON and XML
+```
+
+Generates:
+- VisitorInterface with visit methods
+- Element interface with accept method
+- Concrete visitor implementations
+
+#### Iterator
+```bash
+/acc-generate-patterns iterator OrderCollection
+/acc-generate-patterns collection FilteredProducts -- with pagination
+```
+
+Generates:
+- Collection class (IteratorAggregate)
+- Custom Iterator implementation
+- Filter/pagination support
+
+#### Memento
+```bash
+/acc-generate-patterns memento DocumentEditor
+/acc-generate-patterns undo FormWizard -- with history limit
+```
+
+Generates:
+- Originator (creates/restores mementos)
+- Memento (immutable state snapshot)
+- History/Caretaker (manages memento stack)
+
+### Structural Patterns (GoF)
+
+#### Adapter
+```bash
+/acc-generate-patterns adapter StripePayment
+/acc-generate-patterns wrapper TwilioSms -- with domain interface
+```
+
+Generates:
+```
+src/Domain/Payment/Port/
+├── PaymentGatewayInterface.php
+src/Infrastructure/Payment/Adapter/
+├── StripePaymentAdapter.php
+```
+
+#### Facade
+```bash
+/acc-generate-patterns facade OrderProcessing
+/acc-generate-patterns facade UserOnboarding -- with validation
+```
+
+Generates:
+- Simplified interface to complex subsystem
+- Delegates to internal services
+
+#### Proxy
+```bash
+/acc-generate-patterns proxy ReportService
+/acc-generate-patterns lazy-proxy HeavyRepository -- with caching
+```
+
+Generates:
+- Subject interface
+- Proxy implementation (Lazy/Caching/Access)
+
+#### Composite
+```bash
+/acc-generate-patterns composite MenuTree
+/acc-generate-patterns tree PermissionHierarchy
+```
+
+Generates:
+- Component interface
+- Leaf and Composite nodes
+- Recursive operations
+
+#### Bridge
+```bash
+/acc-generate-patterns bridge Notification
+/acc-generate-patterns bridge Renderer -- with HTML and PDF
+```
+
+Generates:
+- Abstraction with implementor reference
+- Implementor interface
+- Concrete implementors
+
+#### Flyweight
+```bash
+/acc-generate-patterns flyweight Currency
+/acc-generate-patterns flyweight Icon -- with factory
+```
+
+Generates:
+- Flyweight interface (immutable)
+- Concrete flyweight
+- Factory with caching pool
+
 ### Creational Patterns
 
 #### Builder
@@ -360,6 +488,10 @@ Generate related patterns together:
 ```bash
 /acc-generate-patterns circuit-breaker PaymentGateway
 /acc-generate-patterns strategy PaymentProcessor
+/acc-generate-patterns adapter StripePayment
+/acc-generate-patterns facade OrderProcessing
+/acc-generate-patterns template-method DataImporter
+/acc-generate-patterns visitor PriceCalculator
 /acc-generate-patterns saga CheckoutWorkflow
 /acc-generate-patterns builder UserProfile -- with validation steps
 /acc-generate-patterns outbox Order -- with Doctrine integration

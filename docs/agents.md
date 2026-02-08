@@ -16,13 +16,15 @@ Subagents for specialized tasks. Agents are autonomous workers that handle compl
 | `acc-refactor-coordinator` | Refactoring coordinator (analyze → prioritize → fix) | `/acc-refactor` |
 | `acc-ci-coordinator` | CI/CD coordinator (setup, debug, optimize, audit) | `/acc-ci-*`, `/acc-audit-ci` |
 | `acc-docker-coordinator` | Docker expert system coordinator (audit, generate) | `/acc-audit-docker`, `/acc-generate-docker` |
+| `acc-explain-coordinator` | Code explanation coordinator (5 modes) | `/acc-explain` |
 
 ### Auditors (3-12 skills)
 
 | Agent | Purpose | Skills | Invoked By |
 |-------|---------|--------|------------|
 | `acc-structural-auditor` | Structural patterns analysis | 12 | `acc-architecture-auditor` (Task) |
-| `acc-behavioral-auditor` | Behavioral patterns analysis | 12 | `acc-architecture-auditor`, `acc-pattern-auditor` (Task) |
+| `acc-behavioral-auditor` | Behavioral patterns analysis | 17 | `acc-architecture-auditor`, `acc-pattern-auditor` (Task) |
+| `acc-gof-structural-auditor` | GoF Structural patterns analysis | 6 | `acc-pattern-auditor` (Task) |
 | `acc-integration-auditor` | Integration patterns analysis | 12 | `acc-architecture-auditor`, `acc-pattern-auditor` (Task) |
 | `acc-stability-auditor` | Stability patterns analysis | 5 | `acc-pattern-auditor` (Task) |
 | `acc-creational-auditor` | Creational patterns analysis | 3 | `acc-pattern-auditor` (Task) |
@@ -54,7 +56,8 @@ Subagents for specialized tasks. Agents are autonomous workers that handle compl
 | `acc-architecture-generator` | Generate architecture components | 7 | `acc-architecture-auditor` (Task) |
 | `acc-ddd-generator` | Generate DDD components | 14 | `acc-ddd-auditor` (Task) |
 | `acc-stability-generator` | Generate stability patterns | 5 | `acc-pattern-generator` (Task) |
-| `acc-behavioral-generator` | Generate behavioral patterns | 5 | `acc-pattern-generator` (Task) |
+| `acc-behavioral-generator` | Generate behavioral patterns | 10 | `acc-pattern-generator` (Task) |
+| `acc-gof-structural-generator` | Generate GoF structural patterns | 6 | `acc-pattern-generator` (Task) |
 | `acc-creational-generator` | Generate creational patterns | 3 | `acc-pattern-generator` (Task) |
 | `acc-integration-generator` | Generate integration patterns | 7 | `acc-pattern-generator` (Task) |
 | `acc-psr-generator` | Generate PSR implementations | 14 | `/acc-generate-psr`, `acc-psr-auditor` (Skill) |
@@ -87,6 +90,14 @@ Subagents for specialized tasks. Agents are autonomous workers that handle compl
 | `acc-docker-security-agent` | Security audit, hardening | 6 | `acc-docker-coordinator` (Task) |
 | `acc-docker-debugger-agent` | Error diagnosis, troubleshooting | 4 | `acc-docker-coordinator` (Task) |
 | `acc-docker-production-agent` | Production readiness, health checks | 6 | `acc-docker-coordinator` (Task) |
+
+### Code Explainer Specialists
+
+| Agent | Purpose | Skills | Invoked By |
+|-------|---------|--------|------------|
+| `acc-codebase-navigator` | Codebase structure scanning and pattern detection | 3 | `acc-explain-coordinator` (Task) |
+| `acc-business-logic-analyst` | Business rules, processes, domain concepts extraction | 4 | `acc-explain-coordinator` (Task) |
+| `acc-data-flow-analyst` | Request lifecycle, data transformation, async flow tracing | 3 | `acc-explain-coordinator` (Task) |
 
 ### Experts
 
@@ -125,6 +136,7 @@ Coordinator agents use TaskCreate/TaskUpdate for user visibility:
 - `acc-ci-coordinator` — 3 phases
 - `acc-ddd-auditor` — 3 phases
 - `acc-pattern-auditor` — 4 phases
+- `acc-explain-coordinator` — 4 phases
 
 See `acc-task-progress-knowledge` skill for guidelines.
 
@@ -193,7 +205,7 @@ skills: acc-ddd-knowledge, acc-clean-arch-knowledge, acc-hexagonal-knowledge,
 
 **Path:** `agents/acc-behavioral-auditor.md`
 
-Behavioral patterns auditor for CQRS, Event Sourcing, EDA, and GoF behavioral patterns (Strategy, State, Chain of Responsibility, Decorator, Null Object).
+Behavioral patterns auditor for CQRS, Event Sourcing, EDA, and GoF behavioral patterns (Strategy, State, Chain of Responsibility, Decorator, Null Object, Template Method, Visitor, Iterator, Memento).
 
 **Configuration:**
 ```yaml
@@ -204,10 +216,12 @@ skills: acc-cqrs-knowledge, acc-event-sourcing-knowledge, acc-eda-knowledge,
         acc-create-command, acc-create-query, acc-create-domain-event,
         acc-create-read-model, acc-create-strategy, acc-create-state,
         acc-create-chain-of-responsibility, acc-create-decorator,
-        acc-create-null-object
+        acc-create-null-object, acc-check-immutability,
+        acc-create-template-method, acc-create-visitor,
+        acc-create-iterator, acc-create-memento
 ```
 
-**Skills:** 12 (3 knowledge + 9 generators)
+**Skills:** 17 (3 knowledge + 14 generators/analyzers)
 
 ---
 
@@ -250,6 +264,44 @@ skills: acc-stability-patterns-knowledge, acc-create-circuit-breaker,
 ```
 
 **Skills:** 5 (1 knowledge + 4 generators)
+
+---
+
+## `acc-gof-structural-auditor`
+
+**Path:** `agents/acc-gof-structural-auditor.md`
+
+GoF Structural patterns auditor for Adapter, Facade, Proxy, Composite, Bridge, and Flyweight.
+
+**Configuration:**
+```yaml
+name: acc-gof-structural-auditor
+tools: Read, Grep, Glob
+model: sonnet
+skills: acc-create-adapter, acc-create-facade, acc-create-proxy,
+        acc-create-composite, acc-create-bridge, acc-create-flyweight
+```
+
+**Skills:** 6 (generators)
+
+---
+
+## `acc-gof-structural-generator`
+
+**Path:** `agents/acc-gof-structural-generator.md`
+
+Generates GoF structural patterns (Adapter, Facade, Proxy, Composite, Bridge, Flyweight).
+
+**Configuration:**
+```yaml
+name: acc-gof-structural-generator
+tools: Read, Write, Glob, Grep, Edit
+model: sonnet
+skills: acc-create-adapter, acc-create-facade, acc-create-proxy,
+        acc-create-composite, acc-create-bridge, acc-create-flyweight
+```
+
+**Skills:** 6
 
 ---
 
@@ -323,11 +375,12 @@ model: opus
 skills: acc-solid-knowledge, acc-grasp-knowledge
 ```
 
-**Skills:** 2 (knowledge only, delegates to 4 specialized auditors via Task)
+**Skills:** 2 (knowledge only, delegates to 5 specialized auditors via Task)
 
 **Delegation:**
 - `acc-stability-auditor` — Circuit Breaker, Retry, Rate Limiter, Bulkhead
-- `acc-behavioral-auditor` — Strategy, State, Chain, Decorator, Null Object
+- `acc-behavioral-auditor` — Strategy, State, Chain, Decorator, Null Object, Template Method, Visitor, Iterator, Memento
+- `acc-gof-structural-auditor` — Adapter, Facade, Proxy, Composite, Bridge, Flyweight
 - `acc-creational-auditor` — Builder, Object Pool, Factory
 - `acc-integration-auditor` — Outbox, Saga, ADR
 
@@ -337,7 +390,7 @@ skills: acc-solid-knowledge, acc-grasp-knowledge
 
 **Path:** `agents/acc-pattern-generator.md`
 
-Design patterns generation coordinator. Orchestrates stability, behavioral, creational, and integration generators.
+Design patterns generation coordinator. Orchestrates stability, behavioral, GoF structural, creational, and integration generators.
 
 **Configuration:**
 ```yaml
@@ -347,11 +400,12 @@ model: opus
 skills: acc-adr-knowledge
 ```
 
-**Skills:** 1 (delegates to 4 specialized generators via Task)
+**Skills:** 1 (delegates to 5 specialized generators via Task)
 
 **Delegation:**
 - `acc-stability-generator` — Circuit Breaker, Retry, Rate Limiter, Bulkhead
-- `acc-behavioral-generator` — Strategy, State, Chain, Decorator, Null Object
+- `acc-behavioral-generator` — Strategy, State, Chain, Decorator, Null Object, Template Method, Visitor, Iterator, Memento
+- `acc-gof-structural-generator` — Adapter, Facade, Proxy, Composite, Bridge, Flyweight
 - `acc-creational-generator` — Builder, Object Pool, Factory
 - `acc-integration-generator` — Outbox, Saga, Action, Responder
 
@@ -380,7 +434,7 @@ skills: acc-stability-patterns-knowledge, acc-create-circuit-breaker,
 
 **Path:** `agents/acc-behavioral-generator.md`
 
-Generates behavioral patterns (Strategy, State, Chain of Responsibility, Decorator, Null Object).
+Generates behavioral patterns (Strategy, State, Chain of Responsibility, Decorator, Null Object, Template Method, Visitor, Iterator, Memento).
 
 **Configuration:**
 ```yaml
@@ -388,10 +442,12 @@ name: acc-behavioral-generator
 tools: Read, Write, Glob, Grep, Edit
 model: sonnet
 skills: acc-create-strategy, acc-create-state, acc-create-chain-of-responsibility,
-        acc-create-decorator, acc-create-null-object
+        acc-create-decorator, acc-create-null-object, acc-create-policy,
+        acc-create-template-method, acc-create-visitor,
+        acc-create-iterator, acc-create-memento
 ```
 
-**Skills:** 5
+**Skills:** 10
 
 ---
 
@@ -761,20 +817,10 @@ Bug fix specialist generating safe, minimal fixes using diagnosis from bug-hunte
 name: acc-bug-fixer
 tools: Read, Edit, Write, Grep, Glob
 model: sonnet
-skills:
-  # New skills (5)
-  - acc-bug-fix-knowledge
-  - acc-bug-root-cause-finder
-  - acc-bug-impact-analyzer
-  - acc-generate-bug-fix
-  - acc-bug-regression-preventer
-  # Existing skills (6) - quality checks
-  - acc-detect-code-smells
-  - acc-detect-memory-issues
-  - acc-analyze-solid-violations
-  - acc-check-encapsulation
-  - acc-check-side-effects
-  - acc-check-immutability
+skills: acc-bug-fix-knowledge, acc-bug-root-cause-finder, acc-bug-impact-analyzer,
+        acc-generate-bug-fix, acc-bug-regression-preventer,
+        acc-detect-code-smells, acc-detect-memory-issues, acc-analyze-solid-violations,
+        acc-check-encapsulation, acc-check-side-effects, acc-check-immutability
 ```
 
 **Skills:** 11 (5 new + 6 existing)
@@ -1160,6 +1206,84 @@ skills: acc-docker-production-knowledge, acc-docker-orchestration-knowledge,
 ```
 
 **Skills:** 6
+
+---
+
+## `acc-explain-coordinator`
+
+**Path:** `agents/acc-explain-coordinator.md`
+
+Code explanation coordinator. Orchestrates codebase navigation, business logic extraction, data flow tracing, visualization, and documentation suggestion. Supports 5 modes.
+
+**Configuration:**
+```yaml
+name: acc-explain-coordinator
+tools: Read, Grep, Glob, Bash, Task, TaskCreate, TaskUpdate
+model: opus
+skills: acc-explain-output-template, acc-task-progress-knowledge
+```
+
+**Workflow (4 phases):**
+1. **Navigate** — Task → `acc-codebase-navigator` (scan structure, entry points, patterns)
+2. **Analyze** — Task → `acc-business-logic-analyst` + `acc-data-flow-analyst` (+ auditors for deep/onboarding)
+3. **Visualize** — Task → `acc-diagram-designer` + `acc-documentation-writer` (deep/onboarding/business)
+4. **Present** — Aggregate results, format output, suggest documentation
+
+**Modes:** quick (file), deep (module), onboarding (project), business (non-technical), qa (interactive)
+
+---
+
+## `acc-codebase-navigator`
+
+**Path:** `agents/acc-codebase-navigator.md`
+
+Codebase navigation specialist. Scans directory structure, identifies architectural layers, detects framework and patterns, finds entry points.
+
+**Configuration:**
+```yaml
+name: acc-codebase-navigator
+tools: Read, Grep, Glob
+model: sonnet
+skills: acc-scan-codebase-structure, acc-identify-entry-points, acc-detect-architecture-pattern
+```
+
+**Skills:** 3 (analyzers)
+
+---
+
+## `acc-business-logic-analyst`
+
+**Path:** `agents/acc-business-logic-analyst.md`
+
+Business logic analysis specialist. Extracts business rules, explains business processes in natural language, maps domain concepts and ubiquitous language, detects state machines.
+
+**Configuration:**
+```yaml
+name: acc-business-logic-analyst
+tools: Read, Grep, Glob
+model: sonnet
+skills: acc-extract-business-rules, acc-explain-business-process, acc-extract-domain-concepts, acc-extract-state-machine
+```
+
+**Skills:** 4 (analyzers)
+
+---
+
+## `acc-data-flow-analyst`
+
+**Path:** `agents/acc-data-flow-analyst.md`
+
+Data flow analysis specialist. Traces request lifecycles through all layers, maps data transformations between DTOs/Commands/Entities/Responses, identifies async communication flows.
+
+**Configuration:**
+```yaml
+name: acc-data-flow-analyst
+tools: Read, Grep, Glob
+model: sonnet
+skills: acc-trace-request-lifecycle, acc-trace-data-transformation, acc-map-async-flows
+```
+
+**Skills:** 3 (analyzers)
 
 ---
 

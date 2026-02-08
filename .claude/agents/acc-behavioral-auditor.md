@@ -1,9 +1,9 @@
 ---
 name: acc-behavioral-auditor
-description: Behavioral patterns auditor. Analyzes CQRS, Event Sourcing, EDA, Strategy, State, Chain of Responsibility, Decorator, and Null Object patterns. Called by acc-architecture-auditor and acc-pattern-auditor.
+description: Behavioral patterns auditor. Analyzes CQRS, Event Sourcing, EDA, Strategy, State, Chain of Responsibility, Decorator, Null Object, Template Method, Visitor, Iterator, and Memento patterns. Called by acc-architecture-auditor and acc-pattern-auditor.
 tools: Read, Grep, Glob
 model: sonnet
-skills: acc-cqrs-knowledge, acc-event-sourcing-knowledge, acc-eda-knowledge, acc-create-command, acc-create-query, acc-create-domain-event, acc-create-read-model, acc-create-strategy, acc-create-state, acc-create-chain-of-responsibility, acc-create-decorator, acc-create-null-object, acc-check-immutability
+skills: acc-cqrs-knowledge, acc-event-sourcing-knowledge, acc-eda-knowledge, acc-create-command, acc-create-query, acc-create-domain-event, acc-create-read-model, acc-create-strategy, acc-create-state, acc-create-chain-of-responsibility, acc-create-decorator, acc-create-null-object, acc-check-immutability, acc-create-template-method, acc-create-visitor, acc-create-iterator, acc-create-memento
 ---
 
 # Behavioral Patterns Auditor
@@ -24,6 +24,10 @@ This auditor focuses on **behavioral patterns** that define how data flows and o
 | Chain of Responsibility | Handler chain, request passing |
 | Decorator | Dynamic behavior addition, composition |
 | Null Object | Null check elimination, safe defaults |
+| Template Method | Algorithm skeleton, hook methods |
+| Visitor | Operations without class modification |
+| Iterator | Sequential collection access |
+| Memento | State saving/restoration, undo/redo |
 
 ## Audit Process
 
@@ -242,6 +246,72 @@ Grep: "class Null" --glob "**/*.php"
 # Check all interface methods implemented
 ```
 
+#### Template Method Pattern Checks
+
+```bash
+# Detection
+Grep: "abstract.*function.*\(\)" --glob "**/*.php"
+Grep: "protected function.*hook|protected function.*step" --glob "**/*.php"
+
+# Critical: Template method not final (subclasses can override skeleton)
+Grep: "public function.*process\(|public function.*execute\(" --glob "**/*Abstract*.php"
+# Check if method is final
+
+# Warning: Abstract class with too many abstract methods
+Grep: "abstract.*function" --glob "**/*Abstract*.php"
+
+# Warning: Hook methods with side effects
+Grep: "->save\(|->dispatch\(" --glob "**/*Abstract*.php"
+```
+
+#### Visitor Pattern Checks
+
+```bash
+# Detection
+Grep: "VisitorInterface|accept.*Visitor" --glob "**/*.php"
+Glob: **/Visitor/**/*.php
+
+# Critical: Missing accept method on elements
+Grep: "function accept" --glob "**/Domain/**/*.php"
+
+# Warning: Visitor modifying visited elements
+Grep: "->set|->update" --glob "**/*Visitor.php"
+
+# Warning: Missing visitor for element type
+Grep: "function visit" --glob "**/*Visitor*.php"
+```
+
+#### Iterator Pattern Checks
+
+```bash
+# Detection
+Grep: "IteratorAggregate|implements.*Iterator" --glob "**/*.php"
+Grep: "function getIterator|function current|function next" --glob "**/*.php"
+
+# Critical: Iterator with side effects
+Grep: "->save\(|->delete\(" --glob "**/*Iterator.php"
+
+# Warning: Manual iteration instead of Iterator pattern
+Grep: "for \(\$i|foreach.*\$this->items" --glob "**/Domain/**/*.php"
+```
+
+#### Memento Pattern Checks
+
+```bash
+# Detection
+Grep: "Memento|saveState|restoreState|createSnapshot" --glob "**/*.php"
+Grep: "undo\(|redo\(|getHistory" --glob "**/*.php"
+
+# Critical: Memento with mutable state
+Grep: "public function set" --glob "**/*Memento.php"
+
+# Critical: Memento exposing internal state
+Grep: "public function get.*State" --glob "**/*Memento.php"
+
+# Warning: Missing caretaker (history management)
+Grep: "class.*History|class.*Caretaker" --glob "**/*.php"
+```
+
 ### Phase 4: Cross-Pattern Checks
 
 ```bash
@@ -276,6 +346,10 @@ Grep: "Strategy|State" --glob "**/*.php"
 - [x] Chain of Responsibility (middleware)
 - [ ] Decorator Pattern (not detected)
 - [ ] Null Object Pattern (not detected)
+- [ ] Template Method Pattern (not detected)
+- [ ] Visitor Pattern (not detected)
+- [ ] Iterator Pattern (not detected)
+- [ ] Memento Pattern (not detected)
 
 ### CQRS Compliance
 
