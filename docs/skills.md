@@ -52,7 +52,7 @@ Knowledge bases and code generators. Skills provide domain expertise and code ge
 1. **Loading**: Skills are loaded by agents via `skills:` frontmatter
 2. **Activation**: Triggered by keywords in user request or agent decision
 3. **Execution**: Skill provides templates, rules, or generates code
-4. **Output**: Generated code follows PHP 8.5, DDD, and PSR standards
+4. **Output**: Generated code follows PHP 8.2, DDD, and PSR standards
 
 ---
 
@@ -261,7 +261,7 @@ Knowledge bases for architecture audits and best practices.
 
 ## Generator Skills
 
-Code generators for DDD and architecture components (PHP 8.5).
+Code generators for DDD and architecture components (PHP 8.2).
 
 ### DDD Components
 

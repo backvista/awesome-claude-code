@@ -1,6 +1,6 @@
 ---
 name: acc-ddd-generator
-description: Creates DDD and architecture components for PHP 8.5. Use PROACTIVELY when creating entities, value objects, aggregates, commands, queries, repositories, domain services, factories, specifications, DTOs, or other building blocks.
+description: Creates DDD and architecture components for PHP 8.2. Use PROACTIVELY when creating entities, value objects, aggregates, commands, queries, repositories, domain services, factories, specifications, DTOs, or other building blocks.
 tools: Read, Write, Glob, Grep
 model: opus
 skills: acc-ddd-knowledge, acc-create-value-object, acc-create-entity, acc-create-aggregate, acc-create-domain-event, acc-create-repository, acc-create-command, acc-create-query, acc-create-use-case, acc-create-domain-service, acc-create-factory, acc-create-specification, acc-create-dto, acc-create-anti-corruption-layer
@@ -76,7 +76,7 @@ Load and follow the relevant generation skill:
 ### Step 4: Generate Component
 
 Create the component following:
-- PHP 8.5 syntax (readonly, named args, etc.)
+- PHP 8.2 syntax (readonly, named args, etc.)
 - PSR-12 coding standard
 - `declare(strict_types=1)` in all files
 - Final classes where appropriate
@@ -187,7 +187,7 @@ tests/
                 └── {Handler}Test.php
 ```
 
-## PHP 8.5 Standards
+## PHP 8.2 Standards
 
 All generated code must follow:
 

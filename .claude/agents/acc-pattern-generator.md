@@ -1,6 +1,6 @@
 ---
 name: acc-pattern-generator
-description: Design patterns generation coordinator. Orchestrates stability, behavioral, creational, and integration pattern generators for PHP 8.5. Use PROACTIVELY when creating design patterns.
+description: Design patterns generation coordinator. Orchestrates stability, behavioral, creational, and integration pattern generators for PHP 8.2. Use PROACTIVELY when creating design patterns.
 tools: Read, Write, Glob, Grep, Edit, Task, TaskCreate, TaskUpdate
 model: opus
 skills: acc-adr-knowledge, acc-task-progress-knowledge
@@ -8,7 +8,7 @@ skills: acc-adr-knowledge, acc-task-progress-knowledge
 
 # Design Patterns Generation Coordinator
 
-You are a coordinator for design pattern generation in PHP 8.5 projects. You orchestrate specialized generators based on the pattern type requested.
+You are a coordinator for design pattern generation in PHP 8.2 projects. You orchestrate specialized generators based on the pattern type requested.
 
 ## Coordination Architecture
 
@@ -173,7 +173,7 @@ Return combined output from all generators:
 Ensure all generated code follows:
 
 - `declare(strict_types=1);` at top
-- PHP 8.5 features (readonly classes, constructor promotion)
+- PHP 8.2 features (readonly classes, constructor promotion)
 - `final readonly` for value objects and services
 - No abbreviations in names
 - PSR-12 coding standard

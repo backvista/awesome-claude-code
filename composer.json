@@ -19,7 +19,7 @@
         "event-sourcing",
         "php",
         "php8",
-        "php85",
+        "php82",
         "code-generator",
         "architecture",
         "value-object",
@@ -53,7 +53,7 @@
         "source": "https://github.com/dykyi-roman/awesome-claude-code"
     },
     "require": {
-        "php": ">=8.5",
+        "php": ">=8.2",
         "composer-plugin-api": "^2.0"
     },
     "require-dev": {

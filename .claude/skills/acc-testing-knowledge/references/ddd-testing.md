@@ -1,6 +1,6 @@
 # DDD Testing Patterns
 
-Detailed patterns for testing Domain-Driven Design components in PHP 8.5.
+Detailed patterns for testing Domain-Driven Design components in PHP 8.2.
 
 ## Value Object Testing
 

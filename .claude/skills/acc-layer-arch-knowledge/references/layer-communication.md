@@ -59,7 +59,7 @@ Domain ───────────→ Infrastructure (via interfaces)
 └──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
 ```
 
-## PHP 8.5 Implementation
+## PHP 8.2 Implementation
 
 ### Presentation → Application
 

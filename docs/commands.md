@@ -592,7 +592,7 @@ Design patterns audit with SOLID/GRASP compliance analysis.
 
 **Path:** `commands/acc-generate-ddd.md`
 
-Generate DDD components for PHP 8.5 with tests and proper layer placement.
+Generate DDD components for PHP 8.2 with tests and proper layer placement.
 
 **Arguments:**
 ```

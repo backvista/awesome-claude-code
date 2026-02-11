@@ -5,7 +5,7 @@
 ## Quick Facts
 
 - 26 commands, 57 agents, 242 skills, 21 hooks
-- PHP 8.5, PSR-12, readonly classes
+- PHP 8.2, PSR-12, readonly classes
 - DDD/CQRS/Hexagonal patterns
 - Testing, Documentation generation and audit
 - MCP servers support (Database, GitHub, etc.)

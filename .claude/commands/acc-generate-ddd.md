@@ -1,5 +1,5 @@
 ---
-description: Generate DDD components. Creates entities, value objects, aggregates, commands, queries, repositories, domain services, factories, specifications, DTOs, ACL, and use cases for PHP 8.5.
+description: Generate DDD components. Creates entities, value objects, aggregates, commands, queries, repositories, domain services, factories, specifications, DTOs, ACL, and use cases for PHP 8.2.
 allowed-tools: Read, Write, Edit, Glob, Grep, Task
 model: opus
 argument-hint: <component-type> <ComponentName> [-- additional instructions]
@@ -7,7 +7,7 @@ argument-hint: <component-type> <ComponentName> [-- additional instructions]
 
 # Generate DDD Components
 
-Generate Domain-Driven Design components for PHP 8.5 with tests and proper layer placement.
+Generate Domain-Driven Design components for PHP 8.2 with tests and proper layer placement.
 
 ## Input Parsing
 
@@ -78,7 +78,7 @@ Task tool with subagent_type="acc-ddd-generator"
 prompt: "Generate [COMPONENT_TYPE] named [COMPONENT_NAME]. [META-INSTRUCTIONS if provided]
 
 Requirements:
-1. PHP 8.5 with declare(strict_types=1)
+1. PHP 8.2 with declare(strict_types=1)
 2. PSR-12 coding style
 3. Final readonly classes where appropriate
 4. Constructor property promotion

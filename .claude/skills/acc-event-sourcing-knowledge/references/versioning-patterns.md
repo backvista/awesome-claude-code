@@ -36,7 +36,7 @@ Support reading multiple event versions.
 
 Events have flexible schema, handle missing fields gracefully.
 
-## PHP 8.5 Implementation
+## PHP 8.2 Implementation
 
 ### Upcaster Interface
 

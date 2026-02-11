@@ -1,4 +1,4 @@
-# PHP 8.5 Outbox Pattern Implementation
+# PHP 8.2 Outbox Pattern Implementation
 
 ## Complete Implementation Guide
 

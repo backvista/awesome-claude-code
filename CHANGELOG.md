@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.10.1] - 2026-02-11
+
+### Changed
+- PHP version requirement lowered from 8.5 to 8.2 in composer.json, Dockerfile, and all component descriptions
+- Replaced `array_all()` (PHP 8.4) with foreach loop in acc-grasp-knowledge information-expert reference
+
+---
+
 ## [2.10.0] - 2026-02-09
 
 ### Added

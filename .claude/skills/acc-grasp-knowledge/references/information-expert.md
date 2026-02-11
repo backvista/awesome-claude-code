@@ -69,10 +69,12 @@ final class Order
 
     private function hasStock(): bool
     {
-        return array_all(
-            $this->lines,
-            fn(OrderLine $line) => $line->hasStock(),
-        );
+        foreach ($this->lines as $line) {
+            if (!$line->hasStock()) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 

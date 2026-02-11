@@ -1,6 +1,6 @@
 ---
 name: acc-create-policy
-description: Generates Policy pattern for PHP 8.5. Creates encapsulated business rules for authorization, validation, and domain constraints. Includes unit tests.
+description: Generates Policy pattern for PHP 8.2. Creates encapsulated business rules for authorization, validation, and domain constraints. Includes unit tests.
 ---
 
 # Policy Pattern Generator

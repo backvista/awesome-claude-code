@@ -3,7 +3,7 @@
     "description": "Test project for awesome-claude-code package installation",
     "type": "project",
     "require": {
-        "php": "^8.5",
+        "php": "^8.2",
         "dykyi-roman/awesome-claude-code": "@dev"
     },
     "repositories": [

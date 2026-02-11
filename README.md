@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/dykyi-roman/awesome-claude-code.svg?style=flat-square)](https://packagist.org/packages/dykyi-roman/awesome-claude-code)
 [![Total Downloads](https://img.shields.io/packagist/dt/dykyi-roman/awesome-claude-code.svg?style=flat-square)](https://packagist.org/packages/dykyi-roman/awesome-claude-code)
-[![PHP 8.5](https://img.shields.io/badge/PHP-8.5-blue?style=flat-square)](https://php.net)
+[![PHP 8.2](https://img.shields.io/badge/PHP-8.2-blue?style=flat-square)](https://php.net)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Extension-purple?style=flat-square)](https://claude.ai/code)
 [![DDD](https://img.shields.io/badge/DDD-Ready-green?style=flat-square)](https://en.wikipedia.org/wiki/Domain-driven_design)
 [![CQRS](https://img.shields.io/badge/CQRS-Ready-orange?style=flat-square)](https://martinfowler.com/bliki/CQRS.html)
@@ -328,7 +328,7 @@ See [Component Flow](docs/component-flow.md) for the complete dependency graph.
 
 ## Requirements
 
-- **PHP 8.5+** — for generated code (strict typing, readonly classes)
+- **PHP 8.2+** — for generated code (strict typing, readonly classes)
 - **Composer 2.0+** — for package installation
 - **Claude Code CLI** — [Installation guide](https://docs.anthropic.com/en/docs/claude-code)
 
@@ -349,7 +349,7 @@ Yes! Skills use templates stored in the `references/` folder within each skill d
 <details>
 <summary><strong>Which PHP versions are supported?</strong></summary>
 
-Generated code targets PHP 8.5+ and uses modern features like readonly classes, constructor property promotion, and strict typing. The skills themselves work with Claude Code on any platform.
+Generated code targets PHP 8.2+ and uses modern features like readonly classes, constructor property promotion, and strict typing. The skills themselves work with Claude Code on any platform.
 </details>
 
 <details>

@@ -7,7 +7,7 @@ argument-hint: <pattern-name> <ComponentName> [-- additional instructions]
 
 # Generate Design Patterns
 
-Generate design pattern implementations for PHP 8.5 with tests and DI configuration.
+Generate design pattern implementations for PHP 8.2 with tests and DI configuration.
 
 ## Input Parsing
 
@@ -100,7 +100,7 @@ Task tool with subagent_type="acc-pattern-generator"
 prompt: "Generate [PATTERN] for [COMPONENT_NAME]. [META-INSTRUCTIONS if provided]
 
 Requirements:
-1. PHP 8.5 with declare(strict_types=1)
+1. PHP 8.2 with declare(strict_types=1)
 2. PSR-12 coding style
 3. Final readonly classes where appropriate
 4. Constructor property promotion
