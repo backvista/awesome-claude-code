@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Composer plugin (`composer-plugin` type) providing Claude Code extensions for PHP development with DDD, CQRS, and Clean Architecture patterns. Installed via `composer require dykyi-roman/awesome-claude-code`. The plugin auto-copies `.claude/` components (commands, agents, skills) to the target project on install/update, never overwriting existing files.
+Composer plugin (`composer-plugin` type) providing Claude Code extensions for PHP development with DDD, CQRS, and Clean Architecture patterns. Installed via `composer require backvista/awesome-claude-code`. The plugin auto-copies `.claude/` components (commands, agents, skills) to the target project on install/update, never overwriting existing files.
 
 ## Commands
 

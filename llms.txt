@@ -13,7 +13,7 @@
 ## Installation
 
 ```bash
-composer require dykyi-roman/awesome-claude-code
+composer require backvista/awesome-claude-code
 ```
 
 Components auto-copy to `.claude/` directory.
@@ -153,9 +153,9 @@ Components auto-copy to `.claude/` directory.
 
 ## Links
 
-- GitHub: https://github.com/dykyi-roman/awesome-claude-code
-- Packagist: https://packagist.org/packages/dykyi-roman/awesome-claude-code
-- Author: https://github.com/dykyi-roman
+- GitHub: https://github.com/backvista/awesome-claude-code
+- Packagist: https://packagist.org/packages/backvista/awesome-claude-code
+- Author: https://github.com/backvista
 
 ## Version
 

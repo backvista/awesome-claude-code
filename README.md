@@ -1,14 +1,14 @@
 # Awesome Claude Code — PHP Architecture Toolkit
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/dykyi-roman/awesome-claude-code.svg?style=flat-square)](https://packagist.org/packages/dykyi-roman/awesome-claude-code)
-[![Total Downloads](https://img.shields.io/packagist/dt/dykyi-roman/awesome-claude-code.svg?style=flat-square)](https://packagist.org/packages/dykyi-roman/awesome-claude-code)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/backvista/awesome-claude-code.svg?style=flat-square)](https://packagist.org/packages/backvista/awesome-claude-code)
+[![Total Downloads](https://img.shields.io/packagist/dt/backvista/awesome-claude-code.svg?style=flat-square)](https://packagist.org/packages/backvista/awesome-claude-code)
 [![PHP 8.2](https://img.shields.io/badge/PHP-8.2-blue?style=flat-square)](https://php.net)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Extension-purple?style=flat-square)](https://claude.ai/code)
 [![DDD](https://img.shields.io/badge/DDD-Ready-green?style=flat-square)](https://en.wikipedia.org/wiki/Domain-driven_design)
 [![CQRS](https://img.shields.io/badge/CQRS-Ready-orange?style=flat-square)](https://martinfowler.com/bliki/CQRS.html)
-[![License](https://img.shields.io/packagist/l/dykyi-roman/awesome-claude-code.svg?style=flat-square)](https://packagist.org/packages/dykyi-roman/awesome-claude-code)
-[![GitHub Stars](https://img.shields.io/github/stars/dykyi-roman/awesome-claude-code?style=flat-square)](https://github.com/dykyi-roman/awesome-claude-code)
-[![Last Commit](https://img.shields.io/github/last-commit/dykyi-roman/awesome-claude-code?style=flat-square)](https://github.com/dykyi-roman/awesome-claude-code)
+[![License](https://img.shields.io/packagist/l/backvista/awesome-claude-code.svg?style=flat-square)](https://packagist.org/packages/backvista/awesome-claude-code)
+[![GitHub Stars](https://img.shields.io/github/stars/backvista/awesome-claude-code?style=flat-square)](https://github.com/backvista/awesome-claude-code)
+[![Last Commit](https://img.shields.io/github/last-commit/backvista/awesome-claude-code?style=flat-square)](https://github.com/backvista/awesome-claude-code)
 
 > **The most comprehensive Claude Code extension for PHP developers.**
 > Audit, Generate & Document: DDD, CQRS, Event Sourcing, Clean/Hexagonal Architecture, Design Patterns, PSR, Tests ...
@@ -18,7 +18,7 @@
 ## Quick Start
 
 ```bash
-composer require dykyi-roman/awesome-claude-code
+composer require backvista/awesome-claude-code
 ```
 
 Then in Claude Code:
@@ -361,7 +361,7 @@ Use the `/acc-generate-claude-component` wizard to create new components interac
 <details>
 <summary><strong>What if I want to update to a newer version?</strong></summary>
 
-Run `composer update dykyi-roman/awesome-claude-code`. New components are added, but existing files are not overwritten.
+Run `composer update backvista/awesome-claude-code`. New components are added, but existing files are not overwritten.
 
 To force update existing files with the latest versions:
 
@@ -426,7 +426,7 @@ Use the Task tool with subagent_type="acc-ddd-auditor"
 
 **Solutions:**
 1. Run `composer install` again (not just `require`)
-2. Check Composer allows plugins: `composer config allow-plugins.dykyi-roman/awesome-claude-code true`
+2. Check Composer allows plugins: `composer config allow-plugins.backvista/awesome-claude-code true`
 3. Verify you're in the project root directory
 4. Check file permissions on `.claude/` directory
 </details>

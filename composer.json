@@ -1,5 +1,5 @@
 {
-    "name": "dykyi-roman/awesome-claude-code",
+    "name": "backvista/awesome-claude-code",
     "description": "Claude Code extension for PHP: audits (architecture, DDD, security, performance, PSR, design patterns, Docker, CI/CD, tests, docs), 3-level code review, automated bug fix, generators (DDD, CQRS, GoF patterns, PSR, tests, documentation, Docker, CI/CD), code explanation, refactoring. 26 commands, 57 agents, 242 skills.",
     "type": "composer-plugin",
     "license": "MIT",
@@ -37,20 +37,20 @@
         {
             "name": "Roman Dykyi",
             "email": "dykyi.roman@gmail.com",
-            "homepage": "https://github.com/dykyi-roman",
+            "homepage": "https://github.com/backvista",
             "role": "Developer"
         }
     ],
     "funding": [
         {
             "type": "github",
-            "url": "https://github.com/sponsors/dykyi-roman"
+            "url": "https://github.com/sponsors/backvista"
         }
     ],
-    "homepage": "https://github.com/dykyi-roman/awesome-claude-code",
+    "homepage": "https://github.com/backvista/awesome-claude-code",
     "support": {
-        "issues": "https://github.com/dykyi-roman/awesome-claude-code/issues",
-        "source": "https://github.com/dykyi-roman/awesome-claude-code"
+        "issues": "https://github.com/backvista/awesome-claude-code/issues",
+        "source": "https://github.com/backvista/awesome-claude-code"
     },
     "require": {
         "php": ">=8.2",
