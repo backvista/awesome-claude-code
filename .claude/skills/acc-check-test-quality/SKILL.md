@@ -1,15 +1,15 @@
 ---
 name: acc-check-test-quality
-description: Analyzes PHP test code quality. Checks test structure, assertion quality, test isolation, naming conventions, AAA pattern adherence.
+description: Анализирует качество PHP-тестов. Проверяет структуру тестов, качество утверждений, изоляцию тестов, соглашения об именовании, соблюдение паттерна AAA.
 ---
 
-# Test Quality Check
+# Проверка качества тестов
 
-Analyze PHP test code for quality and best practices.
+Анализ PHP-тестов на качество и соблюдение лучших практик.
 
-## Quality Patterns
+## Паттерны качества
 
-### 1. Test Structure (AAA Pattern)
+### 1. Структура тестов (паттерн AAA)
 
 ```php
 // BAD: Mixed arrange/act/assert
@@ -40,7 +40,7 @@ public function testOrderTotalWithDiscount(): void
 }
 ```
 
-### 2. Test Naming
+### 2. Именование тестов
 
 ```php
 // BAD: Unclear names
@@ -58,7 +58,7 @@ public function testOrderTotalIncludesTaxForDomesticOrders(): void {}
 public function testCalculateTotal_WithDiscount_ReturnsReducedPrice(): void {}
 ```
 
-### 3. Single Assertion Focus
+### 3. Один аспект поведения на тест
 
 ```php
 // BAD: Testing multiple behaviors
@@ -89,7 +89,7 @@ public function testNewUserHasNoOrders(): void
 }
 ```
 
-### 4. Assertion Quality
+### 4. Качество утверждений
 
 ```php
 // BAD: Weak assertions
@@ -119,7 +119,7 @@ $this->assertContains(1, $result);
 $this->assertEqualsCanonicalizing([3, 2, 1], $result);
 ```
 
-### 5. Test Isolation
+### 5. Изоляция тестов
 
 ```php
 // BAD: Shared state between tests
@@ -156,7 +156,7 @@ class OrderTest extends TestCase
 }
 ```
 
-### 6. Mock Usage
+### 6. Использование моков
 
 ```php
 // BAD: Over-mocking
@@ -195,7 +195,7 @@ public function testSendNotification(): void
 }
 ```
 
-### 7. Test Data
+### 7. Тестовые данные
 
 ```php
 // BAD: Magic values
@@ -228,7 +228,7 @@ public function testOrderWithMultipleItems(): void
 }
 ```
 
-### 8. Exception Testing
+### 8. Тестирование исключений
 
 ```php
 // BAD: Generic exception test
@@ -260,7 +260,7 @@ public function testProcessThrowsDetailedException(): void
 }
 ```
 
-## Grep Patterns
+## Паттерны Grep
 
 ```bash
 # Multiple assertions in test
@@ -276,30 +276,30 @@ Grep: "expectException\(Exception::class\)" --glob "**/*Test.php"
 Grep: "function\s+test\d+|function\s+testIt" --glob "**/*Test.php"
 ```
 
-## Severity Classification
+## Классификация серьёзности
 
-| Pattern | Severity |
+| Паттерн | Серьёзность |
 |---------|----------|
-| Shared test state | 🟠 Major |
-| Testing mock behavior | 🟠 Major |
-| Multiple behaviors per test | 🟡 Minor |
-| Generic exception testing | 🟡 Minor |
-| Weak assertions | 🟡 Minor |
-| Poor naming | 🟢 Suggestion |
+| Общее состояние между тестами | 🟠 Серьёзная |
+| Тестирование поведения моков | 🟠 Серьёзная |
+| Несколько аспектов поведения в одном тесте | 🟡 Незначительная |
+| Обобщённое тестирование исключений | 🟡 Незначительная |
+| Слабые утверждения | 🟡 Незначительная |
+| Плохое именование | 🟢 Предложение |
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### Test Quality Issue: [Description]
+### Проблема качества тестов: [Описание]
 
-**Severity:** 🟠/🟡/🟢
-**Location:** `tests/OrderTest.php:line`
-**Type:** [Structure|Isolation|Assertions|Naming|...]
+**Серьёзность:** 🟠/🟡/🟢
+**Расположение:** `tests/OrderTest.php:line`
+**Тип:** [Структура|Изоляция|Утверждения|Именование|...]
 
-**Issue:**
-Test mixes multiple behaviors and has unclear assertions.
+**Проблема:**
+Тест смешивает несколько аспектов поведения и имеет неясные утверждения.
 
-**Current:**
+**Текущий код:**
 ```php
 public function testOrder(): void
 {
@@ -310,7 +310,7 @@ public function testOrder(): void
 }
 ```
 
-**Suggested:**
+**Предложение:**
 ```php
 public function testAddItem_IncreasesItemCount(): void
 {

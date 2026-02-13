@@ -1,22 +1,22 @@
 ---
 name: acc-create-responder
-description: Generates ADR Responder classes for PHP 8.2. Creates HTTP response builders with PSR-7/PSR-17 support. Includes unit tests.
+description: Генерирует классы ADR Responder для PHP 8.2. Создаёт билдеры HTTP-ответов с поддержкой PSR-7/PSR-17. Включает модульные тесты.
 ---
 
-# Responder Generator
+# Генератор Responder
 
-Generate ADR-compliant Responder classes for HTTP response building.
+Генерирует ADR-совместимые классы Responder для построения HTTP-ответов.
 
-## Responder Characteristics
+## Характеристики Responder
 
-- **Response Building**: Creates complete HTTP Response (status, headers, body)
-- **No Business Logic**: Only format and transform data
-- **No Domain Access**: No repository or service calls
-- **Error Mapping**: Maps domain errors to HTTP status codes
-- **Content Type**: Sets appropriate Content-Type header
-- **PSR Compliance**: Uses PSR-7 and PSR-17 interfaces
+- **Построение ответа**: Создаёт полный HTTP Response (статус, заголовки, тело)
+- **Без бизнес-логики**: Только форматирование и преобразование данных
+- **Без доступа к домену**: Без вызовов репозиториев или сервисов
+- **Маппинг ошибок**: Отображает доменные ошибки в HTTP-статусы
+- **Content Type**: Устанавливает соответствующий заголовок Content-Type
+- **Соответствие PSR**: Использует интерфейсы PSR-7 и PSR-17
 
-## Template
+## Шаблон
 
 ```php
 <?php
@@ -75,7 +75,7 @@ final readonly class {Action}Responder
 }
 ```
 
-## Test Template
+## Шаблон теста
 
 ```php
 <?php
@@ -149,7 +149,7 @@ final class {Action}ResponderTest extends TestCase
 }
 ```
 
-## Responder Patterns
+## Паттерны Responder
 
 ### Create Responder (201)
 
@@ -273,7 +273,7 @@ final readonly class GetUserByIdResponder
 }
 ```
 
-### List Responder with Pagination
+### List Responder с пагинацией
 
 ```php
 <?php
@@ -393,55 +393,55 @@ final readonly class DeleteUserResponder
 }
 ```
 
-## HTTP Status Mapping
+## Маппинг HTTP-статусов
 
-| Domain Condition | HTTP Status | Method |
-|------------------|-------------|--------|
-| Success (create) | 201 | `created()` |
-| Success (read) | 200 | `json()` |
-| Success (update) | 200 | `json()` |
-| Success (delete) | 204 | `noContent()` |
-| Not found | 404 | `notFound()` |
-| Already exists | 409 | `conflict()` |
-| Validation error | 422 | `unprocessableEntity()` |
-| Invalid input | 400 | `badRequest()` |
-| Unauthorized | 401 | `unauthorized()` |
-| Forbidden | 403 | `forbidden()` |
+| Доменное условие | HTTP-статус | Метод |
+|------------------|-------------|-------|
+| Успех (создание) | 201 | `created()` |
+| Успех (чтение) | 200 | `json()` |
+| Успех (обновление) | 200 | `json()` |
+| Успех (удаление) | 204 | `noContent()` |
+| Не найдено | 404 | `notFound()` |
+| Уже существует | 409 | `conflict()` |
+| Ошибка валидации | 422 | `unprocessableEntity()` |
+| Некорректный ввод | 400 | `badRequest()` |
+| Не авторизован | 401 | `unauthorized()` |
+| Запрещено | 403 | `forbidden()` |
 
-## File Placement
+## Размещение файлов
 
-| Component | Path |
+| Компонент | Путь |
 |-----------|------|
 | Responder | `src/Presentation/Api/{Context}/{Action}/{Action}Responder.php` |
-| Interface | `src/Presentation/Shared/Responder/ResponderInterface.php` |
-| Abstract | `src/Presentation/Shared/Responder/AbstractJsonResponder.php` |
-| Test | `tests/Unit/Presentation/Api/{Context}/{Action}/{Action}ResponderTest.php` |
+| Интерфейс | `src/Presentation/Shared/Responder/ResponderInterface.php` |
+| Абстрактный класс | `src/Presentation/Shared/Responder/AbstractJsonResponder.php` |
+| Тест | `tests/Unit/Presentation/Api/{Context}/{Action}/{Action}ResponderTest.php` |
 
-## Generation Instructions
+## Инструкции по генерации
 
-When asked to create a Responder:
+При создании Responder:
 
-1. **Identify operation type** (create, read, update, delete)
-2. **Determine success status** (201, 200, 204)
-3. **List possible failures** and their HTTP codes
-4. **Define response structure** (what data to return)
-5. **Generate Responder class** with proper namespace
-6. **Generate test** for each status code path
+1. **Определите тип операции** (create, read, update, delete)
+2. **Определите статус успеха** (201, 200, 204)
+3. **Перечислите возможные ошибки** и их HTTP-коды
+4. **Определите структуру ответа** (какие данные возвращать)
+5. **Сгенерируйте класс Responder** с правильным namespace
+6. **Сгенерируйте тест** для каждого пути HTTP-статуса
 
-## Naming Conventions
+## Соглашения об именовании
 
-| HTTP Method | Responder Name | Success Status |
-|-------------|----------------|----------------|
-| GET (single) | Get{Resource}ByIdResponder | 200 |
-| GET (list) | List{Resource}sResponder | 200 |
+| HTTP-метод | Имя Responder | Статус успеха |
+|------------|---------------|---------------|
+| GET (единичный) | Get{Resource}ByIdResponder | 200 |
+| GET (список) | List{Resource}sResponder | 200 |
 | POST | Create{Resource}Responder | 201 |
 | PUT | Update{Resource}Responder | 200 |
 | PATCH | Patch{Resource}Responder | 200 |
 | DELETE | Delete{Resource}Responder | 204 |
 
-## References
+## Ссылки
 
-For detailed patterns and examples:
+Подробные паттерны и примеры:
 
-- `references/templates.md` — Additional Responder templates
-- `references/examples.md` — Real-world Responder examples
+- `references/templates.md` — Дополнительные шаблоны Responder
+- `references/examples.md` — Примеры Responder из реальных проектов

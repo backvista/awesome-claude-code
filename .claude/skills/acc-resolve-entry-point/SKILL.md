@@ -1,17 +1,17 @@
 ---
 name: acc-resolve-entry-point
-description: Resolves HTTP routes (GET /api/orders) and console commands (app:process-payments) to their handler files. Detects framework, searches route/command definitions, extracts handler class and method, locates file via PSR-4 mapping.
+description: Разрешает HTTP-маршруты (GET /api/orders) и консольные команды (app:process-payments) в файлы-обработчики. Определяет фреймворк, ищет определения маршрутов/команд, извлекает класс и метод обработчика, находит файл через PSR-4 маппинг.
 ---
 
-# Entry Point Resolver
+# Резолвер точек входа
 
-## Overview
+## Обзор
 
-Resolves user-provided HTTP routes or console commands to their handler file(s). Given a route like `POST /api/orders` or a command like `app:process-payments`, finds the exact handler class, method, file path, and surrounding context (middleware, route definition, schedule).
+Разрешает пользовательские HTTP-маршруты или консольные команды в их файлы-обработчики. По заданному маршруту, например `POST /api/orders`, или команде `app:process-payments`, находит точный класс обработчика, метод, путь к файлу и окружающий контекст (middleware, определение маршрута, расписание).
 
-## Input Types
+## Типы входных данных
 
-### HTTP Route
+### HTTP-маршрут
 
 ```
 Pattern: ^(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\s+/
@@ -21,7 +21,7 @@ Examples:
   DELETE /api/users/{id}
 ```
 
-### Console Command
+### Консольная команда
 
 ```
 Pattern: ^[a-z][a-z0-9_-]*:[a-z][a-z0-9:_-]*$
@@ -31,28 +31,28 @@ Examples:
   cache:clear
 ```
 
-## Resolution Process
+## Процесс разрешения
 
-### Step 1: Detect Framework
+### Шаг 1: Определить фреймворк
 
 ```bash
-# Check for Symfony
+# Проверка Symfony
 Glob: "config/bundles.php"
 Grep: "symfony/framework-bundle" --glob "composer.json"
 
-# Check for Laravel
+# Проверка Laravel
 Glob: "artisan"
 Grep: "laravel/framework" --glob "composer.json"
 
-# Check for Slim
+# Проверка Slim
 Grep: "slim/slim" --glob "composer.json"
 
-# Fallback: generic PHP (attribute-based routing)
+# Fallback: generic PHP (маршрутизация на атрибутах)
 ```
 
-### Step 2: Resolve HTTP Route
+### Шаг 2: Разрешить HTTP-маршрут
 
-#### Extract HTTP method and path from input
+#### Извлечение HTTP-метода и пути из входных данных
 
 ```
 Input: "POST /api/orders/{id}/status"
@@ -62,149 +62,149 @@ Path pattern (regex-escaped): /api/orders/\{[^}]+\}/status
 Path pattern (simplified): /api/orders/.*/status
 ```
 
-#### Symfony Route Resolution
+#### Разрешение маршрутов Symfony
 
 ```bash
-# 1. Search PHP attribute routes
+# 1. Поиск маршрутов в PHP-атрибутах
 Grep: "#\[Route\(" --glob "**/*.php" --output_mode content
 
-# Then filter by path match:
-# Look for exact path or path with parameter placeholders
+# Затем фильтрация по совпадению пути:
+# Поиск точного пути или пути с заполнителями параметров
 Grep: "#\[Route\(['\"][^'\"]*(/api/orders)" --glob "**/*.php" --output_mode content
 
-# 2. Search YAML route definitions
+# 2. Поиск определений маршрутов в YAML
 Grep: "path:\s.*(/api/orders)" --glob "config/routes*.yaml" --output_mode content
 Grep: "path:\s.*(/api/orders)" --glob "config/routes/**/*.yaml" --output_mode content
 
-# 3. Search XML route definitions
+# 3. Поиск определений маршрутов в XML
 Grep: "path=\"[^\"]*(/api/orders)" --glob "config/routes*.xml" --output_mode content
 
-# 4. Check for method restriction
-# In the found route attribute, look for methods parameter
+# 4. Проверка ограничения по методу
+# В найденном атрибуте маршрута проверить параметр methods
 Grep: "methods:\s*\[.*POST" in matched file --output_mode content
 ```
 
-#### Laravel Route Resolution
+#### Разрешение маршрутов Laravel
 
 ```bash
-# 1. Search routes files
+# 1. Поиск в файлах маршрутов
 Grep: "Route::(post|any)\(\s*['\"]/?api/orders" --glob "routes/*.php" --output_mode content
 
-# 2. Search for resource routes
+# 2. Поиск ресурсных маршрутов
 Grep: "Route::apiResource\(['\"]orders" --glob "routes/*.php" --output_mode content
 Grep: "Route::resource\(['\"]orders" --glob "routes/*.php" --output_mode content
 
-# 3. Search controller annotations
+# 3. Поиск аннотаций контроллеров
 Grep: "#\[Route\(" --glob "app/Http/Controllers/**/*.php" --output_mode content
 ```
 
-#### Generic / Attribute-based Resolution
+#### Универсальное / атрибутное разрешение
 
 ```bash
-# Search all PHP files for route attributes matching the path
+# Поиск во всех PHP-файлах атрибутов маршрутов, совпадающих с путём
 Grep: "#\[Route\(['\"][^'\"]*(/api/orders)" --glob "**/*.php" --output_mode content
 
-# Search for Slim-style route definitions
+# Поиск определений маршрутов в стиле Slim
 Grep: "->(post|get|put|delete|patch)\(\s*['\"]/?api/orders" --glob "**/*.php" --output_mode content
 ```
 
-### Step 3: Resolve Console Command
+### Шаг 3: Разрешить консольную команду
 
-#### Symfony Command Resolution
+#### Разрешение команд Symfony
 
 ```bash
-# 1. Search AsCommand attribute
+# 1. Поиск атрибута AsCommand
 Grep: "#\[AsCommand\(['\"]app:process-payments" --glob "**/*.php" --output_mode content
 
-# 2. Search $defaultName property
+# 2. Поиск свойства $defaultName
 Grep: "\\\$defaultName\s*=\s*['\"]app:process-payments" --glob "**/*.php" --output_mode content
 
-# 3. Search configure() method for setName()
+# 3. Поиск setName() в методе configure()
 Grep: "setName\(['\"]app:process-payments" --glob "**/*.php" --output_mode content
 
-# 4. Search services.yaml for command tag
+# 4. Поиск тега команды в services.yaml
 Grep: "console.command" --glob "config/services*.yaml" --output_mode content
 ```
 
-#### Laravel Command Resolution
+#### Разрешение команд Laravel
 
 ```bash
-# 1. Search $signature property
+# 1. Поиск свойства $signature
 Grep: "\\\$signature\s*=\s*['\"]app:process-payments" --glob "**/*.php" --output_mode content
 
-# 2. Search $name property
+# 2. Поиск свойства $name
 Grep: "\\\$name\s*=\s*['\"]app:process-payments" --glob "**/*.php" --output_mode content
 
-# 3. Search Kernel commands registration
+# 3. Поиск регистрации команд в Kernel
 Grep: "app:process-payments" --glob "app/Console/Kernel.php" --output_mode content
 ```
 
-#### Generic Resolution
+#### Универсальное разрешение
 
 ```bash
-# Search any PHP file containing the command name as a string
+# Поиск любого PHP-файла, содержащего имя команды как строку
 Grep: "['\"]app:process-payments['\"]" --glob "**/*.php" --output_mode content
 ```
 
-### Step 4: Extract Handler Details
+### Шаг 4: Извлечение деталей обработчика
 
-Once the route/command definition file is found:
+После нахождения файла с определением маршрута/команды:
 
 ```bash
-# Read the file containing the route/command definition
+# Прочитать файл, содержащий определение маршрута/команды
 Read: matched_file
 
-# Extract class name and namespace
+# Извлечь имя класса и пространство имён
 Grep: "^namespace\s+" in matched_file --output_mode content
 Grep: "^class\s+" in matched_file --output_mode content
 
-# For route: extract the handler method
-# - If class has __invoke → method is __invoke
-# - If route attribute is on a specific method → that method
-# - If route file points to Controller@method → extract method
+# Для маршрута: извлечь метод обработчика
+# - Если у класса есть __invoke → метод __invoke
+# - Если атрибут маршрута на конкретном методе → этот метод
+# - Если файл маршрута указывает на Controller@method → извлечь метод
 
-# For command: handler method is execute() (Symfony) or handle() (Laravel)
+# Для команды: метод обработчика — execute() (Symfony) или handle() (Laravel)
 ```
 
-### Step 5: Locate Handler File via PSR-4
+### Шаг 5: Найти файл обработчика через PSR-4
 
-If the route definition references a different handler class:
+Если определение маршрута ссылается на другой класс обработчика:
 
 ```bash
-# Read composer.json for PSR-4 autoload mapping
-Read: composer.json → extract autoload.psr-4 section
+# Прочитать composer.json для PSR-4 автозагрузки
+Read: composer.json → извлечь секцию autoload.psr-4
 
-# Convert namespace to path
-# Example: App\Api\Action\CreateOrderAction
+# Преобразовать пространство имён в путь
+# Пример: App\Api\Action\CreateOrderAction
 # PSR-4: "App\\" => "src/"
-# Path: src/Api/Action/CreateOrderAction.php
+# Путь: src/Api/Action/CreateOrderAction.php
 
-# Verify file exists
+# Проверить существование файла
 Glob: "src/Api/Action/CreateOrderAction.php"
 ```
 
-### Step 6: Extract Middleware / Context
+### Шаг 6: Извлечение Middleware / контекста
 
-#### For HTTP Routes
+#### Для HTTP-маршрутов
 
 ```bash
-# Symfony: find middleware (event listeners on kernel.request)
+# Symfony: поиск middleware (слушатели событий kernel.request)
 Grep: "kernel.request|kernel.controller" --glob "**/*.php" --output_mode content
 
-# Check route-level middleware in attributes
+# Проверка middleware на уровне маршрута в атрибутах
 Grep: "#\[IsGranted\(|#\[Security\(" in handler file --output_mode content
 
-# Laravel: check middleware in route definition
+# Laravel: проверка middleware в определении маршрута
 Grep: "->middleware\(" in route definition context --output_mode content
 
-# Check controller constructor middleware
+# Проверка middleware в конструкторе контроллера
 Grep: "\$this->middleware\(" in handler file --output_mode content
 ```
 
-#### For Console Commands
+#### Для консольных команд
 
 ```bash
-# Check if command is scheduled
+# Проверка наличия команды в расписании
 # Symfony
 Grep: "app:process-payments" --glob "config/scheduler*.{php,yaml}" --output_mode content
 Grep: "RecurringMessage" --glob "**/*.php" --output_mode content
@@ -214,110 +214,110 @@ Grep: "app:process-payments" --glob "app/Console/Kernel.php" --output_mode conte
 Grep: "schedule\(" --glob "routes/console.php" --output_mode content
 ```
 
-## Output Format
+## Формат вывода
 
-### HTTP Route Resolution
+### Разрешение HTTP-маршрута
 
 ```markdown
-## Resolved Entry Point
+## Разрешённая точка входа
 
-| Field | Value |
-|-------|-------|
-| Type | HTTP Route |
-| Input | POST /api/orders |
-| Handler | App\Api\Action\CreateOrderAction::__invoke |
-| File | src/Api/Action/CreateOrderAction.php |
-| Route definition | config/routes/api.yaml:15 |
-| HTTP Method | POST |
-| Path | /api/orders |
-| Path params | — |
+| Поле | Значение |
+|------|----------|
+| Тип | HTTP-маршрут |
+| Ввод | POST /api/orders |
+| Обработчик | App\Api\Action\CreateOrderAction::__invoke |
+| Файл | src/Api/Action/CreateOrderAction.php |
+| Определение маршрута | config/routes/api.yaml:15 |
+| HTTP-метод | POST |
+| Путь | /api/orders |
+| Параметры пути | — |
 | Middleware | auth, json-body |
-| Auth | #[IsGranted('ROLE_USER')] |
-| Framework | Symfony 7.x |
+| Авторизация | #[IsGranted('ROLE_USER')] |
+| Фреймворк | Symfony 7.x |
 
-### Handler Chain
-Route definition → Middleware (auth, json) → CreateOrderAction::__invoke → CreateOrderUseCase
+### Цепочка обработки
+Определение маршрута → Middleware (auth, json) → CreateOrderAction::__invoke → CreateOrderUseCase
 ```
 
-### Console Command Resolution
+### Разрешение консольной команды
 
 ```markdown
-## Resolved Entry Point
+## Разрешённая точка входа
 
-| Field | Value |
-|-------|-------|
-| Type | Console Command |
-| Input | app:process-payments |
-| Handler | App\Console\Command\ProcessPaymentsCommand::execute |
-| File | src/Console/Command/ProcessPaymentsCommand.php |
-| Command definition | #[AsCommand('app:process-payments')] |
-| Arguments | --batch-size (optional, default: 100) |
-| Schedule | Daily at 02:00 (config/scheduler.php) |
-| Framework | Symfony 7.x |
+| Поле | Значение |
+|------|----------|
+| Тип | Консольная команда |
+| Ввод | app:process-payments |
+| Обработчик | App\Console\Command\ProcessPaymentsCommand::execute |
+| Файл | src/Console/Command/ProcessPaymentsCommand.php |
+| Определение команды | #[AsCommand('app:process-payments')] |
+| Аргументы | --batch-size (необязательный, по умолчанию: 100) |
+| Расписание | Ежедневно в 02:00 (config/scheduler.php) |
+| Фреймворк | Symfony 7.x |
 
-### Execution Chain
-Schedule/Manual → ProcessPaymentsCommand::execute → ProcessPaymentUseCase
+### Цепочка выполнения
+Расписание/Ручной запуск → ProcessPaymentsCommand::execute → ProcessPaymentUseCase
 ```
 
-### Resolution Failed
+### Разрешение не удалось
 
 ```markdown
-## Resolution Failed
+## Разрешение не удалось
 
-| Field | Value |
-|-------|-------|
-| Input | GET /api/nonexistent |
-| Type | HTTP Route |
-| Framework | Symfony 7.x |
+| Поле | Значение |
+|------|----------|
+| Ввод | GET /api/nonexistent |
+| Тип | HTTP-маршрут |
+| Фреймворк | Symfony 7.x |
 
-### Search Results
-No matching route definition found.
+### Результаты поиска
+Совпадающее определение маршрута не найдено.
 
-### Suggestions
-1. Check available routes: `php bin/console debug:router | grep api`
-2. Verify the route path is correct (case-sensitive)
-3. The route may be defined dynamically or via imported bundle
-4. Try searching with a broader path: `/acc-explain GET /api/`
+### Рекомендации
+1. Проверьте доступные маршруты: `php bin/console debug:router | grep api`
+2. Убедитесь в правильности пути маршрута (регистрозависимый)
+3. Маршрут может быть определён динамически или через импортированный bundle
+4. Попробуйте поиск с более широким путём: `/acc-explain GET /api/`
 ```
 
-## Multiple Matches
+## Множественные совпадения
 
-When multiple handlers match (e.g., versioned APIs, route overrides):
+Когда найдено несколько обработчиков (например, версионированные API, переопределения маршрутов):
 
 ```markdown
-## Resolved Entry Points (multiple matches)
+## Разрешённые точки входа (множественные совпадения)
 
-### Match 1 (primary)
-| Field | Value |
-|-------|-------|
-| Handler | App\Api\V2\CreateOrderAction |
-| File | src/Api/V2/CreateOrderAction.php |
-| Route | config/routes/api_v2.yaml:8 |
+### Совпадение 1 (основное)
+| Поле | Значение |
+|------|----------|
+| Обработчик | App\Api\V2\CreateOrderAction |
+| Файл | src/Api/V2/CreateOrderAction.php |
+| Маршрут | config/routes/api_v2.yaml:8 |
 
-### Match 2
-| Field | Value |
-|-------|-------|
-| Handler | App\Api\V1\CreateOrderAction |
-| File | src/Api/V1/CreateOrderAction.php |
-| Route | config/routes/api_v1.yaml:12 |
+### Совпадение 2
+| Поле | Значение |
+|------|----------|
+| Обработчик | App\Api\V1\CreateOrderAction |
+| Файл | src/Api/V1/CreateOrderAction.php |
+| Маршрут | config/routes/api_v1.yaml:12 |
 
-**Note:** Multiple handlers found. Using Match 1 (most recent/specific definition).
+**Примечание:** Найдено несколько обработчиков. Используется Совпадение 1 (наиболее свежее/специфичное определение).
 ```
 
-## Path Parameter Handling
+## Обработка параметров пути
 
-When resolving routes with parameters:
+При разрешении маршрутов с параметрами:
 
 ```
 Input: GET /api/orders/{id}/items
-Search patterns:
-  1. Exact: /api/orders/{id}/items
-  2. Regex attr: /api/orders/\{[^}]+\}/items
-  3. Simplified: orders.*items (fallback)
+Паттерны поиска:
+  1. Точный: /api/orders/{id}/items
+  2. Regex-атрибут: /api/orders/\{[^}]+\}/items
+  3. Упрощённый: orders.*items (fallback)
 ```
 
-## Integration
+## Интеграция
 
-This skill is used by:
-- `acc-codebase-navigator` — resolves user-provided routes/commands to handler files before navigation
-- `acc-explain-coordinator` — Phase 0 resolution for route/command input types
+Этот навык используется:
+- `acc-codebase-navigator` — разрешает пользовательские маршруты/команды в файлы обработчиков перед навигацией
+- `acc-explain-coordinator` — Фаза 0 разрешения для типов ввода маршрутов/команд
