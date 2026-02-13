@@ -1,15 +1,15 @@
 ---
 name: acc-check-dependency-injection
-description: Analyzes PHP code for dependency injection issues. Detects constructor injection usage, interface dependencies, service locator antipattern, new keyword in business logic.
+description: Анализирует PHP-код на проблемы внедрения зависимостей. Обнаруживает использование constructor injection, зависимости от интерфейсов, антипаттерн service locator, ключевое слово new в бизнес-логике.
 ---
 
-# Dependency Injection Check
+# Проверка внедрения зависимостей
 
-Analyze PHP code for proper dependency injection patterns.
+Анализ PHP-кода на корректное применение паттернов внедрения зависимостей.
 
-## Detection Patterns
+## Паттерны обнаружения
 
-### 1. New Keyword in Business Logic
+### 1. Ключевое слово New в бизнес-логике
 
 ```php
 // BAD: Hard-coded dependency
@@ -36,7 +36,7 @@ class OrderService
 }
 ```
 
-### 2. Service Locator Antipattern
+### 2. Антипаттерн Service Locator
 
 ```php
 // BAD: Service locator
@@ -65,7 +65,7 @@ class UserService
 }
 ```
 
-### 3. Static Method Calls
+### 3. Вызовы статических методов
 
 ```php
 // BAD: Static calls can't be mocked
@@ -101,7 +101,7 @@ class ReportGenerator
 }
 ```
 
-### 4. Missing Interface
+### 4. Отсутствие интерфейса
 
 ```php
 // BAD: Concrete class dependency
@@ -121,7 +121,7 @@ class PaymentProcessor
 }
 ```
 
-### 5. Hidden Dependencies
+### 5. Скрытые зависимости
 
 ```php
 // BAD: Uses global/superglobal
@@ -150,7 +150,7 @@ class UserController
 }
 ```
 
-### 6. Setter Injection Issues
+### 6. Проблемы setter injection
 
 ```php
 // BAD: Optional setter injection
@@ -183,7 +183,7 @@ class OrderService
 }
 ```
 
-### 7. Factory Inside Class
+### 7. Фабрика внутри класса
 
 ```php
 // BAD: Factory logic in service
@@ -215,7 +215,7 @@ class NotificationService
 }
 ```
 
-### 8. Environment/Config Access
+### 8. Доступ к окружению/конфигурации
 
 ```php
 // BAD: Direct environment access
@@ -237,7 +237,7 @@ class ApiClient
 }
 ```
 
-## Grep Patterns
+## Grep-паттерны
 
 ```bash
 # New keyword in methods
@@ -256,7 +256,7 @@ Grep: "\$_(GET|POST|SESSION|COOKIE|ENV|SERVER)" --glob "**/*.php"
 Grep: "(getenv|putenv)\(" --glob "**/*.php"
 ```
 
-## Acceptable Uses of New
+## Допустимое использование New
 
 ```php
 // OK: Value objects and DTOs
@@ -275,41 +275,41 @@ class UserFactory {
 }
 ```
 
-## Severity Classification
+## Классификация серьёзности
 
-| Pattern | Severity |
-|---------|----------|
-| Service locator | 🟠 Major |
-| New keyword for services | 🟠 Major |
-| Static method calls | 🟠 Major |
-| Superglobal access | 🟠 Major |
-| Missing interface | 🟡 Minor |
-| Setter injection | 🟡 Minor |
+| Паттерн | Серьёзность |
+|---------|-------------|
+| Service locator | Major |
+| New для сервисов | Major |
+| Вызовы статических методов | Major |
+| Доступ к суперглобалам | Major |
+| Отсутствие интерфейса | Minor |
+| Setter injection | Minor |
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### DI Issue: [Description]
+### Проблема DI: [Описание]
 
-**Severity:** 🟠/🟡
-**Location:** `file.php:line`
-**Type:** [Service Locator|New Keyword|Static Call|...]
+**Серьёзность:** Major/Minor
+**Расположение:** `file.php:line`
+**Тип:** [Service Locator|New Keyword|Static Call|...]
 
-**Issue:**
-[Description of the DI problem]
+**Проблема:**
+[Описание проблемы DI]
 
-**Current:**
+**Текущий код:**
 ```php
 $mailer = new Mailer();
 ```
 
-**Suggested:**
+**Рекомендация:**
 ```php
 public function __construct(
     private MailerInterface $mailer,
 ) {}
 ```
 
-**Testing Impact:**
-Cannot mock Mailer in unit tests. With injection, tests can use MockMailer.
+**Влияние на тестирование:**
+Невозможно замокать Mailer в юнит-тестах. С инъекцией тесты могут использовать MockMailer.
 ```

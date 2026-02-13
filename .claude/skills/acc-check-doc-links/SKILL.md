@@ -1,15 +1,15 @@
 ---
 name: acc-check-doc-links
-description: Validates documentation links. Detects broken relative links, missing anchor targets, malformed URLs, and orphaned documentation files.
+description: Проверяет ссылки в документации. Обнаруживает битые относительные ссылки, отсутствующие якоря, некорректные URL и потерянные файлы документации.
 ---
 
-# Documentation Link Validation
+# Проверка ссылок в документации
 
-Analyze documentation files for broken links, missing targets, and navigation issues.
+Анализ файлов документации на предмет битых ссылок, отсутствующих целей и проблем навигации.
 
-## Detection Patterns
+## Паттерны обнаружения
 
-### 1. Broken Relative Links
+### 1. Битые относительные ссылки
 
 ```markdown
 <!-- BROKEN: Target file doesn't exist -->
@@ -25,7 +25,7 @@ See [README](readme.md)
 <!-- Actual file is README.md -->
 ```
 
-### 2. Broken Anchor Links
+### 2. Битые якорные ссылки
 
 ```markdown
 <!-- BROKEN: Anchor target doesn't exist in file -->
@@ -41,7 +41,7 @@ See [Setup](#set-up)
 <!-- Heading is "## Set Up" → anchor should be #set-up -->
 ```
 
-### 3. Malformed URLs
+### 3. Некорректные URL
 
 ```markdown
 <!-- MALFORMED: Missing protocol -->
@@ -54,7 +54,7 @@ See [guide](docs/getting started.md)
 See [API](docs/api?version=2&format=json)
 ```
 
-### 4. Orphaned Documentation
+### 4. Потерянная документация
 
 ```markdown
 <!-- File exists but no other doc links to it -->
@@ -62,7 +62,7 @@ docs/deprecated-api.md    <!-- Not linked from any other .md file -->
 docs/internal-notes.md    <!-- Not in any navigation/TOC -->
 ```
 
-## Grep Patterns
+## Grep-паттерны
 
 ```bash
 # All markdown links (relative)
@@ -84,9 +84,9 @@ Grep: "!\[[^\]]*\]\([^)]+\)" --glob "**/*.md"
 Grep: "href=\"[^\"]+\"" --glob "**/*.md"
 ```
 
-## Validation Process
+## Процесс проверки
 
-### Step 1: Extract All Links
+### Шаг 1: Извлечение всех ссылок
 
 ```bash
 # Find all relative links
@@ -96,21 +96,21 @@ Grep: "\]\(([^http][^)]+)\)" --glob "**/*.md"
 Grep: "\]\((#[^)]+)\)" --glob "**/*.md"
 ```
 
-### Step 2: Verify Targets Exist
+### Шаг 2: Проверка существования целей
 
 For each relative link `[text](path)`:
 1. Resolve path relative to the source file's directory
 2. Check if target file exists using `Glob`
 3. If link has `#anchor`, verify heading exists in target
 
-### Step 3: Check Anchor Targets
+### Шаг 3: Проверка целей якорей
 
 For each anchor link `[text](#heading)`:
 1. Convert heading to anchor: lowercase, replace spaces with `-`, remove special chars
 2. Search for matching heading in the file
 3. Report if no match found
 
-### Step 4: Find Orphaned Docs
+### Шаг 4: Поиск потерянной документации
 
 ```bash
 # List all .md files
@@ -121,52 +121,52 @@ Grep: "filename.md" --glob "**/*.md"
 # If referenced by 0 files and not README/CHANGELOG → orphaned
 ```
 
-## Severity Classification
+## Классификация по степени важности
 
-| Pattern | Severity |
+| Паттерн | Важность |
 |---------|----------|
-| Broken link to critical doc (README, install) | 🔴 Critical |
-| Broken relative link | 🟠 Major |
-| Broken anchor link | 🟡 Minor |
-| Malformed URL | 🟡 Minor |
-| Orphaned documentation | 🟡 Minor |
+| Битая ссылка на критическую документацию (README, install) | 🔴 Критическая |
+| Битая относительная ссылка | 🟠 Высокая |
+| Битая якорная ссылка | 🟡 Средняя |
+| Некорректный URL | 🟡 Средняя |
+| Потерянная документация | 🟡 Средняя |
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### Link Validation: [Description]
+### Проверка ссылок: [Описание]
 
-**Severity:** 🔴/🟠/🟡
-**Source:** `file.md:line`
-**Link:** `[text](target)`
-**Type:** Relative/Anchor/External/Image
+**Важность:** 🔴/🟠/🟡
+**Источник:** `file.md:line`
+**Ссылка:** `[text](target)`
+**Тип:** Relative/Anchor/External/Image
 
-**Issue:**
-[Description — target not found, anchor missing, etc.]
+**Проблема:**
+[Описание — цель не найдена, якорь отсутствует и т.д.]
 
-**Fix:**
-- Correct path: `[text](correct/path.md)`
-- Or remove dead link
+**Исправление:**
+- Правильный путь: `[text](correct/path.md)`
+- Или удалить битую ссылку
 ```
 
-## Summary Report Format
+## Формат сводного отчета
 
 ```markdown
-## Link Validation Summary
+## Сводка проверки ссылок
 
-| Metric | Count |
+| Метрика | Количество |
 |--------|-------|
-| Total links checked | X |
-| Valid links | X |
-| Broken relative links | X |
-| Broken anchors | X |
-| Malformed URLs | X |
-| Orphaned files | X |
+| Всего проверено ссылок | X |
+| Корректных ссылок | X |
+| Битых относительных ссылок | X |
+| Битых якорей | X |
+| Некорректных URL | X |
+| Потерянных файлов | X |
 
-### Broken Links
+### Битые ссылки
 
-| Source | Link | Issue |
+| Источник | Ссылка | Проблема |
 |--------|------|-------|
-| `README.md:45` | `[guide](docs/guide.md)` | File not found |
-| `docs/api.md:12` | `[auth](#authentication)` | Anchor not found |
+| `README.md:45` | `[guide](docs/guide.md)` | Файл не найден |
+| `docs/api.md:12` | `[auth](#authentication)` | Якорь не найден |
 ```

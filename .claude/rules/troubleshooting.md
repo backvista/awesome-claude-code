@@ -5,12 +5,12 @@ paths:
   - Makefile
 ---
 
-# Troubleshooting
+# Устранение неполадок
 
-| Issue                     | Cause                                          | Fix                                                                      |
-|---------------------------|------------------------------------------------|--------------------------------------------------------------------------|
-| Skill not loading         | Missing from agent's `skills:` frontmatter     | Add skill name to agent's comma-separated `skills:` list                 |
-| Agent not invoked         | Command uses wrong `subagent_type`             | Match `subagent_type` to agent filename (without `.md`)                  |
-| Validation fails          | Frontmatter missing or malformed               | Ensure file starts with `---` and has required fields                    |
-| Plugin doesn't copy files | Plugin not allowed in Composer                 | Run `composer config allow-plugins.backvista/awesome-claude-code true` |
-| Orphaned skill in audit   | Skill folder exists but no agent references it | Add skill to appropriate agent's `skills:` frontmatter                   |
+| Проблема                              | Причина                                             | Решение                                                                           |
+|---------------------------------------|-----------------------------------------------------|-----------------------------------------------------------------------------------|
+| Навык не загружается                  | Отсутствует в `skills:` frontmatter агента          | Добавьте имя навыка в список `skills:` агента через запятую                       |
+| Агент не вызывается                   | Команда использует неверный `subagent_type`         | Убедитесь, что `subagent_type` соответствует имени файла агента (без `.md`)       |
+| Валидация не проходит                 | Frontmatter отсутствует или неверно отформатирован  | Убедитесь, что файл начинается с `---` и содержит обязательные поля               |
+| Плагин не копирует файлы              | Плагин не разрешен в Composer                       | Выполните `composer config allow-plugins.backvista/awesome-claude-code true`     |
+| Осиротевший навык в аудите            | Папка навыка существует, но ни один агент на него не ссылается | Добавьте навык в `skills:` frontmatter подходящего агента            |

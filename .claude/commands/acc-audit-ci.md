@@ -1,22 +1,22 @@
 ---
-description: Comprehensive CI/CD audit. Analyzes pipeline structure, security, performance, and best practices compliance.
+description: Комплексный аудит CI/CD. Анализирует структуру конвейера, безопасность, производительность и соответствие лучшим практикам.
 allowed-tools: Read, Grep, Glob, Bash, Task
 model: opus
-argument-hint: [path] [-- focus areas]
+argument-hint: [path] [-- области фокуса]
 ---
 
-# CI/CD Audit
+# Аудит CI/CD
 
-Perform a comprehensive audit of CI/CD configuration, including security, performance, and best practices.
+Выполняет комплексный аудит конфигурации CI/CD, включая безопасность, производительность и лучшие практики.
 
-## Input Parsing
+## Парсинг входных данных
 
-Parse `$ARGUMENTS` to extract path and optional focus areas:
+Парсит `$ARGUMENTS` для извлечения пути и опциональных областей фокуса:
 
 ```
-Format: [path] [-- <focus-areas>]
+Формат: [path] [-- <области-фокуса>]
 
-Examples:
+Примеры:
 - /acc-audit-ci
 - /acc-audit-ci ./
 - /acc-audit-ci -- focus on security
@@ -24,195 +24,195 @@ Examples:
 - /acc-audit-ci -- security and performance only
 ```
 
-**Parsing rules:**
-1. First argument = **path** (optional, defaults to `./`)
-2. After `--` = **focus areas** (optional audit scope)
+**Правила парсинга:**
+1. Первый аргумент = **path** (опционально, по умолчанию `./`)
+2. После `--` = **области фокуса** (опциональная область аудита)
 
-## Pre-flight Check
+## Предварительная проверка
 
-1. **Find CI artifacts:**
+1. **Найти артефакты CI:**
    ```bash
-   # CI configurations
+   # Конфигурации CI
    find . -name "*.yml" -path "*/.github/*" 2>/dev/null
    ls .gitlab-ci.yml 2>/dev/null
 
-   # Docker files
+   # Файлы Docker
    ls Dockerfile* 2>/dev/null
 
-   # Static analysis configs
+   # Конфигурации статического анализа
    ls phpstan.neon* psalm.xml* .php-cs-fixer* deptrac.yaml* 2>/dev/null
 
-   # Test config
+   # Конфигурация тестов
    ls phpunit.xml* 2>/dev/null
    ```
 
-2. **If no CI found:**
-   - Report "No CI configuration found"
-   - Suggest `/acc-ci-setup`
+2. **Если CI не найден:**
+   - Сообщить "No CI configuration found"
+   - Предложить `/acc-ci-setup`
 
-## Instructions
+## Инструкции
 
-Use the `acc-ci-coordinator` agent to perform the audit:
+Использовать агент `acc-ci-coordinator` для выполнения аудита:
 
 ```
-Task tool with subagent_type="acc-ci-coordinator"
-prompt: "Perform comprehensive CI/CD audit at [PATH]. Audit level: [LEVEL].
+Task tool с subagent_type="acc-ci-coordinator"
+prompt: "Выполните комплексный аудит CI/CD по пути [PATH]. Уровень аудита: [LEVEL].
 
-Operation: AUDIT
+Операция: AUDIT
 
-[FOCUS_AREAS if provided]
+[FOCUS_AREAS если указаны]
 
-Use TaskCreate/TaskUpdate for progress visibility. Create tasks for each audit phase.
+Используйте TaskCreate/TaskUpdate для отображения прогресса. Создавайте задачи для каждой фазы аудита.
 
-Audit areas:
-1. Pipeline structure and stages
-2. Static analysis configuration
-3. Test configuration and coverage
-4. Security (secrets, permissions, dependencies)
-5. Performance (caching, parallelization)
-6. Docker configuration
-7. Deployment configuration
+Области аудита:
+1. Структура и этапы конвейера
+2. Конфигурация статического анализа
+3. Конфигурация тестов и покрытие
+4. Безопасность (секреты, разрешения, зависимости)
+5. Производительность (кеширование, параллелизация)
+6. Конфигурация Docker
+7. Конфигурация развёртывания
 
-Generate a full audit report with:
-- Summary by category
-- Issues by severity
-- Specific recommendations
-- Action items"
+Сгенерируйте полный отчёт аудита с:
+- Сводкой по категориям
+- Проблемами по критичности
+- Конкретными рекомендациями
+- Задачами к выполнению"
 ```
 
-## Expected Output
+## Ожидаемый результат
 
-The coordinator will delegate to specialized agents and aggregate results:
+Координатор делегирует работу специализированным агентам и агрегирует результаты:
 
-### Audit Report Structure
+### Структура отчёта аудита
 
 ```markdown
-# CI/CD Audit Report
+# Отчёт аудита CI/CD
 
-**Project:** [NAME]
-**Date:** [DATE]
+**Проект:** [NAME]
+**Дата:** [DATE]
 
-## Executive Summary
+## Краткая сводка
 
-| Category | Status | Critical | High | Medium | Low |
+| Категория | Статус | Критично | Высоко | Средне | Низко |
 |----------|--------|----------|------|--------|-----|
-| Pipeline | ✅ | 0 | 0 | 1 | 2 |
-| Static Analysis | ⚠️ | 0 | 2 | 3 | 1 |
-| Testing | ⚠️ | 0 | 1 | 2 | 0 |
-| Security | 🔴 | 1 | 2 | 1 | 0 |
-| Performance | ⚠️ | 0 | 1 | 3 | 2 |
+| Конвейер | ✅ | 0 | 0 | 1 | 2 |
+| Статический анализ | ⚠️ | 0 | 2 | 3 | 1 |
+| Тестирование | ⚠️ | 0 | 1 | 2 | 0 |
+| Безопасность | 🔴 | 1 | 2 | 1 | 0 |
+| Производительность | ⚠️ | 0 | 1 | 3 | 2 |
 | Docker | ✅ | 0 | 0 | 1 | 1 |
-| Deployment | ⚠️ | 0 | 1 | 1 | 0 |
+| Развёртывание | ⚠️ | 0 | 1 | 1 | 0 |
 
-**Overall Score:** 72/100
-**Risk Level:** MEDIUM
+**Общий балл:** 72/100
+**Уровень риска:** СРЕДНИЙ
 
-## Critical Issues
+## Критичные проблемы
 
-[Detailed critical issues...]
+[Детализированные критичные проблемы...]
 
-## Recommendations
+## Рекомендации
 
-### Immediate (This Week)
-1. Fix security issue...
+### Немедленно (На этой неделе)
+1. Исправить проблему безопасности...
 2. ...
 
-### Short-term (This Month)
+### Краткосрочно (В этом месяце)
 1. ...
 
-### Long-term
+### Долгосрочно
 1. ...
 ```
 
-## Audit Categories
+## Категории аудита
 
-### Pipeline Structure
-- Stage organization
-- Job dependencies
-- Triggers configuration
-- Error handling
+### Структура конвейера
+- Организация этапов
+- Зависимости задач
+- Конфигурация триггеров
+- Обработка ошибок
 
-### Static Analysis
-- PHPStan level
-- Psalm configuration
-- DEPTRAC rules
-- Baseline management
+### Статический анализ
+- Уровень PHPStan
+- Конфигурация Psalm
+- Правила DEPTRAC
+- Управление baseline
 
-### Testing
-- Coverage thresholds
-- Test organization
-- Integration tests
-- CI test configuration
+### Тестирование
+- Пороги покрытия
+- Организация тестов
+- Интеграционные тесты
+- Конфигурация тестов в CI
 
-### Security
-- Secrets handling
-- Permissions
-- Dependency vulnerabilities
-- Container security
+### Безопасность
+- Обработка секретов
+- Разрешения
+- Уязвимости зависимостей
+- Безопасность контейнеров
 
-### Performance
-- Caching efficiency
-- Parallelization
-- Build times
-- Resource usage
+### Производительность
+- Эффективность кеширования
+- Параллелизация
+- Время сборки
+- Использование ресурсов
 
 ### Docker
-- Image size
-- Layer optimization
-- Security best practices
-- Multi-stage builds
+- Размер образа
+- Оптимизация слоёв
+- Лучшие практики безопасности
+- Многоступенчатые сборки
 
-### Deployment
-- Zero-downtime
-- Health checks
-- Rollback procedures
+### Развёртывание
+- Развёртывание без простоя
+- Проверки работоспособности
+- Процедуры отката
 - Feature flags
 
-## Usage Examples
+## Примеры использования
 
 ```bash
-# Full audit
+# Полный аудит
 /acc-audit-ci
 
-# Security-focused audit
+# Аудит с фокусом на безопасность
 /acc-audit-ci -- focus on security
 
-# Performance audit
+# Аудит производительности
 /acc-audit-ci -- performance only
 
-# Multiple focus areas
+# Несколько областей фокуса
 /acc-audit-ci -- security and testing, skip deployment
 
-# Specific path
+# Конкретный путь
 /acc-audit-ci ./my-project -- include all categories
 ```
 
-## Meta-Instructions Guide
+## Руководство по мета-инструкциям
 
-| Instruction | Effect |
+| Инструкция | Эффект |
 |-------------|--------|
-| `focus on security` | Deep security analysis |
-| `performance only` | Only performance audit |
-| `skip deployment` | Exclude deployment audit |
-| `include dependency scan` | Full dependency vulnerability scan |
-| `quick audit` | High-level overview only |
-| `detailed report` | Maximum detail in report |
+| `focus on security` | Глубокий анализ безопасности |
+| `performance only` | Только аудит производительности |
+| `skip deployment` | Исключить аудит развёртывания |
+| `include dependency scan` | Полное сканирование уязвимостей зависимостей |
+| `quick audit` | Только общий обзор |
+| `detailed report` | Максимальная детализация в отчёте |
 
-## Audit Levels
+## Уровни аудита
 
-Extract audit level from meta-instructions: `level:quick`, `level:standard`, `level:deep`. Default: `standard`.
+Извлечь уровень аудита из мета-инструкций: `level:quick`, `level:standard`, `level:deep`. По умолчанию: `standard`.
 
-| Level | Scope | What's Checked |
+| Уровень | Область | Что проверяется |
 |-------|-------|----------------|
-| `quick` | Structure check | Pipeline structure, basic config validation |
-| `standard` | Full 7-category | All 7 audit areas with detailed findings |
-| `deep` | Standard + dependencies | Standard + dependency vulnerability scan, cross-job optimization |
+| `quick` | Проверка структуры | Структура конвейера, базовая валидация конфигурации |
+| `standard` | Полные 7 категорий | Все 7 областей аудита с детальными находками |
+| `deep` | Standard + зависимости | Standard + сканирование уязвимостей зависимостей, кросс-оптимизация задач |
 
-## Severity Levels
+## Уровни критичности
 
-| Level | Symbol | Criteria |
+| Уровень | Символ | Критерий |
 |-------|--------|----------|
-| Critical | 🔴 | Security vulnerabilities, data exposure |
-| High | 🟠 | Significant issues, missing best practices |
-| Medium | 🟡 | Improvements recommended |
-| Low | 🟢 | Minor suggestions |
+| Критичный | 🔴 | Уязвимости безопасности, утечка данных |
+| Высокий | 🟠 | Значительные проблемы, отсутствие лучших практик |
+| Средний | 🟡 | Рекомендуются улучшения |
+| Низкий | 🟢 | Незначительные предложения |

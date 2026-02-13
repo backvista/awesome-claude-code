@@ -1,15 +1,15 @@
 ---
 name: acc-cqrs-knowledge
-description: CQRS architecture knowledge base. Provides patterns, antipatterns, and PHP-specific guidelines for Command Query Responsibility Segregation audits.
+description: База знаний архитектуры CQRS. Предоставляет паттерны, антипаттерны и PHP-специфичные рекомендации для аудита Command Query Responsibility Segregation.
 ---
 
-# CQRS Knowledge Base
+# База знаний CQRS
 
-Quick reference for CQRS architecture patterns and PHP implementation guidelines.
+Краткий справочник по паттернам архитектуры CQRS и рекомендациям по PHP-реализации.
 
-## Core Principles
+## Ключевые принципы
 
-### Separation of Concerns
+### Разделение ответственности
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -18,65 +18,65 @@ Quick reference for CQRS architecture patterns and PHP implementation guidelines
 │   WRITE SIDE (Commands)     │     READ SIDE (Queries)       │
 ├─────────────────────────────┼───────────────────────────────┤
 │ Command → Handler → Domain  │  Query → Handler → ReadModel  │
-│ Changes state               │  Returns data, no side effects│
-│ Uses Domain Model           │  Can bypass Domain Model      │
-│ Single aggregate per cmd    │  Can join multiple sources    │
+│ Изменяет состояние          │  Возвращает данные, без       │
+│ Использует Domain Model     │  побочных эффектов            │
+│ Один aggregate на команду   │  Может обходить Domain Model  │
 └─────────────────────────────┴───────────────────────────────┘
 ```
 
-**Rule:** Commands WRITE, Queries READ. Never mix.
+**Правило:** Commands ЗАПИСЫВАЮТ, Queries ЧИТАЮТ. Никогда не смешивать.
 
-### CQRS Components
+### Компоненты CQRS
 
-| Component | Purpose | Returns | Side Effects |
-|-----------|---------|---------|--------------|
-| **Command** | Request to change state | void or ID | Yes |
-| **CommandHandler** | Executes command logic | void or ID | Yes |
-| **Query** | Request for data | Data DTO | No |
-| **QueryHandler** | Fetches and transforms data | Data DTO | No |
-| **CommandBus** | Routes commands to handlers | Depends | N/A |
-| **QueryBus** | Routes queries to handlers | Query result | N/A |
+| Компонент | Назначение | Возвращает | Побочные эффекты |
+|-----------|-----------|------------|-----------------|
+| **Command** | Запрос на изменение состояния | void или ID | Да |
+| **CommandHandler** | Выполняет логику команды | void или ID | Да |
+| **Query** | Запрос на получение данных | Data DTO | Нет |
+| **QueryHandler** | Извлекает и преобразует данные | Data DTO | Нет |
+| **CommandBus** | Маршрутизирует команды к обработчикам | Зависит | Н/П |
+| **QueryBus** | Маршрутизирует запросы к обработчикам | Результат запроса | Н/П |
 
-## Quick Checklists
+## Быстрые чек-листы
 
-### Command Checklist
+### Чек-лист Command
 
-- [ ] Named as imperative verb + noun (CreateOrder, ConfirmPayment)
-- [ ] Immutable (readonly class)
-- [ ] Contains only data needed for operation
-- [ ] Returns void or created ID (never entities)
-- [ ] One command = one aggregate affected
-- [ ] Validated before dispatch
+- [ ] Именование как императивный глагол + существительное (CreateOrder, ConfirmPayment)
+- [ ] Неизменяемый (readonly class)
+- [ ] Содержит только данные, необходимые для операции
+- [ ] Возвращает void или ID созданного объекта (никогда сущности)
+- [ ] Одна команда = один затронутый aggregate
+- [ ] Валидирован перед отправкой
 
-### Query Checklist
+### Чек-лист Query
 
-- [ ] Named as Get/Find/List + noun (GetOrderDetails, ListCustomers)
-- [ ] Immutable (readonly class)
-- [ ] Contains filtering/pagination params
-- [ ] Handler has NO side effects
-- [ ] Can use optimized read models
-- [ ] Returns DTOs, not entities
+- [ ] Именование как Get/Find/List + существительное (GetOrderDetails, ListCustomers)
+- [ ] Неизменяемый (readonly class)
+- [ ] Содержит параметры фильтрации/пагинации
+- [ ] Handler НЕ имеет побочных эффектов
+- [ ] Может использовать оптимизированные read models
+- [ ] Возвращает DTO, не сущности
 
-### Handler Checklist
+### Чек-лист Handler
 
-- [ ] Single `execute()` or `__invoke()` method
-- [ ] One handler per command/query
-- [ ] CommandHandler can dispatch domain events
-- [ ] QueryHandler never dispatches events
-- [ ] No cross-aggregate transactions in single handler
+- [ ] Единственный метод `execute()` или `__invoke()`
+- [ ] Один обработчик на команду/запрос
+- [ ] CommandHandler может отправлять domain events
+- [ ] QueryHandler никогда не отправляет события
+- [ ] Нет кросс-aggregate транзакций в одном обработчике
 
-## Common Violations Quick Reference
+## Краткий справочник частых нарушений
 
-| Violation | Where to Look | Severity |
-|-----------|---------------|----------|
-| Query with side effects | QueryHandler calling save() | Critical |
-| Command returning data | CommandHandler returning entity | Critical |
-| Mixed read/write in handler | Handler with both get and save | Critical |
-| Business logic in handler | if/switch on domain state | Warning |
-| Missing command validation | Command without invariants | Warning |
-| Query using write DB | QueryHandler using EntityManager | Info |
+| Нарушение | Где искать | Серьёзность |
+|-----------|-----------|-------------|
+| Query с побочными эффектами | QueryHandler вызывает save() | Критично |
+| Command возвращает данные | CommandHandler возвращает сущность | Критично |
+| Смешанное чтение/запись в обработчике | Handler с get и save | Критично |
+| Бизнес-логика в обработчике | if/switch по доменному состоянию | Предупреждение |
+| Отсутствующая валидация команды | Command без инвариантов | Предупреждение |
+| Query использует write БД | QueryHandler использует EntityManager | Информация |
 
-## PHP 8.2 CQRS Patterns
+## Паттерны CQRS для PHP 8.2
 
 ### Command
 
@@ -152,12 +152,12 @@ final readonly class GetOrderDetailsHandler
 }
 ```
 
-## References
+## Ссылки
 
-For detailed information, load these reference files:
+Для подробной информации загрузите файлы ссылок:
 
-- `references/command-patterns.md` — Command structure, naming, validation
-- `references/query-patterns.md` — Query structure, read models
-- `references/handler-patterns.md` — Handler patterns, async/sync
-- `references/bus-patterns.md` — Command/Query bus implementations
-- `references/antipatterns.md` — Common violations with detection patterns
+- `references/command-patterns.md` — Структура Command, именование, валидация
+- `references/query-patterns.md` — Структура Query, read models
+- `references/handler-patterns.md` — Паттерны обработчиков, async/sync
+- `references/bus-patterns.md` — Реализации Command/Query bus
+- `references/antipatterns.md` — Частые нарушения с паттернами обнаружения

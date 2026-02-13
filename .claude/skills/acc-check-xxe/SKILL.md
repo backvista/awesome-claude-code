@@ -1,11 +1,11 @@
 ---
 name: acc-check-xxe
-description: Analyzes PHP code for XML External Entity vulnerabilities. Detects unsafe XML parsers, missing entity protection, LIBXML flags issues, XSLT attacks.
+description: Анализирует PHP код на уязвимости XML External Entity. Выявляет небезопасные XML парсеры, отсутствие защиты сущностей, проблемы с флагами LIBXML, атаки XSLT.
 ---
 
 # XXE (XML External Entity) Security Check
 
-Analyze PHP code for XXE vulnerabilities (OWASP A03:2021).
+Анализ PHP кода на уязвимости XXE (OWASP A03:2021).
 
 ## Detection Patterns
 

@@ -1,131 +1,131 @@
 ---
 name: acc-find-logic-errors
-description: Detects logic errors in PHP code. Finds incorrect conditions, wrong operators, missing switch cases, inverted logic, short-circuit evaluation issues.
+description: Обнаруживает логические ошибки в PHP-коде. Находит неправильные условия, неверные операторы, отсутствующие случаи switch, инвертированную логику, проблемы с коротким замыканием.
 ---
 
-# Logic Error Detection
+# Обнаружение логических ошибок
 
-Analyze PHP code for logic errors that cause incorrect behavior.
+Анализ PHP-кода на логические ошибки, вызывающие неправильное поведение.
 
-## Detection Patterns
+## Паттерны обнаружения
 
-### 1. Incorrect Comparison Operators
+### 1. Неправильные операторы сравнения
 
 ```php
-// BUG: Assignment instead of comparison
-if ($status = 'active') { } // Should be ===
+// БАГ: Присваивание вместо сравнения
+if ($status = 'active') { } // Должно быть ===
 
-// BUG: Wrong comparison type
-if ($count == '0') { } // '0' is truthy in string comparison
+// БАГ: Неправильный тип сравнения
+if ($count == '0') { } // '0' является истинным в строковом сравнении
 
-// BUG: Yoda condition error
-if ('active' = $status) { } // Assignment error
+// БАГ: Ошибка условия Йоды
+if ('active' = $status) { } // Ошибка присваивания
 ```
 
-### 2. Inverted Logic
+### 2. Инвертированная логика
 
 ```php
-// BUG: Double negation confusion
-if (!$user->isNotActive()) { } // Hard to reason about
+// БАГ: Путаница с двойным отрицанием
+if (!$user->isNotActive()) { } // Сложно рассуждать
 
-// BUG: Wrong negation placement
+// БАГ: Неправильное размещение отрицания
 if (!$a && $b) { } // vs if (!($a && $b))
 
-// BUG: DeMorgan's law violation
-if (!$a || !$b) { } // When meaning !($a && $b)
+// БАГ: Нарушение закона Де Моргана
+if (!$a || !$b) { } // Когда имеется в виду !($a && $b)
 ```
 
-### 3. Missing Switch/Match Cases
+### 3. Отсутствующие случаи Switch/Match
 
 ```php
-// BUG: Missing enum case
+// БАГ: Пропущен случай enum
 match ($status) {
     Status::Active => 'active',
     Status::Inactive => 'inactive',
-    // Missing: Status::Pending, Status::Deleted
+    // Пропущены: Status::Pending, Status::Deleted
 };
 
-// BUG: Missing default
+// БАГ: Отсутствует default
 switch ($type) {
     case 'A': return 1;
     case 'B': return 2;
-    // No default - undefined behavior for other values
+    // Нет default - неопределенное поведение для других значений
 }
 ```
 
-### 4. Short-Circuit Evaluation Issues
+### 4. Проблемы с коротким замыканием
 
 ```php
-// BUG: Side effect in short-circuit
-if ($valid && $this->save()) { } // save() not called if !$valid
+// БАГ: Побочный эффект в коротком замыкании
+if ($valid && $this->save()) { } // save() не вызывается если !$valid
 
-// BUG: Order matters
-if ($obj->method() && $obj !== null) { } // Null check too late
+// БАГ: Порядок имеет значение
+if ($obj->method() && $obj !== null) { } // Проверка null слишком поздно
 ```
 
-### 5. Off-by-One in Comparisons
+### 5. Ошибка на единицу в сравнениях
 
 ```php
-// BUG: Fence post error
+// БАГ: Ошибка fence post
 if ($index < count($array)) { } // vs <=
 
-// BUG: Wrong boundary
-for ($i = 0; $i <= $length; $i++) { } // Off by one
+// БАГ: Неправильная граница
+for ($i = 0; $i <= $length; $i++) { } // На единицу больше
 ```
 
-### 6. Boolean Expression Errors
+### 6. Ошибки булевых выражений
 
 ```php
-// BUG: Always true/false
-if ($age > 0 || $age <= 0) { } // Always true
+// БАГ: Всегда истинно/ложно
+if ($age > 0 || $age <= 0) { } // Всегда истинно
 
-// BUG: Unreachable condition
-if ($x > 10 && $x < 5) { } // Always false
+// БАГ: Недостижимое условие
+if ($x > 10 && $x < 5) { } // Всегда ложно
 
-// BUG: Redundant condition
-if ($status === 'active' && $status !== 'inactive') { } // Second part redundant
+// БАГ: Избыточное условие
+if ($status === 'active' && $status !== 'inactive') { } // Вторая часть избыточна
 ```
 
-### 7. Return Value Ignorance
+### 7. Игнорирование возвращаемого значения
 
 ```php
-// BUG: Ignoring important return
-array_push($items, $new); // Returns count, not array
-$string->trim(); // String is immutable, returns new string
+// БАГ: Игнорирование важного return
+array_push($items, $new); // Возвращает count, не array
+$string->trim(); // String неизменяем, возвращает новую строку
 ```
 
-## Grep Patterns
+## Паттерны Grep
 
 ```bash
-# Assignment in condition
+# Присваивание в условии
 Grep: "if\s*\([^=]*[^!=<>]=[^=][^)]*\)" --glob "**/*.php"
 
-# Double negation
+# Двойное отрицание
 Grep: "!\$\w+->isNot|!!\$" --glob "**/*.php"
 
-# Empty switch without default
+# Пустой switch без default
 Grep: "switch\s*\([^)]+\)\s*\{[^}]*\}" --glob "**/*.php"
 ```
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### Logic Error: [Description]
+### Логическая ошибка: [Описание]
 
-**Severity:** 🔴/🟠/🟡
-**Location:** `file.php:line`
-**Type:** [Incorrect Operator|Inverted Logic|Missing Case|...]
+**Серьезность:** 🔴/🟠/🟡
+**Расположение:** `file.php:line`
+**Тип:** [Incorrect Operator|Inverted Logic|Missing Case|...]
 
-**Issue:**
-[Description]
+**Проблема:**
+[Описание]
 
-**Code:**
+**Код:**
 ```php
-// Current code
+// Текущий код
 ```
 
-**Fix:**
+**Исправление:**
 ```php
-// Corrected code
+// Исправленный код
 ```
 ```

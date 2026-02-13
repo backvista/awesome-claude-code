@@ -1,29 +1,29 @@
 ---
 name: acc-bug-fix-knowledge
-description: Bug fix knowledge base. Provides bug categories, symptoms, fix patterns, and minimal intervention principles for PHP 8.2 projects.
+description: База знаний по исправлению ошибок. Предоставляет категории ошибок, симптомы, паттерны исправлений и принципы минимального вмешательства для проектов на PHP 8.2.
 ---
 
-# Bug Fix Knowledge Base
+# База знаний по исправлению ошибок
 
-Comprehensive knowledge for diagnosing and fixing bugs in PHP applications following DDD, CQRS, and Clean Architecture patterns.
+Комплексная база знаний для диагностики и исправления ошибок в PHP-приложениях, следующих паттернам DDD, CQRS и Clean Architecture.
 
-## Bug Categories and Symptoms
+## Категории ошибок и симптомы
 
-### 1. Logic Errors
-**Symptoms:**
-- Incorrect output for valid input
-- Wrong branch taken in conditionals
-- Inverted boolean logic
-- Off-by-one errors in loops
-- Missing edge case handling
+### 1. Логические ошибки
+**Симптомы:**
+- Некорректный вывод для валидного ввода
+- Неправильная ветка в условных операторах
+- Инвертированная булева логика
+- Ошибки на единицу в циклах
+- Необработанные граничные случаи
 
-**Common Causes:**
-- `>` instead of `>=`, `&&` instead of `||`
-- Negation errors (`!$condition` vs `$condition`)
-- Loop boundary mistakes (`< count` vs `<= count`)
-- Missing `break` in switch statements
+**Частые причины:**
+- `>` вместо `>=`, `&&` вместо `||`
+- Ошибки отрицания (`!$condition` вместо `$condition`)
+- Ошибки границ цикла (`< count` вместо `<= count`)
+- Отсутствующий `break` в switch-операторах
 
-**Fix Pattern:**
+**Паттерн исправления:**
 ```php
 // Before: Logic error
 if ($amount > $limit) { // Should be >=
@@ -36,20 +36,20 @@ if ($amount >= $limit) {
 }
 ```
 
-### 2. Null Pointer Issues
-**Symptoms:**
+### 2. Проблемы с Null
+**Симптомы:**
 - "Call to a member function on null"
 - "Cannot access property on null"
-- Unexpected null returns
-- Missing null checks after optional operations
+- Неожиданные null-возвраты
+- Отсутствующие проверки null после опциональных операций
 
-**Common Causes:**
-- Repository returning null for non-existent entity
-- Optional relationships not checked
-- Nullable parameters not validated
-- Method chaining on potentially null objects
+**Частые причины:**
+- Repository возвращает null для несуществующей сущности
+- Опциональные связи не проверены
+- Nullable-параметры не валидированы
+- Цепочка вызовов на потенциально null-объектах
 
-**Fix Pattern:**
+**Паттерн исправления:**
 ```php
 // Before: Null pointer risk
 $user = $this->userRepository->find($id);
@@ -66,20 +66,20 @@ $email = $user->getEmail();
 $email = $user?->getEmail() ?? throw new UserNotFoundException($id);
 ```
 
-### 3. Boundary Issues
-**Symptoms:**
-- Array index out of bounds
-- Empty collection access
-- String index errors
-- Numeric overflow/underflow
+### 3. Проблемы границ
+**Симптомы:**
+- Выход за пределы индекса массива
+- Доступ к пустой коллекции
+- Ошибки строковых индексов
+- Числовое переполнение/потеря разрядности
 
-**Common Causes:**
-- Accessing first/last element without checking emptiness
-- Loop index exceeding array size
-- Integer overflow in calculations
-- Missing bounds validation
+**Частые причины:**
+- Доступ к первому/последнему элементу без проверки пустоты
+- Индекс цикла превышает размер массива
+- Целочисленное переполнение при вычислениях
+- Отсутствующая валидация границ
 
-**Fix Pattern:**
+**Паттерн исправления:**
 ```php
 // Before: Boundary issue
 $firstItem = $items[0]; // Crashes if empty
@@ -94,20 +94,20 @@ $firstItem = $items[0];
 $firstItem = $items[0] ?? throw new EmptyCollectionException('items');
 ```
 
-### 4. Race Conditions
-**Symptoms:**
-- Intermittent failures
-- Data corruption under load
-- Lost updates
-- Duplicate records
+### 4. Состояния гонки
+**Симптомы:**
+- Периодические сбои
+- Повреждение данных под нагрузкой
+- Потерянные обновления
+- Дублирование записей
 
-**Common Causes:**
-- Check-then-act without locking
-- Shared mutable state
-- Missing database transactions
-- Concurrent file access
+**Частые причины:**
+- Проверка-затем-действие без блокировки
+- Разделяемое изменяемое состояние
+- Отсутствующие транзакции БД
+- Конкурентный доступ к файлам
 
-**Fix Pattern:**
+**Паттерн исправления:**
 ```php
 // Before: Race condition
 if (!$this->repository->exists($id)) {
@@ -128,20 +128,20 @@ try {
 // Use UNIQUE constraint + INSERT ... ON DUPLICATE KEY
 ```
 
-### 5. Resource Leaks
-**Symptoms:**
-- Memory exhaustion over time
+### 5. Утечки ресурсов
+**Симптомы:**
+- Исчерпание памяти со временем
 - "Too many open files"
-- Database connection pool exhaustion
-- Slow performance degradation
+- Исчерпание пула соединений БД
+- Постепенная деградация производительности
 
-**Common Causes:**
-- Unclosed file handles
-- Missing database connection release
-- Event listeners not removed
-- Circular references preventing GC
+**Частые причины:**
+- Незакрытые файловые дескрипторы
+- Отсутствующее освобождение соединений БД
+- Обработчики событий не удалены
+- Циклические ссылки, препятствующие GC
 
-**Fix Pattern:**
+**Паттерн исправления:**
 ```php
 // Before: Resource leak
 $handle = fopen($path, 'r');
@@ -160,20 +160,20 @@ try {
 $content = file_get_contents($path);
 ```
 
-### 6. Exception Handling Issues
-**Symptoms:**
-- Silent failures
-- Generic error messages
-- Lost exception context
-- Swallowed exceptions
+### 6. Проблемы обработки исключений
+**Симптомы:**
+- Тихие сбои
+- Общие сообщения об ошибках
+- Потеря контекста исключений
+- Проглоченные исключения
 
-**Common Causes:**
-- Empty catch blocks
-- Catching too broad exception types
-- Not re-throwing after logging
-- Missing exception chaining
+**Частые причины:**
+- Пустые блоки catch
+- Перехват слишком широких типов исключений
+- Отсутствие повторного выброса после логирования
+- Отсутствующая цепочка исключений
 
-**Fix Pattern:**
+**Паттерн исправления:**
 ```php
 // Before: Swallowed exception
 try {
@@ -193,20 +193,20 @@ try {
 }
 ```
 
-### 7. Type Issues
-**Symptoms:**
+### 7. Проблемы типов
+**Симптомы:**
 - "Type error: Argument must be of type X, Y given"
-- Unexpected type coercion
-- String/int confusion
-- Array/object mismatch
+- Неожиданное приведение типов
+- Путаница string/int
+- Несоответствие array/object
 
-**Common Causes:**
-- Missing strict_types declaration
-- Implicit type casting
-- Mixed types from external sources
-- Legacy code without type hints
+**Частые причины:**
+- Отсутствующее объявление strict_types
+- Неявное приведение типов
+- Смешанные типы из внешних источников
+- Устаревший код без подсказок типов
 
-**Fix Pattern:**
+**Паттерн исправления:**
 ```php
 // Before: Type issue
 function calculate($amount) { // No type hint
@@ -221,20 +221,20 @@ function calculate(float $amount): float {
 }
 ```
 
-### 8. SQL Injection
-**Symptoms:**
-- Security vulnerabilities
-- Unexpected query results
-- Data corruption
-- Authentication bypass
+### 8. SQL-инъекции
+**Симптомы:**
+- Уязвимости безопасности
+- Неожиданные результаты запросов
+- Повреждение данных
+- Обход аутентификации
 
-**Common Causes:**
-- String concatenation in queries
-- Missing parameter binding
-- Unvalidated user input in queries
-- Dynamic table/column names
+**Частые причины:**
+- Конкатенация строк в запросах
+- Отсутствующая привязка параметров
+- Невалидированный пользовательский ввод в запросах
+- Динамические имена таблиц/столбцов
 
-**Fix Pattern:**
+**Паттерн исправления:**
 ```php
 // Before: SQL injection vulnerability
 $query = "SELECT * FROM users WHERE email = '$email'";
@@ -245,20 +245,20 @@ $stmt = $pdo->prepare($query);
 $stmt->execute(['email' => $email]);
 ```
 
-### 9. Infinite Loops
-**Symptoms:**
-- Application hangs
-- 100% CPU usage
-- Request timeouts
-- Memory exhaustion
+### 9. Бесконечные циклы
+**Симптомы:**
+- Зависание приложения
+- 100% загрузка CPU
+- Таймауты запросов
+- Исчерпание памяти
 
-**Common Causes:**
-- Missing or unreachable exit condition
-- Iterator not advancing
-- Recursive call without base case
-- Circular dependencies in processing
+**Частые причины:**
+- Отсутствующее или недостижимое условие выхода
+- Итератор не продвигается
+- Рекурсивный вызов без базового случая
+- Циклические зависимости в обработке
 
-**Fix Pattern:**
+**Паттерн исправления:**
 ```php
 // Before: Potential infinite loop
 while ($item = $queue->pop()) {
@@ -277,88 +277,88 @@ while ($item = $queue->pop()) {
 }
 ```
 
-## Minimal Intervention Principles
+## Принципы минимального вмешательства
 
-### 1. Single Responsibility Fix
-- Fix ONLY the bug, nothing else
-- No refactoring while fixing
-- No "while I'm here" improvements
-- Keep the diff minimal
+### 1. Исправление единственной ответственности
+- Исправлять ТОЛЬКО ошибку, ничего более
+- Никакого рефакторинга при исправлении
+- Никаких улучшений «пока я тут»
+- Минимальный diff
 
-### 2. Preserve Behavior
-- Existing tests must pass
-- API contracts must not change
-- Side effects must be preserved (if intentional)
-- Error messages format should match
+### 2. Сохранение поведения
+- Существующие тесты должны проходить
+- Контракты API не должны меняться
+- Побочные эффекты должны сохраняться (если намеренные)
+- Формат сообщений об ошибках должен совпадать
 
-### 3. Backward Compatibility
-- Public method signatures unchanged
-- Return types unchanged
-- Exception types unchanged
-- Event payloads unchanged
+### 3. Обратная совместимость
+- Сигнатуры публичных методов без изменений
+- Возвращаемые типы без изменений
+- Типы исключений без изменений
+- Payload событий без изменений
 
-### 4. Test First
-- Write failing test that reproduces bug
-- Fix should make test pass
-- No fix without reproduction test
+### 4. Сначала тест
+- Написать падающий тест, воспроизводящий ошибку
+- Исправление должно сделать тест зелёным
+- Никаких исправлений без теста воспроизведения
 
-## Fix Validation Checklist
+## Чек-лист валидации исправления
 
-Before applying a fix, verify:
+Перед применением исправления проверьте:
 
-1. **Reproduction Test Exists**
-   - [ ] Test fails without fix
-   - [ ] Test passes with fix
-   - [ ] Test covers edge cases
+1. **Тест воспроизведения существует**
+   - [ ] Тест падает без исправления
+   - [ ] Тест проходит с исправлением
+   - [ ] Тест покрывает граничные случаи
 
-2. **Minimal Change**
-   - [ ] Only affected code changed
-   - [ ] No unrelated refactoring
-   - [ ] No formatting changes
+2. **Минимальное изменение**
+   - [ ] Изменён только затронутый код
+   - [ ] Нет несвязанного рефакторинга
+   - [ ] Нет изменений форматирования
 
-3. **No Regressions**
-   - [ ] All existing tests pass
-   - [ ] No new warnings
-   - [ ] Performance not degraded
+3. **Нет регрессий**
+   - [ ] Все существующие тесты проходят
+   - [ ] Нет новых предупреждений
+   - [ ] Производительность не деградировала
 
-4. **Code Quality**
-   - [ ] No new code smells
-   - [ ] SOLID principles respected
-   - [ ] DDD patterns maintained
+4. **Качество кода**
+   - [ ] Нет новых code smells
+   - [ ] Принципы SOLID соблюдены
+   - [ ] Паттерны DDD сохранены
 
-5. **Documentation**
-   - [ ] PHPDoc updated if needed
-   - [ ] CHANGELOG entry added
-   - [ ] Issue linked in commit
+5. **Документация**
+   - [ ] PHPDoc обновлён при необходимости
+   - [ ] Запись в CHANGELOG добавлена
+   - [ ] Issue связан в коммите
 
-## DDD-Specific Bug Patterns
+## Паттерны ошибок, специфичные для DDD
 
-### Domain Layer Bugs
-- Value Object validation bypass
-- Entity invariant violation
-- Aggregate boundary crossing
-- Domain Event lost
+### Ошибки Domain Layer
+- Обход валидации Value Object
+- Нарушение инвариантов Entity
+- Пересечение границы Aggregate
+- Потеря Domain Event
 
-### Application Layer Bugs
-- Use Case not transactional
-- Command/Query mixing
-- Missing authorization check
-- Event handler not idempotent
+### Ошибки Application Layer
+- Use Case без транзакции
+- Смешивание Command/Query
+- Отсутствующая проверка авторизации
+- Event handler не идемпотентен
 
-### Infrastructure Layer Bugs
-- Repository returning detached entity
-- Cache invalidation missing
-- Message not acknowledged
-- Connection not released
+### Ошибки Infrastructure Layer
+- Repository возвращает отсоединённую сущность
+- Отсутствующая инвалидация кеша
+- Сообщение не подтверждено
+- Соединение не освобождено
 
-## Quick Reference: Fix by Error Message
+## Краткий справочник: исправление по сообщению об ошибке
 
-| Error Message | Likely Bug | Quick Fix |
-|--------------|------------|-----------|
-| "Call to member function on null" | Null pointer | Add null check |
-| "Undefined array key" | Boundary issue | Check array_key_exists |
-| "Type error: Argument X" | Type issue | Add type validation |
-| "Maximum execution time" | Infinite loop | Add iteration limit |
-| "Allowed memory exhausted" | Resource leak | Close resources in finally |
-| "Integrity constraint violation" | Race condition | Add locking/transaction |
-| "Cannot modify readonly property" | Immutability violation | Create new instance |
+| Сообщение об ошибке | Вероятная ошибка | Быстрое исправление |
+|---------------------|------------------|---------------------|
+| "Call to member function on null" | Null pointer | Добавить проверку null |
+| "Undefined array key" | Проблема границ | Проверить array_key_exists |
+| "Type error: Argument X" | Проблема типов | Добавить валидацию типов |
+| "Maximum execution time" | Бесконечный цикл | Добавить лимит итераций |
+| "Allowed memory exhausted" | Утечка ресурсов | Закрывать ресурсы в finally |
+| "Integrity constraint violation" | Состояние гонки | Добавить блокировку/транзакцию |
+| "Cannot modify readonly property" | Нарушение неизменяемости | Создать новый экземпляр |

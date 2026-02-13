@@ -35,16 +35,10 @@
     ],
     "authors": [
         {
-            "name": "Roman Dykyi",
-            "email": "dykyi.roman@gmail.com",
+            "name": "Timur Bayan",
+            "email": "timurbayanrds@gmail.com",
             "homepage": "https://github.com/backvista",
             "role": "Developer"
-        }
-    ],
-    "funding": [
-        {
-            "type": "github",
-            "url": "https://github.com/sponsors/backvista"
         }
     ],
     "homepage": "https://github.com/backvista/awesome-claude-code",
@@ -61,12 +55,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Dykyi\\AwesomeClaudeCode\\": "src/"
+            "BackVista\\AwesomeClaudeCode\\": "src/"
         }
     },
     "bin": ["bin/acc"],
     "extra": {
-        "class": "Dykyi\\AwesomeClaudeCode\\ComposerPlugin"
+        "class": "BackVista\\AwesomeClaudeCode\\ComposerPlugin"
     },
     "minimum-stability": "stable",
     "prefer-stable": true

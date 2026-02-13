@@ -1,71 +1,71 @@
 ---
 name: acc-create-test-builder
-description: Generates Test Data Builder and Object Mother patterns for PHP 8.2. Creates fluent builders with sensible defaults and factory methods for test data creation.
+description: Генерирует паттерны Test Data Builder и Object Mother для PHP 8.2. Создаёт fluent-билдеры с разумными значениями по умолчанию и фабричные методы для создания тестовых данных.
 ---
 
-# Test Data Builder Generator
+# Генератор Test Data Builder
 
-Generates Test Data Builder and Object Mother patterns for test data creation.
+Генерирует паттерны Test Data Builder и Object Mother для создания тестовых данных.
 
-## Patterns
+## Паттерны
 
 ### Test Data Builder
 
-Fluent interface for constructing test objects with customizable properties.
+Fluent-интерфейс для конструирования тестовых объектов с настраиваемыми свойствами.
 
-**When to use:**
-- Complex objects with many properties
-- Need to customize specific properties per test
-- Want to express test intent clearly
+**Когда использовать:**
+- Сложные объекты с множеством свойств
+- Нужно настраивать конкретные свойства для каждого теста
+- Хотите чётко выражать намерение теста
 
 ### Object Mother
 
-Factory methods returning pre-configured objects for common scenarios.
+Фабричные методы, возвращающие преднастроенные объекты для типичных сценариев.
 
-**When to use:**
-- Standard test fixtures (default user, pending order)
-- Shared across many tests
-- Named scenarios (premium customer, expired subscription)
+**Когда использовать:**
+- Стандартные тестовые фикстуры (пользователь по умолчанию, ожидающий заказ)
+- Используются во многих тестах
+- Именованные сценарии (премиум-клиент, истёкшая подписка)
 
-## References
+## Ссылки
 
-- `references/templates.md` — Builder and Object Mother class templates
-- `references/examples.md` — Complete Order example with Value Object builders and usage
+- `references/templates.md` — Шаблоны классов Builder и Object Mother
+- `references/examples.md` — Полный пример Order с билдерами Value Object и использованием
 
-## Generation Instructions
+## Инструкции по генерации
 
-1. **Analyze the target class:**
-   - Constructor parameters
-   - Required vs optional properties
-   - Value objects used
-   - State transitions (for entities)
+1. **Проанализировать целевой класс:**
+   - Параметры конструктора
+   - Обязательные vs опциональные свойства
+   - Используемые value objects
+   - Переходы состояний (для сущностей)
 
-2. **Determine sensible defaults:**
-   - Generate IDs automatically
-   - Use common/valid values
-   - Consider relationships
+2. **Определить разумные значения по умолчанию:**
+   - Генерировать ID автоматически
+   - Использовать распространённые/валидные значения
+   - Учитывать отношения
 
-3. **Create Builder with:**
-   - Private constructor with defaults
-   - Static factory method (`aOrder`, `anEmail`)
-   - `with*` methods for each property
-   - Immutable (clone in each method)
-   - `build()` method
+3. **Создать Builder с:**
+   - Приватным конструктором со значениями по умолчанию
+   - Статическим фабричным методом (`aOrder`, `anEmail`)
+   - Методами `with*` для каждого свойства
+   - Immutable (клонирование в каждом методе)
+   - Методом `build()`
 
-4. **Create Mother with:**
-   - `default()` method
-   - Named scenarios (`pending`, `confirmed`, `premium`)
-   - Parameterized methods (`forCustomer`, `withTotal`)
+4. **Создать Mother с:**
+   - Методом `default()`
+   - Именованными сценариями (`pending`, `confirmed`, `premium`)
+   - Параметризованными методами (`forCustomer`, `withTotal`)
 
-5. **File placement:**
-   - Builders: `tests/Builder/{ClassName}Builder.php`
+5. **Размещение файлов:**
+   - Билдеры: `tests/Builder/{ClassName}Builder.php`
    - Mothers: `tests/Mother/{ClassName}Mother.php`
 
-## Best Practices
+## Лучшие практики
 
-1. **Sensible defaults** — Tests should work without customization
-2. **Fluent interface** — Chain method calls
-3. **Immutable builders** — Clone in each `with*` method
-4. **Expressive names** — `pending()` not `withStatus(pending)`
-5. **Composition** — Builders can use other Mothers/Builders
-6. **Single Responsibility** — One builder per aggregate/entity
+1. **Разумные значения по умолчанию** — Тесты должны работать без настройки
+2. **Fluent-интерфейс** — Цепочка вызовов методов
+3. **Immutable билдеры** — Клонирование в каждом методе `with*`
+4. **Выразительные имена** — `pending()` а не `withStatus(pending)`
+5. **Композиция** — Билдеры могут использовать другие Mothers/Builders
+6. **Единая ответственность** — Один билдер на агрегат/сущность

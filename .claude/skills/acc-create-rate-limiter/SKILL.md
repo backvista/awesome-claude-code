@@ -1,94 +1,94 @@
 ---
 name: acc-create-rate-limiter
-description: Generates Rate Limiter pattern for PHP 8.2. Creates request throttling with token bucket, sliding window, and fixed window algorithms. Includes unit tests.
+description: Генерирует паттерн Rate Limiter для PHP 8.2. Создаёт ограничение запросов с алгоритмами token bucket, sliding window и fixed window. Включает модульные тесты.
 ---
 
-# Rate Limiter Generator
+# Генератор Rate Limiter
 
-Creates Rate Limiter pattern infrastructure for request throttling and API protection.
+Создаёт инфраструктуру паттерна Rate Limiter для ограничения запросов и защиты API.
 
-## When to Use
+## Когда использовать
 
-| Scenario | Example |
-|----------|---------|
-| API protection | Prevent abuse |
-| Resource throttling | Database connection limits |
-| Fair usage | Per-user request limits |
-| Burst protection | Spike handling |
+| Сценарий | Пример |
+|----------|--------|
+| Защита API | Предотвращение злоупотреблений |
+| Ограничение ресурсов | Лимиты подключений к базе данных |
+| Справедливое использование | Лимиты запросов на пользователя |
+| Защита от всплесков | Обработка пиковых нагрузок |
 
-## Component Characteristics
+## Характеристики компонентов
 
 ### RateLimiterInterface
-- Common interface for all algorithms
-- Check and consume methods
-- Remaining capacity queries
+- Общий интерфейс для всех алгоритмов
+- Методы проверки и потребления
+- Запросы оставшейся ёмкости
 
-### Algorithms
-- **Token Bucket**: Smooth rate limiting with burst capacity
-- **Sliding Window**: Time-based with sliding window log
-- **Fixed Window**: Simple time-based counter
+### Алгоритмы
+- **Token Bucket**: Плавное ограничение с допуском всплесков
+- **Sliding Window**: Ограничение по времени со скользящим окном
+- **Fixed Window**: Простой счётчик по времени
 
 ### RateLimitResult
-- Contains allowed/denied status
-- Provides retry-after information
-- Generates HTTP headers
+- Содержит статус разрешено/отклонено
+- Предоставляет информацию о retry-after
+- Генерирует HTTP-заголовки
 
 ---
 
-## Generation Process
+## Процесс генерации
 
-### Step 1: Generate Core Components
+### Шаг 1: Генерация основных компонентов
 
-**Path:** `src/Infrastructure/Resilience/RateLimiter/`
+**Путь:** `src/Infrastructure/Resilience/RateLimiter/`
 
-1. `RateLimiterInterface.php` — Common interface
-2. `RateLimitResult.php` — Result value object with headers
-3. `RateLimitExceededException.php` — Exception with retry info
-4. `StorageInterface.php` — Storage abstraction
+1. `RateLimiterInterface.php` — Общий интерфейс
+2. `RateLimitResult.php` — Value object результата с заголовками
+3. `RateLimitExceededException.php` — Исключение с информацией о повторе
+4. `StorageInterface.php` — Абстракция хранилища
 
-### Step 2: Choose and Generate Algorithm
+### Шаг 2: Выбор и генерация алгоритма
 
-Choose based on use case:
+Выберите на основе сценария:
 
-1. `TokenBucketRateLimiter.php` — For APIs with burst allowance
-2. `SlidingWindowRateLimiter.php` — For strict per-time limits
-3. `FixedWindowRateLimiter.php` — For simple rate limiting
+1. `TokenBucketRateLimiter.php` — Для API с допуском всплесков
+2. `SlidingWindowRateLimiter.php` — Для строгих лимитов по времени
+3. `FixedWindowRateLimiter.php` — Для простого ограничения
 
-### Step 3: Generate Storage
+### Шаг 3: Генерация хранилища
 
-1. `RedisStorage.php` — Production storage with TTL
+1. `RedisStorage.php` — Production-хранилище с TTL
 
-### Step 4: Generate Tests
+### Шаг 4: Генерация тестов
 
-1. `{Algorithm}RateLimiterTest.php` — Algorithm tests
-2. `RateLimitResultTest.php` — Result value object tests
+1. `{Algorithm}RateLimiterTest.php` — Тесты алгоритмов
+2. `RateLimitResultTest.php` — Тесты value object результата
 
 ---
 
-## File Placement
+## Размещение файлов
 
-| Component | Path |
+| Компонент | Путь |
 |-----------|------|
-| All Classes | `src/Infrastructure/Resilience/RateLimiter/` |
-| Unit Tests | `tests/Unit/Infrastructure/Resilience/RateLimiter/` |
+| Все классы | `src/Infrastructure/Resilience/RateLimiter/` |
+| Модульные тесты | `tests/Unit/Infrastructure/Resilience/RateLimiter/` |
 
 ---
 
-## Naming Conventions
+## Соглашения об именовании
 
-| Component | Pattern | Example |
-|-----------|---------|---------|
-| Interface | `RateLimiterInterface` | `RateLimiterInterface` |
+| Компонент | Шаблон | Пример |
+|-----------|--------|--------|
+| Интерфейс | `RateLimiterInterface` | `RateLimiterInterface` |
 | Token Bucket | `TokenBucketRateLimiter` | `TokenBucketRateLimiter` |
 | Sliding Window | `SlidingWindowRateLimiter` | `SlidingWindowRateLimiter` |
 | Fixed Window | `FixedWindowRateLimiter` | `FixedWindowRateLimiter` |
-| Result | `RateLimitResult` | `RateLimitResult` |
-| Exception | `RateLimitExceededException` | `RateLimitExceededException` |
-| Test | `{ClassName}Test` | `TokenBucketRateLimiterTest` |
+| Результат | `RateLimitResult` | `RateLimitResult` |
+| Исключение | `RateLimitExceededException` | `RateLimitExceededException` |
+| Тест | `{ClassName}Test` | `TokenBucketRateLimiterTest` |
 
 ---
 
-## Quick Template Reference
+## Краткий справочник шаблонов
 
 ### RateLimiterInterface
 
@@ -117,7 +117,7 @@ final readonly class RateLimitResult
 
 ---
 
-## Usage Example
+## Пример использования
 
 ```php
 // Create limiter
@@ -147,30 +147,30 @@ foreach ($result->toHeaders() as $name => $value) {
 
 ---
 
-## Algorithm Comparison
+## Сравнение алгоритмов
 
-| Algorithm | Burst Handling | Memory | Precision | Use Case |
-|-----------|----------------|--------|-----------|----------|
-| Token Bucket | Good (configurable) | Low | Medium | APIs with burst allowance |
-| Sliding Window | Limited | High | High | Strict per-time limits |
-| Fixed Window | Poor (boundary issues) | Low | Low | Simple rate limiting |
-
----
-
-## Anti-patterns to Avoid
-
-| Anti-pattern | Problem | Solution |
-|--------------|---------|----------|
-| No Redis/Shared Storage | Per-instance limits | Use shared storage |
-| Missing Headers | Client can't adapt | Return X-RateLimit-* headers |
-| Single Algorithm | Doesn't fit all cases | Choose per use case |
-| No Retry-After | Client spams | Always return retry timing |
-| Synchronous Blocking | Thread blocking | Use non-blocking check |
+| Алгоритм | Обработка всплесков | Память | Точность | Сценарий |
+|----------|---------------------|--------|----------|----------|
+| Token Bucket | Хорошая (настраиваемая) | Низкая | Средняя | API с допуском всплесков |
+| Sliding Window | Ограниченная | Высокая | Высокая | Строгие лимиты по времени |
+| Fixed Window | Плохая (проблемы на границах) | Низкая | Низкая | Простое ограничение |
 
 ---
 
-## References
+## Антипаттерны, которых следует избегать
 
-For complete PHP templates and examples, see:
-- `references/templates.md` — All algorithm implementations
-- `references/examples.md` — Middleware example and tests
+| Антипаттерн | Проблема | Решение |
+|-------------|----------|---------|
+| Без Redis/общего хранилища | Лимиты на экземпляр | Используйте общее хранилище |
+| Отсутствие заголовков | Клиент не может адаптироваться | Возвращайте X-RateLimit-* заголовки |
+| Один алгоритм | Не подходит для всех случаев | Выбирайте под конкретный сценарий |
+| Без Retry-After | Клиент спамит | Всегда возвращайте время повтора |
+| Синхронная блокировка | Блокировка потоков | Используйте неблокирующую проверку |
+
+---
+
+## Ссылки
+
+Полные PHP-шаблоны и примеры см. в:
+- `references/templates.md` — Все реализации алгоритмов
+- `references/examples.md` — Пример middleware и тесты

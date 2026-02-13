@@ -1,58 +1,58 @@
-# Contributing to Awesome Claude Code
+# Участие в проекте Awesome Claude Code
 
-Thank you for your interest in contributing!
+Спасибо за ваш интерес к участию!
 
-## How to Contribute
+## Как внести вклад
 
-### Reporting Issues
+### Сообщение о проблемах
 
-1. Check existing issues to avoid duplicates
-2. Use issue templates when available
-3. Include: PHP version, Composer version, Claude Code version
-4. Provide minimal reproduction steps
+1. Проверьте существующие issues, чтобы избежать дубликатов
+2. Используйте шаблоны issues, когда они доступны
+3. Включите: версию PHP, версию Composer, версию Claude Code
+4. Предоставьте минимальные шаги для воспроизведения
 
 ### Pull Requests
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-feature`
-3. Make your changes
-4. Run validation: `make validate-claude`
-5. Commit with descriptive message
-6. Push and create a Pull Request
+1. Сделайте fork репозитория
+2. Создайте feature-ветку: `git checkout -b feature/my-feature`
+3. Внесите свои изменения
+4. Запустите валидацию: `make validate-claude`
+5. Сделайте commit с описательным сообщением
+6. Отправьте изменения и создайте Pull Request
 
-### Code Style
+### Стиль кода
 
-- Follow PSR-12 coding standards
-- Use `declare(strict_types=1)` in all PHP files
-- Write self-documenting code
-- Add PHPDoc for public methods
+- Следуйте стандартам кодирования PSR-12
+- Используйте `declare(strict_types=1)` во всех PHP-файлах
+- Пишите самодокументирующийся код
+- Добавляйте PHPDoc для публичных методов
 
-### Component Guidelines
+### Руководство по компонентам
 
-**Commands:**
-- Use `acc-` prefix
-- Include YAML frontmatter with `description`
-- Document arguments and examples
+**Команды:**
+- Используйте префикс `acc-`
+- Включайте YAML frontmatter с `description`
+- Документируйте аргументы и примеры
 
-**Agents:**
-- Include `name`, `description`, `tools` in frontmatter
-- Reference skills in `skills:` list
-- Keep to max 15 skills per agent
+**Агенты:**
+- Включайте `name`, `description`, `tools` в frontmatter
+- Ссылайтесь на навыки в списке `skills:`
+- Ограничьте максимум 15 навыков на агента
 
-**Skills:**
-- Keep under 500 lines
-- Use `references/` folder for templates
-- Include working examples
+**Навыки:**
+- Держите до 500 строк
+- Используйте папку `references/` для шаблонов
+- Включайте рабочие примеры
 
-### Testing
+### Тестирование
 
-Before submitting:
+Перед отправкой:
 
 ```bash
-make validate-claude  # Validate .claude structure
-make test            # Run in Docker test environment
+make validate-claude  # Валидация структуры .claude
+make test            # Запуск в Docker-тестовом окружении
 ```
 
-### Questions?
+### Вопросы?
 
-Open an issue with the "question" label.
+Откройте issue с меткой "question".

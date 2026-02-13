@@ -1,29 +1,29 @@
 ---
 name: acc-docker-php-extensions-knowledge
-description: Docker PHP extensions knowledge base. Provides installation patterns for common extensions, build dependency management, and PECL usage.
+description: База знаний по PHP-расширениям для Docker. Предоставляет паттерны установки распространённых расширений, управление зависимостями сборки и использование PECL.
 ---
 
-# Docker PHP Extensions Knowledge Base
+# База знаний по PHP-расширениям для Docker
 
-Patterns for installing, building, and managing PHP extensions in Docker containers.
+Паттерны установки, сборки и управления PHP-расширениями в Docker-контейнерах.
 
-## Extension Categories
+## Категории расширений
 
-| Category | Extensions | Purpose |
-|----------|-----------|---------|
-| **Core** | opcache, intl, mbstring, bcmath | Performance, i18n, math |
-| **Database** | pdo_pgsql, pdo_mysql, pgsql, mysqli | Database connectivity |
-| **Cache** | redis, apcu, memcached | Caching layers |
-| **Crypto** | sodium, openssl | Encryption, hashing |
-| **Image** | gd, imagick | Image processing |
-| **Archive** | zip, zlib, bz2 | Compression |
-| **Message** | amqp, pcntl | Queues, process control |
-| **Debug** | xdebug, pcov | Debugging, coverage |
-| **Serialization** | igbinary, msgpack | Fast serialization |
+| Категория | Расширения | Назначение |
+|-----------|-----------|-----------|
+| **Ядро** | opcache, intl, mbstring, bcmath | Производительность, i18n, математика |
+| **Базы данных** | pdo_pgsql, pdo_mysql, pgsql, mysqli | Подключение к БД |
+| **Кеш** | redis, apcu, memcached | Слои кеширования |
+| **Криптография** | sodium, openssl | Шифрование, хеширование |
+| **Изображения** | gd, imagick | Обработка изображений |
+| **Архивы** | zip, zlib, bz2 | Сжатие |
+| **Сообщения** | amqp, pcntl | Очереди, управление процессами |
+| **Отладка** | xdebug, pcov | Отладка, покрытие |
+| **Сериализация** | igbinary, msgpack | Быстрая сериализация |
 
-## Installation Methods
+## Методы установки
 
-### Method 1: docker-php-ext-install (Built-in Extensions)
+### Метод 1: docker-php-ext-install (встроенные расширения)
 
 ```dockerfile
 # Extensions bundled with PHP source
@@ -38,7 +38,7 @@ RUN docker-php-ext-install -j$(nproc) \
     sockets
 ```
 
-### Method 2: docker-php-ext-configure + install
+### Метод 2: docker-php-ext-configure + install
 
 ```dockerfile
 # Extensions requiring configuration
@@ -49,7 +49,7 @@ RUN docker-php-ext-configure gd \
     && docker-php-ext-install -j$(nproc) gd
 ```
 
-### Method 3: PECL Install
+### Метод 3: PECL Install
 
 ```dockerfile
 # Extensions from PECL repository
@@ -57,7 +57,7 @@ RUN pecl install redis-6.1.0 apcu-5.1.24 igbinary-3.2.16 \
     && docker-php-ext-enable redis apcu igbinary
 ```
 
-### Method 4: Manual Compilation
+### Метод 4: Ручная компиляция
 
 ```dockerfile
 # For extensions not in PECL or needing custom patches
@@ -70,13 +70,13 @@ RUN curl -fsSL https://github.com/example/ext/archive/v1.0.tar.gz | tar xz \
     && docker-php-ext-enable ext
 ```
 
-## Alpine vs Debian Build Dependencies
+## Зависимости сборки Alpine vs Debian
 
-| Extension | Alpine Packages | Debian Packages |
+| Расширение | Пакеты Alpine | Пакеты Debian |
 |-----------|----------------|-----------------|
 | intl | `icu-dev` | `libicu-dev` |
 | pdo_pgsql | `libpq-dev` | `libpq-dev` |
-| pdo_mysql | (none) | (none) |
+| pdo_mysql | (нет) | (нет) |
 | gd | `freetype-dev libjpeg-turbo-dev libpng-dev libwebp-dev` | `libfreetype6-dev libjpeg62-turbo-dev libpng-dev libwebp-dev` |
 | zip | `libzip-dev` | `libzip-dev` |
 | imagick | `imagemagick-dev` | `libmagickwand-dev` |
@@ -89,7 +89,7 @@ RUN curl -fsSL https://github.com/example/ext/archive/v1.0.tar.gz | tar xz \
 | gmp | `gmp-dev` | `libgmp-dev` |
 | imap | `imap-dev krb5-dev` | `libc-client-dev libkrb5-dev` |
 
-## Runtime vs Build Dependencies Pattern
+## Паттерн Runtime vs Build зависимостей
 
 ```dockerfile
 FROM php:8.4-fpm-alpine AS production
@@ -135,7 +135,7 @@ RUN apk add --no-cache \
     rabbitmq-c
 ```
 
-## Extension Builder Stage Pattern
+## Паттерн отдельного этапа сборки расширений
 
 ```dockerfile
 # Dedicated stage for compiling extensions (reusable across images)
@@ -160,9 +160,9 @@ COPY --from=ext-builder /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
 RUN apk add --no-cache icu-libs libpq libzip
 ```
 
-## Framework Extension Combinations
+## Комбинации расширений для фреймворков
 
-### Symfony Stack
+### Стек Symfony
 
 ```dockerfile
 RUN docker-php-ext-install -j$(nproc) \
@@ -178,7 +178,7 @@ RUN pecl install redis apcu amqp \
     && docker-php-ext-enable redis apcu amqp
 ```
 
-### Laravel Stack
+### Стек Laravel
 
 ```dockerfile
 RUN docker-php-ext-install -j$(nproc) \
@@ -193,7 +193,7 @@ RUN pecl install redis igbinary \
     && docker-php-ext-enable redis igbinary
 ```
 
-### API Platform / High-Load
+### API Platform / Высоконагруженные проекты
 
 ```dockerfile
 RUN docker-php-ext-install -j$(nproc) \
@@ -208,7 +208,7 @@ RUN pecl install redis apcu amqp igbinary msgpack \
     && docker-php-ext-enable redis apcu amqp igbinary msgpack
 ```
 
-## OPcache Configuration for Production
+## Конфигурация OPcache для production
 
 ```ini
 ; /usr/local/etc/php/conf.d/opcache.ini
@@ -227,18 +227,18 @@ opcache.jit_buffer_size=128M
 COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 ```
 
-## Troubleshooting
+## Устранение неполадок
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| `cannot find -licu` | Missing icu-dev | `apk add icu-dev` or `apt install libicu-dev` |
-| `pecl install fails` | Missing $PHPIZE_DEPS | `apk add $PHPIZE_DEPS` |
-| Extension loads but segfaults | Alpine musl incompatibility | Switch to Debian base |
-| `Class 'Redis' not found` | Extension not enabled | `docker-php-ext-enable redis` |
-| `iconv(): Wrong encoding` | Alpine musl iconv | Install `gnu-libiconv` |
-| Slow builds | Sequential compilation | Use `-j$(nproc)` and BuildKit cache |
+| Проблема | Причина | Решение |
+|----------|---------|---------|
+| `cannot find -licu` | Отсутствует icu-dev | `apk add icu-dev` или `apt install libicu-dev` |
+| `pecl install fails` | Отсутствует $PHPIZE_DEPS | `apk add $PHPIZE_DEPS` |
+| Расширение загружается, но segfault | Несовместимость Alpine musl | Перейдите на Debian-образ |
+| `Class 'Redis' not found` | Расширение не подключено | `docker-php-ext-enable redis` |
+| `iconv(): Wrong encoding` | Alpine musl iconv | Установите `gnu-libiconv` |
+| Медленная сборка | Последовательная компиляция | Используйте `-j$(nproc)` и кеш BuildKit |
 
-## References
+## Ссылки
 
-For the full extensions matrix with all dependencies, see `references/extensions-matrix.md`.
-For base image selection, see `acc-docker-base-images-knowledge`.
+Полная матрица расширений со всеми зависимостями находится в `references/extensions-matrix.md`.
+Выбор базового образа описан в `acc-docker-base-images-knowledge`.

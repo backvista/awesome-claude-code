@@ -1,25 +1,25 @@
 ---
 name: acc-create-psr7-http-message
-description: Generates PSR-7 HTTP Message implementations for PHP 8.2. Creates Request, Response, Stream, Uri, and ServerRequest classes with immutability. Includes unit tests.
+description: Генерирует реализации PSR-7 HTTP Message для PHP 8.2. Создаёт классы Request, Response, Stream, Uri и ServerRequest с иммутабельностью. Включает модульные тесты.
 ---
 
-# PSR-7 HTTP Message Generator
+# Генератор PSR-7 HTTP Message
 
-## Overview
+## Обзор
 
-Generates PSR-7 compliant HTTP message implementations following `Psr\Http\Message` interfaces.
+Генерирует PSR-7-совместимые реализации HTTP-сообщений на основе интерфейсов `Psr\Http\Message`.
 
-## When to Use
+## Когда использовать
 
-- Building custom HTTP framework
-- Creating lightweight HTTP message handling
-- Need for immutable request/response objects
-- Testing HTTP interactions
+- Построение собственного HTTP-фреймворка
+- Создание легковесной обработки HTTP-сообщений
+- Необходимость иммутабельных объектов запроса/ответа
+- Тестирование HTTP-взаимодействий
 
-## Generated Components
+## Генерируемые компоненты
 
-| Component | Interface | Location |
-|-----------|-----------|----------|
+| Компонент | Интерфейс | Расположение |
+|-----------|-----------|--------------|
 | Request | `RequestInterface` | `src/Infrastructure/Http/Message/` |
 | Response | `ResponseInterface` | `src/Infrastructure/Http/Message/` |
 | ServerRequest | `ServerRequestInterface` | `src/Infrastructure/Http/Message/` |
@@ -27,7 +27,7 @@ Generates PSR-7 compliant HTTP message implementations following `Psr\Http\Messa
 | Uri | `UriInterface` | `src/Infrastructure/Http/Message/` |
 | UploadedFile | `UploadedFileInterface` | `src/Infrastructure/Http/Message/` |
 
-## Quick Template: Response
+## Краткий шаблон: Response
 
 ```php
 <?php
@@ -84,7 +84,7 @@ final readonly class Response implements ResponseInterface
 }
 ```
 
-## Usage Example
+## Пример использования
 
 ```php
 <?php
@@ -104,7 +104,7 @@ echo $response->getHeaderLine('Content-Type'); // application/json
 echo (string) $response->getBody();        // {"status":"ok"}
 ```
 
-## Requirements
+## Требования
 
 ```json
 {
@@ -114,7 +114,7 @@ echo (string) $response->getBody();        // {"status":"ok"}
 }
 ```
 
-## See Also
+## См. также
 
-- `references/templates.md` - Full Response, Stream, Uri, Request, ServerRequest, UploadedFile templates
-- `references/examples.md` - Integration examples
+- `references/templates.md` - Полные шаблоны Response, Stream, Uri, Request, ServerRequest, UploadedFile
+- `references/examples.md` - Примеры интеграции

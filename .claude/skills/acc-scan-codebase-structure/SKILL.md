@@ -1,188 +1,188 @@
 ---
 name: acc-scan-codebase-structure
-description: Scans directory tree to identify architectural layers (Domain, Application, Infrastructure, Presentation), detect framework (Symfony, Laravel, custom), count files per layer, and build project structure map.
+description: Сканирует дерево каталогов для определения архитектурных слоёв (Domain, Application, Infrastructure, Presentation), обнаружения фреймворка (Symfony, Laravel, кастомный), подсчёта файлов по слоям и построения карты структуры проекта.
 ---
 
-# Codebase Structure Scanner
+# Сканер структуры кодовой базы
 
-## Overview
+## Обзор
 
-Analyzes a directory tree to build a structured map of the project: identifies architectural layers, detects the framework in use, counts files per layer, and determines the overall project organization pattern.
+Анализирует дерево каталогов для построения структурированной карты проекта: определяет архитектурные слои, обнаруживает используемый фреймворк, подсчитывает файлы по слоям и определяет общий паттерн организации проекта.
 
-## Scanning Process
+## Процесс сканирования
 
-### Step 1: Directory Tree Analysis
+### Шаг 1: Анализ дерева каталогов
 
 ```bash
-# Get top-level structure
+# Получить структуру верхнего уровня
 Glob: "*" in target path
 
-# Get full PHP file tree
+# Получить полное дерево PHP-файлов
 Glob: "**/*.php" in target path
 
-# Get configuration files
+# Получить конфигурационные файлы
 Glob: "{composer.json,*.yaml,*.yml,*.xml,*.neon,*.json}" in target path
 ```
 
-### Step 2: Framework Detection
+### Шаг 2: Обнаружение фреймворка
 
-| Framework | Detection Pattern | Key Files |
-|-----------|-------------------|-----------|
-| Symfony | `symfony/framework-bundle` in composer.json | `config/bundles.php`, `config/services.yaml` |
-| Laravel | `laravel/framework` in composer.json | `artisan`, `app/Providers/` |
-| Yii2 | `yiisoft/yii2` in composer.json | `config/web.php`, `config/console.php` |
-| Slim | `slim/slim` in composer.json | `routes/`, `public/index.php` |
-| Custom/None | No major framework | `composer.json` only |
+| Фреймворк | Паттерн обнаружения | Ключевые файлы |
+|-----------|---------------------|----------------|
+| Symfony | `symfony/framework-bundle` в composer.json | `config/bundles.php`, `config/services.yaml` |
+| Laravel | `laravel/framework` в composer.json | `artisan`, `app/Providers/` |
+| Yii2 | `yiisoft/yii2` в composer.json | `config/web.php`, `config/console.php` |
+| Slim | `slim/slim` в composer.json | `routes/`, `public/index.php` |
+| Кастомный/Без фреймворка | Нет основного фреймворка | Только `composer.json` |
 
 ```bash
-# Check composer.json for framework
+# Проверка composer.json на фреймворк
 Grep: "symfony/framework-bundle|laravel/framework|yiisoft/yii2|slim/slim" in composer.json
 
-# Check for Symfony bundles
+# Проверка наличия Symfony bundles
 Glob: "config/bundles.php"
 
-# Check for Laravel artisan
+# Проверка наличия Laravel artisan
 Glob: "artisan"
 
-# Check for framework config patterns
+# Проверка паттернов конфигурации фреймворков
 Glob: "config/{services,bundles,web,console,app}.{php,yaml,yml}"
 ```
 
-### Step 3: Layer Identification
+### Шаг 3: Определение слоёв
 
-Detect architectural layers by namespace patterns and directory structure:
+Обнаружение архитектурных слоёв по паттернам пространств имён и структуре каталогов:
 
-#### Domain Layer
+#### Доменный слой
 
 ```bash
-# Standard DDD directories
+# Стандартные DDD-директории
 Glob: "**/Domain/**/*.php"
 Glob: "**/Model/**/*.php"
 Glob: "**/Entity/**/*.php"
 
-# Domain components
+# Доменные компоненты
 Grep: "namespace.*\\\\Domain\\\\" --glob "**/*.php"
 Grep: "namespace.*\\\\Model\\\\" --glob "**/*.php"
 
-# Domain markers
+# Маркеры домена
 Grep: "interface.*Repository" --glob "**/*.php"
 Grep: "class.*ValueObject|extends.*ValueObject" --glob "**/*.php"
 Grep: "class.*AggregateRoot|extends.*AggregateRoot" --glob "**/*.php"
 Grep: "class.*DomainEvent|extends.*DomainEvent" --glob "**/*.php"
 ```
 
-#### Application Layer
+#### Слой приложения
 
 ```bash
-# Standard Application directories
+# Стандартные директории Application
 Glob: "**/Application/**/*.php"
 Glob: "**/UseCase/**/*.php"
 Glob: "**/Service/**/*.php"
 
-# Application components
+# Компоненты приложения
 Grep: "namespace.*\\\\Application\\\\" --glob "**/*.php"
 Grep: "namespace.*\\\\UseCase\\\\" --glob "**/*.php"
 
-# CQRS markers
+# Маркеры CQRS
 Grep: "CommandHandler|QueryHandler|CommandBus|QueryBus" --glob "**/*.php"
 Grep: "class.*Command\\b|class.*Query\\b" --glob "**/*.php"
 ```
 
-#### Infrastructure Layer
+#### Инфраструктурный слой
 
 ```bash
-# Standard Infrastructure directories
+# Стандартные директории Infrastructure
 Glob: "**/Infrastructure/**/*.php"
 Glob: "**/Persistence/**/*.php"
 Glob: "**/Adapter/**/*.php"
 
-# Infrastructure components
+# Инфраструктурные компоненты
 Grep: "namespace.*\\\\Infrastructure\\\\" --glob "**/*.php"
 Grep: "implements.*Repository" --glob "**/*.php"
 
-# External integrations
+# Внешние интеграции
 Grep: "Redis|RabbitMQ|Doctrine|Elasticsearch|Guzzle" --glob "**/*.php"
 ```
 
-#### Presentation Layer
+#### Слой представления
 
 ```bash
-# Standard Presentation directories
+# Стандартные директории Presentation
 Glob: "**/Controller/**/*.php"
 Glob: "**/Action/**/*.php"
 Glob: "**/Api/**/*.php"
 Glob: "**/Console/**/*.php"
 
-# Presentation components
+# Компоненты представления
 Grep: "namespace.*\\\\(Controller|Action|Api|Console|Cli)\\\\" --glob "**/*.php"
 Grep: "extends.*Controller|extends.*AbstractController" --glob "**/*.php"
 Grep: "#\\[Route\\(|@Route" --glob "**/*.php"
 ```
 
-### Step 4: Module/Bounded Context Detection
+### Шаг 4: Обнаружение модулей / ограниченных контекстов
 
 ```bash
-# Detect bounded contexts (common patterns)
-# Pattern 1: src/{Context}/Domain|Application|Infrastructure
+# Обнаружение ограниченных контекстов (распространённые паттерны)
+# Паттерн 1: src/{Context}/Domain|Application|Infrastructure
 Glob: "src/*/Domain/"
 Glob: "src/*/Application/"
 
-# Pattern 2: src/Domain/{Context}/
+# Паттерн 2: src/Domain/{Context}/
 Glob: "src/Domain/*/"
 
-# Pattern 3: packages/{context}/
+# Паттерн 3: packages/{context}/
 Glob: "packages/*/"
 
-# Pattern 4: modules/{context}/
+# Паттерн 4: modules/{context}/
 Glob: "modules/*/"
 ```
 
-### Step 5: File Statistics
+### Шаг 5: Статистика файлов
 
-For each detected layer, count:
-- Total PHP files
-- Classes (class keyword)
-- Interfaces (interface keyword)
-- Abstract classes
-- Enums (PHP 8.1+)
-- Traits
+Для каждого обнаруженного слоя подсчитать:
+- Общее количество PHP-файлов
+- Классы (ключевое слово class)
+- Интерфейсы (ключевое слово interface)
+- Абстрактные классы
+- Перечисления (PHP 8.1+)
+- Трейты
 
 ```bash
-# Count by type per directory
+# Подсчёт по типу для каждой директории
 Grep: "^(final |abstract |readonly )?class " --glob "**/*.php" in each layer
 Grep: "^interface " --glob "**/*.php" in each layer
 Grep: "^enum " --glob "**/*.php" in each layer
 Grep: "^trait " --glob "**/*.php" in each layer
 ```
 
-## Output Format
+## Формат вывода
 
 ```markdown
-## Project Structure Map
+## Карта структуры проекта
 
-### Framework
-- **Framework:** Symfony 6.4 / Laravel 11 / Custom
-- **PHP Version:** 8.4 (from composer.json require.php)
-- **Type:** Monolith / Modular Monolith / Microservice
+### Фреймворк
+- **Фреймворк:** Symfony 6.4 / Laravel 11 / Кастомный
+- **Версия PHP:** 8.4 (из composer.json require.php)
+- **Тип:** Монолит / Модульный монолит / Микросервис
 
-### Layers Overview
+### Обзор слоёв
 
-| Layer | Directory | Files | Classes | Interfaces | Enums |
-|-------|-----------|-------|---------|------------|-------|
+| Слой | Директория | Файлы | Классы | Интерфейсы | Перечисления |
+|------|-----------|-------|--------|------------|-------------|
 | Domain | src/Domain/ | 45 | 30 | 10 | 5 |
 | Application | src/Application/ | 22 | 20 | 2 | 0 |
 | Infrastructure | src/Infrastructure/ | 18 | 15 | 0 | 3 |
 | Presentation | src/Api/, src/Console/ | 12 | 12 | 0 | 0 |
 
-### Bounded Contexts (if detected)
+### Ограниченные контексты (при обнаружении)
 
-| Context | Domain | Application | Infrastructure | Presentation |
-|---------|--------|-------------|----------------|-------------|
-| Order | 15 files | 8 files | 6 files | 4 files |
-| User | 10 files | 5 files | 4 files | 3 files |
-| Payment | 8 files | 4 files | 3 files | 2 files |
+| Контекст | Domain | Application | Infrastructure | Presentation |
+|----------|--------|-------------|----------------|-------------|
+| Order | 15 файлов | 8 файлов | 6 файлов | 4 файла |
+| User | 10 файлов | 5 файлов | 4 файла | 3 файла |
+| Payment | 8 файлов | 4 файла | 3 файла | 2 файла |
 
-### Directory Tree
+### Дерево каталогов
 ```
 src/
 ├── Domain/
@@ -204,35 +204,35 @@ src/
     └── Console/
 ```
 
-### Key Configuration Files
-| File | Purpose |
-|------|---------|
-| composer.json | Dependencies, autoloading |
-| config/services.yaml | DI container configuration |
-| config/routes.yaml | Route definitions |
+### Ключевые конфигурационные файлы
+| Файл | Назначение |
+|------|-----------|
+| composer.json | Зависимости, автозагрузка |
+| config/services.yaml | Конфигурация DI-контейнера |
+| config/routes.yaml | Определения маршрутов |
 ```
 
-## Key Indicators
+## Ключевые индикаторы
 
-### Project Size Classification
+### Классификация размера проекта
 
-| Size | Files | Description |
-|------|-------|-------------|
-| Small | < 50 | Single module or microservice |
-| Medium | 50-200 | Standard application |
-| Large | 200-500 | Complex monolith |
-| Very Large | > 500 | Enterprise application |
+| Размер | Файлы | Описание |
+|--------|-------|----------|
+| Малый | < 50 | Один модуль или микросервис |
+| Средний | 50-200 | Стандартное приложение |
+| Большой | 200-500 | Сложный монолит |
+| Очень большой | > 500 | Корпоративное приложение |
 
-### Layer Health Indicators
+### Индикаторы здоровья слоёв
 
-- **Domain > Infrastructure** = Good DDD adherence
-- **Infrastructure > Domain** = Potential coupling issues
-- **No Application layer** = Possible logic leak to controllers
-- **No Domain layer** = Transaction script pattern
+- **Domain > Infrastructure** = Хорошее следование DDD
+- **Infrastructure > Domain** = Потенциальные проблемы связанности
+- **Нет слоя Application** = Возможная утечка логики в контроллеры
+- **Нет слоя Domain** = Паттерн Transaction Script
 
-## Integration
+## Интеграция
 
-This skill provides the structural foundation for:
-- `acc-identify-entry-points` — uses layer map to find entry points
-- `acc-detect-architecture-pattern` — uses structure for pattern detection
-- All analysis agents — uses layer map for scoped analysis
+Этот навык обеспечивает структурную основу для:
+- `acc-identify-entry-points` — использует карту слоёв для поиска точек входа
+- `acc-detect-architecture-pattern` — использует структуру для определения паттернов
+- Все агенты анализа — используют карту слоёв для ограниченного анализа

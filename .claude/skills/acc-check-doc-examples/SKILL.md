@@ -1,15 +1,15 @@
 ---
 name: acc-check-doc-examples
-description: Verifies code examples in documentation. Checks that class names, method signatures, namespaces, and imports match actual codebase. Detects outdated and misleading examples.
+description: Проверяет примеры кода в документации. Сверяет имена классов, сигнатуры методов, пространства имен и импорты с реальной кодовой базой. Обнаруживает устаревшие и вводящие в заблуждение примеры.
 ---
 
-# Documentation Code Examples Verification
+# Проверка примеров кода в документации
 
-Analyze documentation for code examples that don't match the actual codebase.
+Анализ документации на предмет примеров кода, не соответствующих реальной кодовой базе.
 
-## Detection Patterns
+## Паттерны обнаружения
 
-### 1. Incorrect Class Name in Example
+### 1. Неправильное имя класса в примере
 
 ```markdown
 <!-- DOC says: -->
@@ -20,7 +20,7 @@ $processor = new OrderProcessor();
 <!-- But actual class is App\Application\Order\ProcessOrderUseCase -->
 ```
 
-### 2. Wrong Method Signature
+### 2. Неверная сигнатура метода
 
 ```markdown
 <!-- DOC says: -->
@@ -32,7 +32,7 @@ $user = $repository->findByEmail($email);
 public function findByEmail(Email $email): ?User  // Uses Email VO, not string
 ```
 
-### 3. Outdated Namespace
+### 3. Устаревшее пространство имен
 
 ```markdown
 <!-- DOC says: -->
@@ -44,7 +44,7 @@ use App\Models\User;  // Laravel-style
 use App\UserManagement\Domain\Entity\User;
 ```
 
-### 4. Missing Required Parameters
+### 4. Отсутствующие обязательные параметры
 
 ```markdown
 <!-- DOC says: -->
@@ -56,7 +56,7 @@ $order = Order::create($userId, $items);
 Order::create(UserId $userId, ItemCollection $items, Currency $currency, Address $shippingAddress)
 ```
 
-### 5. Deprecated API in Examples
+### 5. Устаревший API в примерах
 
 ```markdown
 <!-- DOC says: -->
@@ -65,9 +65,9 @@ $service->process($data);  // process() was renamed to execute()
 ```
 <!-- Method was renamed but docs not updated -->
 
-## Verification Process
+## Процесс проверки
 
-### Step 1: Extract Code Blocks from Docs
+### Шаг 1: Извлечение блоков кода из документации
 
 ```bash
 # Find PHP code blocks in markdown
@@ -78,7 +78,7 @@ Grep: "`[A-Z][a-zA-Z]+::[a-z]" --glob "**/*.md"
 Grep: "`\\$[a-z]+->|new [A-Z]" --glob "**/*.md"
 ```
 
-### Step 2: Verify Class References
+### Шаг 2: Проверка ссылок на классы
 
 ```bash
 # For each class mentioned in docs, verify it exists
@@ -89,7 +89,7 @@ Grep: "class OrderProcessor" --glob "**/*.php"
 Grep: "namespace.*Order" --glob "**/*.php"
 ```
 
-### Step 3: Verify Method Signatures
+### Шаг 3: Проверка сигнатур методов
 
 ```bash
 # For each method call in doc examples
@@ -98,7 +98,7 @@ Grep: "function findByEmail" --glob "**/*.php"
 # Compare parameter types and count
 ```
 
-### Step 4: Check Import Paths
+### Шаг 4: Проверка путей импорта
 
 ```bash
 # For each use statement in doc examples
@@ -108,7 +108,7 @@ Glob: **/Service/OrderProcessor.php
 Grep: "class OrderProcessor" --glob "**/*.php"
 ```
 
-### Step 5: Verify Constructor Parameters
+### Шаг 5: Проверка параметров конструктора
 
 ```bash
 # For each "new ClassName(...)" in docs
@@ -117,58 +117,58 @@ Grep: "class OrderProcessor" --glob "**/*.php" -A 20
 # Check __construct parameters
 ```
 
-## Severity Classification
+## Классификация по степени важности
 
-| Pattern | Severity |
+| Паттерн | Важность |
 |---------|----------|
-| Non-existent class in install/quickstart | 🔴 Critical |
-| Wrong method signature in API docs | 🔴 Critical |
-| Outdated namespace in examples | 🟠 Major |
-| Missing required parameters | 🟠 Major |
-| Deprecated method in examples | 🟡 Minor |
-| Style difference (not functional) | 🟡 Minor |
+| Несуществующий класс в install/quickstart | 🔴 Критическая |
+| Неверная сигнатура метода в документации API | 🔴 Критическая |
+| Устаревшее пространство имен в примерах | 🟠 Высокая |
+| Отсутствующие обязательные параметры | 🟠 Высокая |
+| Устаревший метод в примерах | 🟡 Средняя |
+| Разница в стиле (не функциональная) | 🟡 Средняя |
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### Code Example Mismatch: [Description]
+### Несоответствие примера кода: [Описание]
 
-**Severity:** 🔴/🟠/🟡
-**Documentation:** `file.md:line`
-**Code Reference:** `src/path/File.php:line`
+**Важность:** 🔴/🟠/🟡
+**Документация:** `file.md:line`
+**Ссылка на код:** `src/path/File.php:line`
 
-**In Documentation:**
+**В документации:**
 ```php
 // What the doc says
 ```
 
-**In Actual Code:**
+**В реальном коде:**
 ```php
 // What the code actually is
 ```
 
-**Fix:**
-Update documentation to match current code.
+**Исправление:**
+Обновить документацию в соответствии с текущим кодом.
 ```
 
-## Summary Report Format
+## Формат сводного отчета
 
 ```markdown
-## Code Examples Verification
+## Проверка примеров кода
 
-| Metric | Count |
+| Метрика | Количество |
 |--------|-------|
-| Code blocks checked | X |
-| Valid examples | X |
-| Class name mismatches | X |
-| Method signature mismatches | X |
-| Namespace mismatches | X |
-| Deprecated API usage | X |
+| Проверено блоков кода | X |
+| Корректных примеров | X |
+| Несовпадений имен классов | X |
+| Несовпадений сигнатур методов | X |
+| Несовпадений пространств имен | X |
+| Использования устаревшего API | X |
 
-### Mismatched Examples
+### Несоответствующие примеры
 
-| Doc File | Line | Reference | Issue |
+| Файл документации | Строка | Ссылка | Проблема |
 |----------|------|-----------|-------|
-| `README.md` | 45 | `OrderProcessor` | Class not found |
-| `docs/api.md` | 78 | `findByEmail()` | Wrong parameters |
+| `README.md` | 45 | `OrderProcessor` | Класс не найден |
+| `docs/api.md` | 78 | `findByEmail()` | Неверные параметры |
 ```

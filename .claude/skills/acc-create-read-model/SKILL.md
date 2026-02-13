@@ -1,102 +1,102 @@
 ---
 name: acc-create-read-model
-description: Generates Read Model/Projection for PHP 8.2. Creates optimized query models for CQRS read side with projections and denormalization. Includes unit tests.
+description: Генерирует Read Model/Projection для PHP 8.2. Создаёт оптимизированные модели запросов для стороны чтения CQRS с проекциями и денормализацией. Включает модульные тесты.
 ---
 
-# Read Model / Projection Generator
+# Генератор Read Model / Projection
 
-Creates Read Model infrastructure for CQRS read side with optimized query models.
+Создаёт инфраструктуру Read Model для стороны чтения CQRS с оптимизированными моделями запросов.
 
-## When to Use
+## Когда использовать
 
-| Scenario | Example |
-|----------|---------|
-| CQRS read side | Separate query models |
-| Denormalized views | Dashboard aggregates |
-| Complex queries | Multi-entity joins |
-| Event-driven updates | Event projections |
+| Сценарий | Пример |
+|----------|--------|
+| Сторона чтения CQRS | Отдельные модели запросов |
+| Денормализованные представления | Агрегаты для дашбордов |
+| Сложные запросы | Объединения нескольких сущностей |
+| Обновления по событиям | Проекции событий |
 
-## Component Characteristics
+## Характеристики компонентов
 
 ### Read Model
-- Optimized for queries
-- Denormalized data
-- Eventually consistent
-- No business logic
+- Оптимизирована для запросов
+- Денормализованные данные
+- Конечная согласованность
+- Без бизнес-логики
 
 ### Projection
-- Builds read models from events
-- Handles event streams
-- Maintains synchronization
-- Idempotent processing
+- Строит модели чтения из событий
+- Обрабатывает потоки событий
+- Поддерживает синхронизацию
+- Идемпотентная обработка
 
 ### Repository
-- Query-focused methods
-- Returns read models
-- No write operations
+- Методы, ориентированные на запросы
+- Возвращает модели чтения
+- Без операций записи
 
 ---
 
-## Generation Process
+## Процесс генерации
 
-### Step 1: Generate Domain Read Model
+### Шаг 1: Генерация доменной модели чтения
 
-**Path:** `src/Domain/{BoundedContext}/ReadModel/`
+**Путь:** `src/Domain/{BoundedContext}/ReadModel/`
 
-1. `{Name}ReadModel.php` — Immutable read model with fromArray/toArray
-2. `{Name}ReadModelRepositoryInterface.php` — Query-focused repository interface
+1. `{Name}ReadModel.php` — Иммутабельная модель чтения с fromArray/toArray
+2. `{Name}ReadModelRepositoryInterface.php` — Интерфейс репозитория для запросов
 
-### Step 2: Generate Application Projection
+### Шаг 2: Генерация проекции приложения
 
-**Path:** `src/Application/{BoundedContext}/Projection/`
+**Путь:** `src/Application/{BoundedContext}/Projection/`
 
-1. `{Name}ProjectionInterface.php` — Projection contract
-2. `{Name}Projection.php` — Event handlers building read model
+1. `{Name}ProjectionInterface.php` — Контракт проекции
+2. `{Name}Projection.php` — Обработчики событий для построения модели чтения
 
-### Step 3: Generate Infrastructure
+### Шаг 3: Генерация инфраструктуры
 
-**Path:** `src/Infrastructure/{BoundedContext}/`
+**Путь:** `src/Infrastructure/{BoundedContext}/`
 
-1. `Projection/{Name}Store.php` — Store for insert/update/upsert
-2. `ReadModel/Doctrine{Name}Repository.php` — Repository implementation
+1. `Projection/{Name}Store.php` — Хранилище для insert/update/upsert
+2. `ReadModel/Doctrine{Name}Repository.php` — Реализация репозитория
 
-### Step 4: Generate Tests
+### Шаг 4: Генерация тестов
 
-1. `{Name}ReadModelTest.php` — Read model serialization tests
-2. `{Name}ProjectionTest.php` — Projection event handling tests
+1. `{Name}ReadModelTest.php` — Тесты сериализации модели чтения
+2. `{Name}ProjectionTest.php` — Тесты обработки событий проекцией
 
 ---
 
-## File Placement
+## Размещение файлов
 
-| Component | Path |
+| Компонент | Путь |
 |-----------|------|
-| Read Model | `src/Domain/{BoundedContext}/ReadModel/` |
-| Repository Interface | `src/Domain/{BoundedContext}/ReadModel/` |
-| Projection Interface | `src/Application/{BoundedContext}/Projection/` |
-| Projection | `src/Application/{BoundedContext}/Projection/` |
-| Store | `src/Infrastructure/{BoundedContext}/Projection/` |
-| Repository Impl | `src/Infrastructure/{BoundedContext}/ReadModel/` |
-| Unit Tests | `tests/Unit/` |
+| Модель чтения | `src/Domain/{BoundedContext}/ReadModel/` |
+| Интерфейс репозитория | `src/Domain/{BoundedContext}/ReadModel/` |
+| Интерфейс проекции | `src/Application/{BoundedContext}/Projection/` |
+| Проекция | `src/Application/{BoundedContext}/Projection/` |
+| Хранилище | `src/Infrastructure/{BoundedContext}/Projection/` |
+| Реализация репозитория | `src/Infrastructure/{BoundedContext}/ReadModel/` |
+| Модульные тесты | `tests/Unit/` |
 
 ---
 
-## Naming Conventions
+## Соглашения об именовании
 
-| Component | Pattern | Example |
-|-----------|---------|---------|
-| Read Model | `{Name}ReadModel` | `OrderSummaryReadModel` |
-| Repository Interface | `{Name}ReadModelRepositoryInterface` | `OrderSummaryReadModelRepositoryInterface` |
-| Projection Interface | `{Name}ProjectionInterface` | `OrderSummaryProjectionInterface` |
-| Projection | `{Name}Projection` | `OrderSummaryProjection` |
-| Store | `{Name}Store` | `OrderSummaryStore` |
-| Test | `{ClassName}Test` | `OrderSummaryProjectionTest` |
+| Компонент | Шаблон | Пример |
+|-----------|--------|--------|
+| Модель чтения | `{Name}ReadModel` | `OrderSummaryReadModel` |
+| Интерфейс репозитория | `{Name}ReadModelRepositoryInterface` | `OrderSummaryReadModelRepositoryInterface` |
+| Интерфейс проекции | `{Name}ProjectionInterface` | `OrderSummaryProjectionInterface` |
+| Проекция | `{Name}Projection` | `OrderSummaryProjection` |
+| Хранилище | `{Name}Store` | `OrderSummaryStore` |
+| Тест | `{ClassName}Test` | `OrderSummaryProjectionTest` |
 
 ---
 
-## Quick Template Reference
+## Краткий справочник шаблонов
 
-### Read Model
+### Модель чтения
 
 ```php
 final readonly class {Name}ReadModel
@@ -113,7 +113,7 @@ final readonly class {Name}ReadModel
 }
 ```
 
-### Projection
+### Проекция
 
 ```php
 final class {Name}Projection implements {Name}ProjectionInterface
@@ -134,7 +134,7 @@ final class {Name}Projection implements {Name}ProjectionInterface
 
 ---
 
-## Usage Example
+## Пример использования
 
 ```php
 // Query read model
@@ -149,7 +149,7 @@ $projection->reset();
 
 ---
 
-## Database Schema
+## Схема базы данных
 
 ```sql
 CREATE TABLE order_summaries (
@@ -169,20 +169,20 @@ CREATE TABLE order_summaries (
 
 ---
 
-## Anti-patterns to Avoid
+## Антипаттерны, которых следует избегать
 
-| Anti-pattern | Problem | Solution |
-|--------------|---------|----------|
-| Business Logic | Read model has behavior | Keep data-only |
-| Write Operations | Modifying read models | Use projections only |
-| Non-idempotent | Re-projection breaks data | Idempotent event handling |
-| Missing Reset | Can't rebuild | Add reset() method |
-| Tight Coupling | Projection depends on domain | Use events only |
+| Антипаттерн | Проблема | Решение |
+|-------------|----------|---------|
+| Бизнес-логика | Модель чтения содержит поведение | Оставляйте только данные |
+| Операции записи | Модификация моделей чтения | Используйте только проекции |
+| Неидемпотентность | Повторная проекция ломает данные | Идемпотентная обработка событий |
+| Отсутствие reset | Невозможно перестроить | Добавьте метод reset() |
+| Жёсткая связанность | Проекция зависит от домена | Используйте только события |
 
 ---
 
-## References
+## Ссылки
 
-For complete PHP templates and examples, see:
-- `references/templates.md` — Read model, projection, store templates
-- `references/examples.md` — OrderSummary example and tests
+Полные PHP-шаблоны и примеры см. в:
+- `references/templates.md` — Шаблоны модели чтения, проекции, хранилища
+- `references/examples.md` — Пример OrderSummary и тесты

@@ -1,6 +1,6 @@
-# Query Pattern Templates
+# Шаблоны Query Pattern
 
-## Query Template
+## Шаблон Query
 
 ```php
 <?php
@@ -21,7 +21,7 @@ final readonly class {Name}Query
 
 ---
 
-## Handler Template
+## Шаблон Handler
 
 ```php
 <?php
@@ -49,7 +49,7 @@ final readonly class {Name}Handler
 
 ---
 
-## DTO Template
+## Шаблон DTO
 
 ```php
 <?php
@@ -82,7 +82,7 @@ final readonly class {Name}DTO
 
 ---
 
-## Paginated Result DTO
+## DTO с пагинацией
 
 ```php
 <?php
@@ -137,7 +137,7 @@ final readonly class PaginatedResultDTO
 
 ---
 
-## Read Model Interface
+## Интерфейс Read Model
 
 ```php
 <?php
@@ -171,9 +171,9 @@ interface {Name}ReadModelInterface
 
 ---
 
-## Test Templates
+## Шаблоны тестов
 
-### Query Test
+### Тест Query
 
 ```php
 <?php
@@ -229,7 +229,7 @@ final class {Name}QueryTest extends TestCase
 }
 ```
 
-### Handler Test
+### Тест Handler
 
 ```php
 <?php

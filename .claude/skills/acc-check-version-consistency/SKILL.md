@@ -1,15 +1,15 @@
 ---
 name: acc-check-version-consistency
-description: Audits version consistency across project files. Checks composer.json, README, CHANGELOG, docs, and configuration files for version number synchronization.
+description: Аудит консистентности версий в файлах проекта. Проверяет синхронизацию номеров версий в composer.json, README, CHANGELOG, документации и конфигурационных файлах.
 ---
 
-# Version Consistency Audit
+# Аудит консистентности версий
 
-Analyze project files for version number synchronization across all locations where version is referenced.
+Анализ файлов проекта на предмет синхронизации номеров версий во всех местах, где указана версия.
 
-## Detection Patterns
+## Паттерны обнаружения
 
-### 1. composer.json vs README Version Mismatch
+### 1. Несоответствие версии composer.json и README
 
 ```json
 // composer.json says:
@@ -21,7 +21,7 @@ Analyze project files for version number synchronization across all locations wh
 Current version: **2.9.0**   <!-- OUTDATED! -->
 ```
 
-### 2. CHANGELOG Missing Latest Version
+### 2. Отсутствие последней версии в CHANGELOG
 
 ```markdown
 <!-- CHANGELOG.md -->
@@ -31,7 +31,7 @@ Current version: **2.9.0**   <!-- OUTDATED! -->
 <!-- Missing entry for 2.10.0! -->
 ```
 
-### 3. Documentation References Old Version
+### 3. Устаревшая версия в документации
 
 ```markdown
 <!-- docs/getting-started.md -->
@@ -39,7 +39,7 @@ composer require vendor/package:^2.8
 <!-- Should be ^2.10 -->
 ```
 
-### 4. Component Count Mismatch
+### 4. Несоответствие количества компонентов
 
 ```markdown
 <!-- README.md says: -->
@@ -51,9 +51,9 @@ composer require vendor/package:^2.8
 <!-- Out of sync! -->
 ```
 
-## Verification Process
+## Процесс верификации
 
-### Step 1: Find All Version References
+### Шаг 1: Найти все упоминания версии
 
 ```bash
 # Version in composer.json
@@ -72,7 +72,7 @@ Grep: "version|v[0-9]+\.[0-9]+" -i --glob "docs/**/*.md"
 Grep: "version" --glob "**/*.json" --glob "**/*.yaml" --glob "**/*.yml"
 ```
 
-### Step 2: Extract Canonical Version
+### Шаг 2: Определить каноническую версию
 
 ```bash
 # Primary source of truth: composer.json or latest CHANGELOG entry
@@ -83,14 +83,14 @@ Read: composer.json
 # git describe --tags --abbrev=0
 ```
 
-### Step 3: Cross-Check All Locations
+### Шаг 3: Перекрёстная проверка всех мест
 
-For each location where version appears:
-1. Extract the version number
-2. Compare against canonical version
-3. Report mismatches
+Для каждого места, где упоминается версия:
+1. Извлечь номер версии
+2. Сравнить с канонической версией
+3. Сообщить о несоответствиях
 
-### Step 4: Verify Component Counts
+### Шаг 4: Проверить количество компонентов
 
 ```bash
 # Count actual components
@@ -104,7 +104,7 @@ Grep: "commands.*[0-9]+|agents.*[0-9]+|skills.*[0-9]+" -i --glob "docs/quick-ref
 Grep: "commands.*[0-9]+|agents.*[0-9]+|skills.*[0-9]+" -i --glob "composer.json"
 ```
 
-### Step 5: Verify CHANGELOG Completeness
+### Шаг 5: Проверить полноту CHANGELOG
 
 ```bash
 # Check CHANGELOG has entry for current version
@@ -114,52 +114,52 @@ Grep: "## \[" --glob "CHANGELOG.md"
 Grep: "\[.*\]: https://.*compare" --glob "CHANGELOG.md"
 ```
 
-## Files to Check
+## Файлы для проверки
 
-| File | What to Verify |
+| Файл | Что проверять |
 |------|---------------|
-| `composer.json` | `version` field, `description` with counts |
-| `README.md` | Version badges, component counts, install examples |
-| `CHANGELOG.md` | Latest version section, comparison links |
-| `docs/quick-reference.md` | Statistics table, version references |
-| `llms.txt` | Quick Facts section, component counts |
-| `CLAUDE.md` | Architecture section counts |
-| `docs/*.md` | Version references in examples |
+| `composer.json` | Поле `version`, `description` с количеством |
+| `README.md` | Бейджи версий, количество компонентов, примеры установки |
+| `CHANGELOG.md` | Секция последней версии, ссылки сравнения |
+| `docs/quick-reference.md` | Таблица статистики, упоминания версий |
+| `llms.txt` | Секция Quick Facts, количество компонентов |
+| `CLAUDE.md` | Количество в секции Architecture |
+| `docs/*.md` | Упоминания версий в примерах |
 
-## Severity Classification
+## Классификация серьёзности
 
-| Pattern | Severity |
+| Паттерн | Серьёзность |
 |---------|----------|
-| composer.json version wrong | 🔴 Critical |
-| CHANGELOG missing latest version | 🔴 Critical |
-| README version mismatch | 🟠 Major |
-| Component count mismatch | 🟠 Major |
-| Docs referencing old version | 🟡 Minor |
-| Badge showing wrong version | 🟡 Minor |
+| Неверная версия в composer.json | 🔴 Критическая |
+| Отсутствие последней версии в CHANGELOG | 🔴 Критическая |
+| Несоответствие версии в README | 🟠 Серьёзная |
+| Несоответствие количества компонентов | 🟠 Серьёзная |
+| Устаревшая версия в документации | 🟡 Незначительная |
+| Неверная версия в бейдже | 🟡 Незначительная |
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### Version Consistency: [Description]
+### Консистентность версий: [Описание]
 
-**Severity:** 🔴/🟠/🟡
-**Canonical Version:** X.Y.Z
+**Серьёзность:** 🔴/🟠/🟡
+**Каноническая версия:** X.Y.Z
 
-**Mismatches Found:**
+**Найденные несоответствия:**
 
-| File | Expected | Found | Line |
+| Файл | Ожидалось | Найдено | Строка |
 |------|----------|-------|------|
 | `README.md` | 2.10.0 | 2.9.0 | 15 |
 | `docs/guide.md` | ^2.10 | ^2.8 | 23 |
 
-**Component Count Sync:**
+**Синхронизация количества компонентов:**
 
-| File | Commands | Agents | Skills | Status |
+| Файл | Commands | Agents | Skills | Статус |
 |------|----------|--------|--------|--------|
-| Actual | 26 | 56 | 222 | Source |
+| Фактически | 26 | 56 | 222 | Источник |
 | README.md | 26 | 56 | 222 | OK |
-| composer.json | 26 | 56 | 200 | MISMATCH |
+| composer.json | 26 | 56 | 200 | НЕСООТВЕТСТВИЕ |
 
-**Fix:**
-Update all listed files to version X.Y.Z.
+**Исправление:**
+Обновить все перечисленные файлы до версии X.Y.Z.
 ```

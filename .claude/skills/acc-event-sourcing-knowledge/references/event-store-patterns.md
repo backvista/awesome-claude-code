@@ -1,27 +1,27 @@
-# Event Store Patterns
+# Паттерны Event Store
 
-Detailed patterns for Event Store implementation in PHP.
+Подробные паттерны реализации Event Store на PHP.
 
-## Event Store Definition
+## Определение Event Store
 
-### What is an Event Store?
+### Что такое Event Store?
 
-An append-only database optimized for storing and retrieving domain events.
+Append-only база данных, оптимизированная для хранения и извлечения доменных событий.
 
-### Core Requirements
+### Основные требования
 
-| Requirement | Description |
-|-------------|-------------|
-| **Append-only** | Events can only be added, never modified or deleted |
-| **Ordered** | Events within a stream maintain order |
-| **Immutable** | Stored events never change |
-| **Atomic writes** | All events from one command committed together |
-| **Optimistic concurrency** | Detect concurrent modifications |
-| **Stream-based** | Events grouped into streams (per aggregate) |
+| Требование | Описание |
+|------------|----------|
+| **Append-only** | События можно только добавлять, но не изменять или удалять |
+| **Упорядоченность** | События в потоке сохраняют порядок |
+| **Неизменяемость** | Сохранённые события никогда не изменяются |
+| **Атомарная запись** | Все события от одной команды фиксируются вместе |
+| **Оптимистичная конкурентность** | Обнаружение параллельных модификаций |
+| **Потоковая модель** | События группируются в потоки (по агрегату) |
 
-## PHP 8.2 Implementation
+## Реализация на PHP 8.2
 
-### Event Store Interface
+### Интерфейс Event Store
 
 ```php
 <?php
@@ -69,7 +69,7 @@ interface EventStoreInterface
 }
 ```
 
-### Stored Event Structure
+### Структура хранимого события
 
 ```php
 <?php
@@ -93,7 +93,7 @@ final readonly class StoredEvent
 }
 ```
 
-### Database Schema
+### Схема базы данных
 
 ```sql
 CREATE TABLE event_store (
@@ -115,7 +115,7 @@ CREATE INDEX idx_event_store_event_type ON event_store(event_type);
 CREATE INDEX idx_event_store_occurred_at ON event_store(occurred_at);
 ```
 
-### PostgreSQL Event Store Implementation
+### Реализация PostgreSQL Event Store
 
 ```php
 <?php
@@ -227,7 +227,7 @@ final readonly class PostgresEventStore implements EventStoreInterface
 }
 ```
 
-### Event Serializer
+### Сериализатор событий
 
 ```php
 <?php
@@ -294,9 +294,9 @@ final readonly class EventSerializer
 }
 ```
 
-## Stream Patterns
+## Паттерны потоков
 
-### Stream Naming Conventions
+### Соглашения об именовании потоков
 
 ```php
 // Pattern: {aggregate_type}-{aggregate_id}
@@ -306,9 +306,9 @@ final readonly class EventSerializer
 "inventory-item-987fcdeb-51a2-43e8-b8d6-789012345678"
 ```
 
-### Category Streams
+### Потоки по категориям
 
-For projections that need events from multiple aggregates:
+Для проекций, которым нужны события из нескольких агрегатов:
 
 ```php
 interface EventStoreInterface
@@ -344,9 +344,9 @@ public function loadByCategory(string $category, int $fromPosition, int $limit):
 }
 ```
 
-### All Stream
+### Общий поток
 
-For rebuilding all projections:
+Для перестроения всех проекций:
 
 ```php
 interface EventStoreInterface
@@ -362,21 +362,21 @@ interface EventStoreInterface
 }
 ```
 
-## Optimistic Concurrency
+## Оптимистичная конкурентность
 
-### Why It's Needed
+### Зачем она нужна
 
-Prevent lost updates when two processes try to modify the same aggregate.
+Предотвращение потери обновлений, когда два процесса пытаются изменить один и тот же агрегат.
 
 ```
-Process A:                          Process B:
-1. Load Order (version 5)           1. Load Order (version 5)
-2. Add item                         2. Add item
-3. Save (expect version 5)          3. Save (expect version 5)
-   ✓ Success (now version 6)           ✗ ConcurrencyException!
+Процесс A:                         Процесс B:
+1. Загрузка Order (версия 5)        1. Загрузка Order (версия 5)
+2. Добавление товара                 2. Добавление товара
+3. Сохранение (ожидание версии 5)    3. Сохранение (ожидание версии 5)
+   ✓ Успех (теперь версия 6)            ✗ ConcurrencyException!
 ```
 
-### Implementation
+### Реализация
 
 ```php
 public function append(string $streamId, array $events, int $expectedVersion): void
@@ -399,7 +399,7 @@ public function append(string $streamId, array $events, int $expectedVersion): v
 }
 ```
 
-### Retry Strategy
+### Стратегия повторных попыток
 
 ```php
 final readonly class RetryingEventStore implements EventStoreInterface
@@ -434,9 +434,9 @@ final readonly class RetryingEventStore implements EventStoreInterface
 }
 ```
 
-## Event Store Repository
+## Репозиторий Event Store
 
-### Repository Using Event Store
+### Репозиторий на основе Event Store
 
 ```php
 <?php
@@ -493,22 +493,22 @@ final readonly class EventSourcedOrderRepository implements OrderRepositoryInter
 }
 ```
 
-## Detection Patterns
+## Паттерны обнаружения
 
 ```bash
-# Check for Event Store interface
+# Проверка интерфейса Event Store
 Grep: "interface.*EventStore" --glob "**/*.php"
 
-# Check for append-only operations
+# Проверка append-only операций
 Grep: "function append|function save.*Event" --glob "**/EventStore*.php"
 
-# Warning: Update/Delete in Event Store
+# Предупреждение: Update/Delete в Event Store
 Grep: "UPDATE event_store|DELETE FROM event_store" --glob "**/*.php"
 Grep: "->update\(|->delete\(" --glob "**/EventStore*.php"
 
-# Check for optimistic concurrency
+# Проверка оптимистичной конкурентности
 Grep: "expectedVersion|ConcurrencyException" --glob "**/EventStore*.php"
 
-# Check for stream-based storage
+# Проверка потокового хранения
 Grep: "streamId|stream_id" --glob "**/EventStore*.php"
 ```

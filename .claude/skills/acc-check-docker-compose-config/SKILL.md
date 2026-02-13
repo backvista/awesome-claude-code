@@ -1,15 +1,15 @@
 ---
 name: acc-check-docker-compose-config
-description: Checks Docker Compose configuration for PHP stacks. Detects missing health checks, improper dependencies, hardcoded values, and networking issues.
+description: Проверяет конфигурацию Docker Compose для PHP-стеков. Обнаруживает отсутствующие health checks, некорректные зависимости, захардкоженные значения и проблемы с сетью.
 ---
 
-# Docker Compose Configuration Checker
+# Проверка конфигурации Docker Compose
 
-Analyze Docker Compose files for configuration issues in PHP application stacks.
+Анализ файлов Docker Compose на предмет проблем конфигурации в стеках PHP-приложений.
 
-## Detection Patterns
+## Паттерны обнаружения
 
-### 1. Missing Health Checks
+### 1. Отсутствующие Health Checks
 
 ```yaml
 # BAD: No healthcheck section for service
@@ -23,7 +23,7 @@ services:
       retries: 3
 ```
 
-### 2. depends_on Without Condition
+### 2. depends_on без условия
 
 ```yaml
 # BAD: No health condition (race condition on startup)
@@ -40,7 +40,7 @@ services:
         condition: service_healthy
 ```
 
-### 3. Hardcoded Passwords
+### 3. Захардкоженные пароли
 
 ```yaml
 # BAD: Credentials in plain text
@@ -57,7 +57,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 ```
 
-### 4. No Resource Limits
+### 4. Отсутствие лимитов ресурсов
 
 ```yaml
 # GOOD: Resource limits defined
@@ -70,7 +70,7 @@ services:
           memory: 512M
 ```
 
-### 5. No Restart Policy
+### 5. Отсутствие политики перезапуска
 
 ```yaml
 # GOOD: Restart policy defined
@@ -79,7 +79,7 @@ services:
     restart: unless-stopped
 ```
 
-### 6. Deprecated version Field
+### 6. Устаревшее поле version
 
 ```yaml
 # BAD: Deprecated in Compose V2+
@@ -89,7 +89,7 @@ services:
     image: my-app
 ```
 
-### 7. Missing Networks Definition
+### 7. Отсутствие определения сетей
 
 ```yaml
 # GOOD: Explicit network isolation
@@ -104,7 +104,7 @@ networks:
     internal: true
 ```
 
-### 8. Volume Permission Issues
+### 8. Проблемы с правами на тома
 
 ```yaml
 # GOOD: User mapping to avoid permission issues
@@ -115,14 +115,14 @@ services:
       - ./src:/var/www/html
 ```
 
-### 9. Port Conflicts
+### 9. Конфликты портов
 
 ```yaml
 # BAD: Binding to all interfaces — ports: ["80:80"]
 # GOOD: Specific host binding — ports: ["127.0.0.1:8080:80"]
 ```
 
-### 10. Missing .env File Reference
+### 10. Отсутствие ссылки на .env файл
 
 ```yaml
 # GOOD: Explicit env_file with variable interpolation
@@ -131,7 +131,7 @@ services:
     env_file: [.env]
 ```
 
-## Grep Patterns
+## Grep-паттерны
 
 ```bash
 # Hardcoded passwords
@@ -147,29 +147,29 @@ Grep: "^version:" --glob "**/docker-compose*.yml"
 Grep: "ports:" --glob "**/docker-compose*.yml"
 ```
 
-## Severity Classification
+## Классификация серьёзности
 
-| Pattern | Severity | Impact |
-|---------|----------|--------|
-| Hardcoded credentials | Critical | Security breach risk |
-| No health checks | Major | Unreliable dependencies |
-| depends_on without condition | Major | Race conditions on startup |
-| No resource limits | Major | OOM kills, resource exhaustion |
-| Port conflicts | Major | Service startup failure |
-| Missing networks | Minor | No network isolation |
-| Deprecated version field | Minor | Compatibility warning |
-| No restart policy | Minor | Manual recovery needed |
-| Volume permissions | Minor | File access errors |
-| Missing .env reference | Minor | Undefined variable risk |
+| Паттерн | Серьёзность | Влияние |
+|---------|-------------|---------|
+| Захардкоженные учётные данные | Critical | Риск утечки безопасности |
+| Нет health checks | Major | Ненадёжные зависимости |
+| depends_on без условия | Major | Race conditions при запуске |
+| Нет лимитов ресурсов | Major | OOM kills, исчерпание ресурсов |
+| Конфликты портов | Major | Ошибка запуска сервиса |
+| Отсутствие сетей | Minor | Нет сетевой изоляции |
+| Устаревшее поле version | Minor | Предупреждение совместимости |
+| Нет политики перезапуска | Minor | Необходимость ручного восстановления |
+| Права на тома | Minor | Ошибки доступа к файлам |
+| Отсутствие ссылки на .env | Minor | Риск неопределённых переменных |
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### Compose Issue: [Description]
+### Проблема Compose: [Описание]
 
-**Severity:** Critical/Major/Minor
-**File:** `docker-compose.yml:line`
-**Issue:** [Description of the problem]
-**Fix:** [Corrected configuration snippet]
-**Impact:** [What could happen if not fixed]
+**Серьёзность:** Critical/Major/Minor
+**Файл:** `docker-compose.yml:line`
+**Проблема:** [Описание проблемы]
+**Исправление:** [Исправленный фрагмент конфигурации]
+**Влияние:** [Что может произойти, если не исправить]
 ```

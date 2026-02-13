@@ -1,68 +1,68 @@
 ---
 name: acc-create-flyweight
-description: Generates Flyweight pattern for PHP 8.2. Optimizes memory via shared intrinsic state. Includes unit tests.
+description: Генерирует паттерн Flyweight для PHP 8.2. Оптимизирует память через разделяемое внутреннее состояние. Включает юнит-тесты.
 ---
 
 # Flyweight Pattern Generator
 
-Creates Flyweight pattern infrastructure for memory optimization through object sharing.
+Создает инфраструктуру паттерна Flyweight для оптимизации памяти через разделение объектов.
 
-## When to Use
+## Когда использовать
 
-| Scenario | Example |
+| Сценарий | Пример |
 |----------|---------|
-| Large number of similar objects | Icons, glyphs, particles |
-| Memory constraints | Mobile apps, embedded systems |
-| Immutable shared state | Currency codes, tax rates |
-| Performance optimization | Reduce object creation overhead |
+| Большое количество похожих объектов | Иконки, глифы, частицы |
+| Ограничения памяти | Мобильные приложения, встроенные системы |
+| Неизменяемое разделяемое состояние | Коды валют, налоговые ставки |
+| Оптимизация производительности | Снижение накладных расходов на создание объектов |
 
-## Component Characteristics
+## Характеристики компонентов
 
 ### Flyweight Interface
-- Defines operations
-- Accepts extrinsic state as parameters
+- Определяет операции
+- Принимает внешнее состояние как параметры
 
 ### ConcreteFlyweight
-- Stores intrinsic state (shared)
-- Immutable
-- Reusable across contexts
+- Хранит внутреннее состояние (разделяемое)
+- Неизменяемый
+- Переиспользуемый в разных контекстах
 
 ### FlyweightFactory
-- Creates and manages flyweights
-- Returns existing or new flyweight
-- Ensures sharing
+- Создает и управляет flyweight'ами
+- Возвращает существующий или новый flyweight
+- Обеспечивает разделение
 
 ---
 
-## Generation Process
+## Процесс генерации
 
-### Step 1: Generate Flyweight Interface
+### Шаг 1: Генерировать Flyweight Interface
 
-**Path:** `src/Domain/{BoundedContext}/`
+**Путь:** `src/Domain/{BoundedContext}/`
 
-1. `{Name}Interface.php` — Operations contract
+1. `{Name}Interface.php` — Контракт операций
 
-### Step 2: Generate ConcreteFlyweight
+### Шаг 2: Генерировать ConcreteFlyweight
 
-**Path:** `src/Domain/{BoundedContext}/`
+**Путь:** `src/Domain/{BoundedContext}/`
 
-1. `{Name}Flyweight.php` — Shared object
+1. `{Name}Flyweight.php` — Разделяемый объект
 
-### Step 3: Generate FlyweightFactory
+### Шаг 3: Генерировать FlyweightFactory
 
-**Path:** `src/Domain/{BoundedContext}/Factory/` or `src/Infrastructure/`
+**Путь:** `src/Domain/{BoundedContext}/Factory/` или `src/Infrastructure/`
 
-1. `{Name}FlyweightFactory.php` — Manages flyweights
+1. `{Name}FlyweightFactory.php` — Управление flyweight'ами
 
-### Step 4: Generate Tests
+### Шаг 4: Генерировать тесты
 
-1. `{ClassName}Test.php` — Flyweight behavior and sharing verification
+1. `{ClassName}Test.php` — Тесты поведения Flyweight и проверка разделения
 
 ---
 
-## File Placement
+## Размещение файлов
 
-| Component | Path |
+| Компонент | Путь |
 |-----------|------|
 | Flyweight Interface | `src/Domain/{BoundedContext}/` |
 | ConcreteFlyweight | `src/Domain/{BoundedContext}/` |
@@ -71,9 +71,9 @@ Creates Flyweight pattern infrastructure for memory optimization through object 
 
 ---
 
-## Naming Conventions
+## Соглашения об именах
 
-| Component | Pattern | Example |
+| Компонент | Шаблон | Пример |
 |-----------|---------|---------|
 | Flyweight Interface | `{Name}Interface` | `CurrencyInterface` |
 | ConcreteFlyweight | `{Name}Flyweight` | `CurrencyFlyweight` |
@@ -82,7 +82,7 @@ Creates Flyweight pattern infrastructure for memory optimization through object 
 
 ---
 
-## Quick Template Reference
+## Краткая справка по шаблонам
 
 ### Flyweight
 
@@ -125,49 +125,49 @@ final class {Name}FlyweightFactory
 
 ---
 
-## Usage Example
+## Пример использования
 
 ```php
 $factory = new CurrencyFlyweightFactory();
 
-// Same object returned
+// Возвращается один и тот же объект
 $usd1 = $factory->getFlyweight('USD');
 $usd2 = $factory->getFlyweight('USD');
 
 assert($usd1 === $usd2); // true
 
-// Format with extrinsic state
+// Форматирование с внешним состоянием
 $usd1->format(100.50); // "$100.50"
 ```
 
 ---
 
-## Common Flyweights
+## Распространенные Flyweight'ы
 
-| Flyweight | Purpose |
+| Flyweight | Назначение |
 |-----------|---------|
-| CurrencyFlyweight | Currency codes and symbols |
-| IconFlyweight | UI icons |
-| TaxRuleFlyweight | Tax rates by region |
-| CharacterFlyweight | Text rendering glyphs |
-| ColorFlyweight | Color palettes |
+| CurrencyFlyweight | Коды и символы валют |
+| IconFlyweight | UI иконки |
+| TaxRuleFlyweight | Налоговые ставки по регионам |
+| CharacterFlyweight | Глифы для отрисовки текста |
+| ColorFlyweight | Цветовые палитры |
 
 ---
 
-## Anti-patterns to Avoid
+## Антипаттерны, которых следует избегать
 
-| Anti-pattern | Problem | Solution |
+| Антипаттерн | Проблема | Решение |
 |--------------|---------|----------|
-| Mutable Flyweight | State changes affect all users | Make flyweights immutable |
-| No Factory | Manual object management | Use flyweight factory |
-| Large Intrinsic State | Memory not optimized | Keep intrinsic state minimal |
-| Extrinsic in Flyweight | Not reusable | Pass extrinsic via parameters |
-| Premature Optimization | Complexity without benefit | Profile first |
+| Изменяемый Flyweight | Изменения состояния влияют на всех пользователей | Сделать flyweight неизменяемым |
+| Нет фабрики | Ручное управление объектами | Использовать фабрику flyweight |
+| Большое внутреннее состояние | Память не оптимизирована | Держать внутреннее состояние минимальным |
+| Внешнее в Flyweight | Не переиспользуемый | Передавать внешнее через параметры |
+| Преждевременная оптимизация | Сложность без пользы | Сначала профилировать |
 
 ---
 
-## References
+## Ссылки
 
-For complete PHP templates and examples, see:
-- `references/templates.md` — Flyweight, factory templates
-- `references/examples.md` — Currency, icon, tax rule flyweights with unit tests
+Полные PHP-шаблоны и примеры см.:
+- `references/templates.md` — Шаблоны Flyweight, фабрики
+- `references/examples.md` — Currency, icon, tax rule flyweight'ы с юнит-тестами

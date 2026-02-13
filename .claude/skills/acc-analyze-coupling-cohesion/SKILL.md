@@ -1,300 +1,300 @@
 ---
 name: acc-analyze-coupling-cohesion
-description: Analyzes coupling and cohesion metrics in PHP codebases. Calculates Afferent/Efferent coupling (Ca/Ce), LCOM metrics, instability index, and abstractness. Identifies highly coupled modules and low cohesion classes.
+description: Анализирует метрики связанности и сплочённости в PHP кодовых базах. Вычисляет Afferent/Efferent coupling (Ca/Ce), метрики LCOM, индекс нестабильности и абстрактность. Идентифицирует сильно связанные модули и классы с низкой сплочённостью.
 ---
 
-# Coupling & Cohesion Analyzer
+# Анализатор связанности и сплочённости
 
-## Overview
+## Обзор
 
-This skill analyzes PHP codebases for coupling and cohesion metrics, helping identify architectural issues like unstable dependencies, low cohesion classes, and tightly coupled modules.
+Этот навык анализирует PHP кодовые базы на метрики связанности и сплочённости, помогая выявлять архитектурные проблемы, такие как нестабильные зависимости, классы с низкой сплочённостью и сильно связанные модули.
 
-## Metrics Reference
+## Справка по метрикам
 
-| Metric | Formula | Target | Description |
+| Метрика | Формула | Цель | Описание |
 |--------|---------|--------|-------------|
-| Ca (Afferent) | Incoming deps | - | Classes depending ON this |
-| Ce (Efferent) | Outgoing deps | < 10 | Classes this DEPENDS on |
-| Instability (I) | Ce / (Ca + Ce) | 0.0-1.0 | 0=stable, 1=unstable |
-| Abstractness (A) | Abstract / Total | 0.0-1.0 | Ratio of interfaces |
-| Distance (D) | \|A + I - 1\| | < 0.3 | Distance from main sequence |
-| LCOM | Methods not sharing fields | < 0.5 | Lack of cohesion |
+| Ca (Afferent) | Входящие зав-ти | - | Классы, зависящие ОТ этого |
+| Ce (Efferent) | Исходящие зав-ти | < 10 | Классы, от которых ЗАВИСИТ этот |
+| Instability (I) | Ce / (Ca + Ce) | 0.0-1.0 | 0=стабильный, 1=нестабильный |
+| Abstractness (A) | Abstract / Total | 0.0-1.0 | Соотношение интерфейсов |
+| Distance (D) | \|A + I - 1\| | < 0.3 | Расстояние от основной последовательности |
+| LCOM | Методы не разделяющие поля | < 0.5 | Отсутствие сплочённости |
 
-## Detection Patterns
+## Паттерны обнаружения
 
-### Phase 1: Dependency Discovery
+### Фаза 1: Обнаружение зависимостей
 
 ```bash
-# Count imports per file (Efferent Coupling - Ce)
+# Подсчёт импортов на файл (Efferent Coupling - Ce)
 Grep: "^use " --glob "**/*.php"
-# Group by file, count unique namespaces
+# Группировать по файлам, подсчитывать уникальные пространства имён
 
-# Find who imports a class (Afferent Coupling - Ca)
+# Поиск кто импортирует класс (Afferent Coupling - Ca)
 Grep: "use [A-Z][a-z]+\\\\[A-Z][a-z]+\\\\[A-Z]+" --glob "**/*.php"
-# For each class, count files importing it
+# Для каждого класса подсчитывать файлы, импортирующие его
 
-# Constructor dependencies
+# Зависимости в конструкторе
 Grep: "__construct\(" --glob "**/*.php" -A 15
-# Count injected dependencies
+# Подсчитывать внедрённые зависимости
 ```
 
-### Phase 2: Efferent Coupling (Ce) Analysis
+### Фаза 2: Анализ Efferent Coupling (Ce)
 
 ```bash
-# Classes with high outgoing dependencies
-# For each PHP file in src/:
+# Классы с высокими исходящими зависимостями
+# Для каждого PHP файла в src/:
 
-# Count use statements
+# Подсчёт use statements
 grep -c "^use " "$file"
 
-# Count constructor parameters
+# Подсчёт параметров конструктора
 grep -A 20 "__construct" "$file" | grep -c "private\|readonly"
 
-# Count method parameters with type hints
+# Подсчёт параметров методов с type hints
 grep -c "function.*[A-Z][a-z]+.*\$" "$file"
 ```
 
-**Thresholds:**
-- Ce < 5: Low coupling (good)
-- Ce 5-10: Moderate coupling
-- Ce 10-15: High coupling (warning)
-- Ce > 15: Very high coupling (critical)
+**Пороги:**
+- Ce < 5: Низкая связанность (хорошо)
+- Ce 5-10: Умеренная связанность
+- Ce 10-15: Высокая связанность (предупреждение)
+- Ce > 15: Очень высокая связанность (критично)
 
-### Phase 3: Afferent Coupling (Ca) Analysis
+### Фаза 3: Анализ Afferent Coupling (Ca)
 
 ```bash
-# Find highly depended-on classes
-# For target class "User":
+# Поиск классов с высокой зависимостью от них
+# Для целевого класса "User":
 
 Grep: "use.*\\\\User;|use.*\\\\User as" --glob "**/*.php" --output_mode count
 
-# Find classes imported across many modules
+# Поиск классов, импортируемых через множество модулей
 Grep: "use [A-Z]" --glob "**/*.php" --output_mode content
-# Aggregate by imported class
+# Агрегировать по импортируемому классу
 ```
 
-**High Ca Classes (> 20):**
-- May be stable core abstractions (good)
-- May be God classes (bad)
-- Should be interfaces, not concrete classes
+**Классы с высоким Ca (> 20):**
+- Могут быть стабильными core абстракциями (хорошо)
+- Могут быть God классами (плохо)
+- Должны быть интерфейсами, а не конкретными классами
 
-### Phase 4: Instability Index
+### Фаза 4: Индекс нестабильности
 
 ```php
 // I = Ce / (Ca + Ce)
-// I = 0: Maximally stable (many depend on it, depends on few)
-// I = 1: Maximally unstable (few depend on it, depends on many)
+// I = 0: Максимально стабилен (многие зависят от него, зависит от немногих)
+// I = 1: Максимально нестабилен (немногие зависят от него, зависит от многих)
 ```
 
 ```bash
-# Calculate per package/namespace
-# Example for src/Order/:
+# Вычислить для package/namespace
+# Пример для src/Order/:
 
-# Ce: outgoing dependencies from Order to other namespaces
+# Ce: исходящие зависимости из Order к другим namespace
 grep -rh "^use " src/Order/ | grep -v "Order\\\\" | sort -u | wc -l
 
-# Ca: incoming dependencies to Order from other namespaces
+# Ca: входящие зависимости к Order из других namespace
 grep -rh "use.*Order\\\\" src/ | grep -v "src/Order/" | sort -u | wc -l
 ```
 
-**Stable Dependencies Principle:**
-- Unstable packages should depend on stable packages
-- I(dependent) > I(dependency)
+**Принцип стабильных зависимостей:**
+- Нестабильные пакеты должны зависеть от стабильных пакетов
+- I(зависимого) > I(зависимости)
 
-### Phase 5: Abstractness Analysis
+### Фаза 5: Анализ абстрактности
 
 ```bash
-# Count interfaces and abstract classes per package
+# Подсчёт интерфейсов и абстрактных классов на пакет
 Grep: "^interface |^abstract class " --glob "**/Domain/**/*.php"
 
-# Count concrete classes
+# Подсчёт конкретных классов
 Grep: "^class |^final class |^readonly class " --glob "**/Domain/**/*.php"
 
 # Abstractness = abstract / total
 ```
 
-**Target Abstractness by Layer:**
-- Domain interfaces: A ≈ 0.3-0.5
+**Целевая абстрактность по слоям:**
+- Интерфейсы Domain: A ≈ 0.3-0.5
 - Application: A ≈ 0.2-0.3
-- Infrastructure: A ≈ 0.1-0.2 (mostly concrete)
+- Infrastructure: A ≈ 0.1-0.2 (в основном конкретные)
 
-### Phase 6: LCOM (Lack of Cohesion of Methods)
+### Фаза 6: LCOM (Lack of Cohesion of Methods)
 
 ```bash
-# LCOM measures how methods share instance variables
-# High LCOM = methods don't share state = low cohesion
+# LCOM измеряет насколько методы разделяют instance переменные
+# Высокий LCOM = методы не разделяют состояние = низкая сплочённость
 
-# For each class, analyze:
-# 1. List all instance variables
-# 2. For each method, list variables it uses
-# 3. Calculate pairs of methods not sharing any variable
+# Для каждого класса анализировать:
+# 1. Перечислить все instance переменные
+# 2. Для каждого метода перечислить используемые переменные
+# 3. Вычислить пары методов, не разделяющих ни одной переменной
 
 Grep: "private \$|private readonly" --glob "**/*.php"
 Grep: "\$this->" --glob "**/*.php"
 ```
 
-**LCOM Calculation:**
+**Вычисление LCOM:**
 ```
-LCOM = (methods not sharing fields) / (total method pairs)
+LCOM = (методы не разделяющие поля) / (всего пар методов)
 
-If class has 5 methods and 3 pairs share no fields:
-LCOM = 3 / 10 = 0.3 (acceptable)
+Если класс имеет 5 методов и 3 пары не разделяют поля:
+LCOM = 3 / 10 = 0.3 (приемлемо)
 
-If class has 10 methods and 40 pairs share no fields:
-LCOM = 40 / 45 = 0.89 (high - consider splitting)
+Если класс имеет 10 методов и 40 пар не разделяют поля:
+LCOM = 40 / 45 = 0.89 (высокий - рассмотреть разделение)
 ```
 
-### Phase 7: Dependency Cycles Detection
+### Фаза 7: Обнаружение циклических зависимостей
 
 ```bash
-# Find circular dependencies between packages
+# Поиск циклических зависимостей между пакетами
 
-# Build dependency graph
-# For each namespace A, find dependencies to namespace B
-# If B also depends on A → cycle
+# Построить граф зависимостей
+# Для каждого namespace A найти зависимости к namespace B
+# Если B также зависит от A → цикл
 
-# Package A imports from B
+# Пакет A импортирует из B
 Grep: "namespace Order|use Payment\\\\" --glob "**/Order/**/*.php"
 
-# Package B imports from A
+# Пакет B импортирует из A
 Grep: "namespace Payment|use Order\\\\" --glob "**/Payment/**/*.php"
 
-# If both match → circular dependency
+# Если оба совпадают → циклическая зависимость
 ```
 
-## Report Format
+## Формат отчёта
 
 ```markdown
-# Coupling & Cohesion Analysis Report
+# Отчёт анализа связанности и сплочённости
 
-## Package Metrics
+## Метрики пакетов
 
-| Package | Ce | Ca | I | A | D | Status |
+| Пакет | Ce | Ca | I | A | D | Статус |
 |---------|----|----|---|---|---|--------|
-| Domain/User | 3 | 25 | 0.11 | 0.40 | 0.29 | ✅ Stable |
-| Domain/Order | 8 | 18 | 0.31 | 0.35 | 0.04 | ✅ Good |
-| Application/Order | 15 | 5 | 0.75 | 0.10 | 0.15 | ✅ Unstable (OK) |
-| Infrastructure/Persistence | 22 | 3 | 0.88 | 0.05 | 0.07 | ⚠️ High Ce |
+| Domain/User | 3 | 25 | 0.11 | 0.40 | 0.29 | ✅ Стабильный |
+| Domain/Order | 8 | 18 | 0.31 | 0.35 | 0.04 | ✅ Хорошо |
+| Application/Order | 15 | 5 | 0.75 | 0.10 | 0.15 | ✅ Нестабильный (OK) |
+| Infrastructure/Persistence | 22 | 3 | 0.88 | 0.05 | 0.07 | ⚠️ Высокий Ce |
 
-**Legend:**
-- Ce = Efferent coupling (outgoing)
-- Ca = Afferent coupling (incoming)
-- I = Instability (0=stable, 1=unstable)
-- A = Abstractness
-- D = Distance from main sequence
+**Легенда:**
+- Ce = Efferent coupling (исходящие)
+- Ca = Afferent coupling (входящие)
+- I = Нестабильность (0=стабильный, 1=нестабильный)
+- A = Абстрактность
+- D = Расстояние от основной последовательности
 
-## Main Sequence Diagram
+## Диаграмма основной последовательности
 
 ```
 Abstractness (A)
 1.0 ┌───────────────────────────────────┐
-    │ Zone of Uselessness               │
+    │ Зона бесполезности                │
     │          ╲                        │
-0.5 │           ╲ Main Sequence         │
+0.5 │           ╲ Основная посл-ть      │
     │ Domain/User ●                     │
     │              ╲ Domain/Order       │
     │               ● ╲                 │
 0.0 │                  ╲ Infra/Persist  │
-    │ Zone of Pain      ● ●App/Order    │
+    │ Зона боли         ● ●App/Order    │
     └───────────────────────────────────┘
     0.0                              1.0
                 Instability (I)
 ```
 
-## Critical Issues
+## Критичные проблемы
 
-### COUP-001: High Efferent Coupling
-- **Package:** `src/Application/Order/`
-- **Ce:** 22 (threshold: 15)
-- **Dependencies:**
-  - Domain/Order (4 classes)
-  - Domain/User (3 classes)
-  - Domain/Payment (2 classes)
-  - Domain/Shipping (3 classes)
-  - Infrastructure/Persistence (4 classes)
-  - Infrastructure/Messaging (3 classes)
-  - External/Stripe (3 classes)
-- **Issue:** Too many external dependencies
-- **Refactoring:**
-  - Split into focused use cases
-  - Introduce facades/mediators
-  - Use domain events instead of direct calls
-- **Skills:** `acc-create-use-case`, `acc-create-mediator`
+### COUP-001: Высокая Efferent Coupling
+- **Пакет:** `src/Application/Order/`
+- **Ce:** 22 (порог: 15)
+- **Зависимости:**
+  - Domain/Order (4 класса)
+  - Domain/User (3 класса)
+  - Domain/Payment (2 класса)
+  - Domain/Shipping (3 класса)
+  - Infrastructure/Persistence (4 класса)
+  - Infrastructure/Messaging (3 класса)
+  - External/Stripe (3 класса)
+- **Проблема:** Слишком много внешних зависимостей
+- **Рефакторинг:**
+  - Разделить на сфокусированные use cases
+  - Ввести facades/mediators
+  - Использовать domain events вместо прямых вызовов
+- **Навыки:** `acc-create-use-case`, `acc-create-mediator`
 
-### COUP-002: Unstable Package Depends on Unstable
-- **Violation:** Stable Dependencies Principle
-- **Package:** `Domain/Order` (I=0.31)
-- **Depends on:** `Application/Reporting` (I=0.82)
-- **Issue:** Stable domain depends on unstable application
-- **Refactoring:** Invert dependency, use interface
+### COUP-002: Нестабильный пакет зависит от нестабильного
+- **Нарушение:** Принцип стабильных зависимостей
+- **Пакет:** `Domain/Order` (I=0.31)
+- **Зависит от:** `Application/Reporting` (I=0.82)
+- **Проблема:** Стабильный домен зависит от нестабильного application
+- **Рефакторинг:** Инвертировать зависимость, использовать интерфейс
 
-### COUP-003: Circular Dependency
-- **Packages:** `Order` ↔ `Payment`
+### COUP-003: Циклическая зависимость
+- **Пакеты:** `Order` ↔ `Payment`
 - **Order → Payment:**
-  - `Order.php` imports `PaymentService`
+  - `Order.php` импортирует `PaymentService`
 - **Payment → Order:**
-  - `PaymentProcessor.php` imports `OrderRepository`
-- **Refactoring:**
-  - Introduce shared interface in Domain
-  - Use domain events for communication
-- **Skills:** `acc-create-domain-event`
+  - `PaymentProcessor.php` импортирует `OrderRepository`
+- **Рефакторинг:**
+  - Ввести общий интерфейс в Domain
+  - Использовать domain events для коммуникации
+- **Навыки:** `acc-create-domain-event`
 
-## Warning Issues
+## Проблемы с предупреждением
 
-### COUP-004: Low Cohesion Class
-- **File:** `src/Application/Service/OrderService.php`
-- **LCOM:** 0.78 (threshold: 0.5)
-- **Methods:** 12
-- **Shared fields:** Only 2 fields used across all methods
-- **Issue:** Class has multiple responsibilities
-- **Refactoring:** Split into focused classes
+### COUP-004: Класс с низкой сплочённостью
+- **Файл:** `src/Application/Service/OrderService.php`
+- **LCOM:** 0.78 (порог: 0.5)
+- **Методы:** 12
+- **Разделяемые поля:** Только 2 поля используются всеми методами
+- **Проблема:** Класс имеет множество ответственностей
+- **Рефакторинг:** Разделить на сфокусированные классы
   - `OrderCreationService`
   - `OrderValidationService`
   - `OrderNotificationService`
-- **Skills:** `acc-create-use-case`, `acc-create-domain-service`
+- **Навыки:** `acc-create-use-case`, `acc-create-domain-service`
 
-### COUP-005: Zone of Pain
-- **Package:** `src/Infrastructure/Legacy/`
-- **Metrics:** I=0.15, A=0.05
-- **Issue:** Stable concrete package (hard to change, many depend on it)
-- **Refactoring:** Extract interfaces, increase abstractness
+### COUP-005: Зона боли
+- **Пакет:** `src/Infrastructure/Legacy/`
+- **Метрики:** I=0.15, A=0.05
+- **Проблема:** Стабильный конкретный пакет (сложно менять, многие зависят от него)
+- **Рефакторинг:** Извлечь интерфейсы, увеличить абстрактность
 
-### COUP-006: High Afferent on Concrete
-- **Class:** `src/Domain/Order/Order.php`
-- **Ca:** 45 (many classes depend on it)
-- **Type:** Concrete class
-- **Issue:** Changes affect 45 dependents
-- **Refactoring:** Ensure class is stable, consider interface
+### COUP-006: Высокий Afferent на конкретном
+- **Класс:** `src/Domain/Order/Order.php`
+- **Ca:** 45 (многие классы зависят от него)
+- **Тип:** Конкретный класс
+- **Проблема:** Изменения затрагивают 45 зависимых
+- **Рефакторинг:** Убедиться, что класс стабилен, рассмотреть интерфейс
 
-## Class Metrics
+## Метрики классов
 
-### High Coupling Classes (Ce > 10)
+### Классы с высокой связанностью (Ce > 10)
 
-| Class | Ce | Layer | Recommendation |
+| Класс | Ce | Слой | Рекомендация |
 |-------|----|----|----------------|
-| OrderService | 18 | Application | Split responsibilities |
-| ReportGenerator | 15 | Application | Use query service |
-| UserController | 12 | Presentation | Extract handlers |
-| ImportProcessor | 14 | Infrastructure | Use adapter pattern |
+| OrderService | 18 | Application | Разделить ответственности |
+| ReportGenerator | 15 | Application | Использовать query service |
+| UserController | 12 | Presentation | Извлечь handlers |
+| ImportProcessor | 14 | Infrastructure | Использовать adapter pattern |
 
-### Low Cohesion Classes (LCOM > 0.5)
+### Классы с низкой сплочённостью (LCOM > 0.5)
 
-| Class | LCOM | Methods | Fields | Recommendation |
+| Класс | LCOM | Методы | Поля | Рекомендация |
 |-------|------|---------|--------|----------------|
-| OrderManager | 0.82 | 15 | 4 | Split by responsibility |
-| UserService | 0.71 | 12 | 3 | Extract domain logic |
-| ReportHelper | 0.68 | 8 | 2 | Group related methods |
+| OrderManager | 0.82 | 15 | 4 | Разделить по ответственности |
+| UserService | 0.71 | 12 | 3 | Извлечь доменную логику |
+| ReportHelper | 0.68 | 8 | 2 | Сгруппировать связанные методы |
 
-## Dependency Diagram
+## Диаграмма зависимостей
 
 ```mermaid
 graph TD
-    subgraph "Stable (I < 0.3)"
+    subgraph "Стабильные (I < 0.3)"
         DO[Domain/Order<br/>I=0.31, A=0.35]
         DU[Domain/User<br/>I=0.11, A=0.40]
     end
 
-    subgraph "Unstable (I > 0.7)"
+    subgraph "Нестабильные (I > 0.7)"
         AO[Application/Order<br/>I=0.75, A=0.10]
         IO[Infrastructure/Order<br/>I=0.88, A=0.05]
     end
@@ -310,33 +310,33 @@ graph TD
     style IO fill:#FFB6C1
 ```
 
-## Recommendations
+## Рекомендации
 
-### Immediate Actions
-1. Break circular dependencies with events
-2. Split high Ce classes (> 15 dependencies)
-3. Extract interfaces for high Ca concrete classes
+### Немедленные действия
+1. Разорвать циклические зависимости с помощью events
+2. Разделить классы с высоким Ce (> 15 зависимостей)
+3. Извлечь интерфейсы для конкретных классов с высоким Ca
 
-### Short-term
-4. Split low cohesion classes (LCOM > 0.5)
-5. Move unstable code away from stable packages
-6. Increase abstractness in Zone of Pain packages
+### Краткосрочно
+4. Разделить классы с низкой сплочённостью (LCOM > 0.5)
+5. Убрать нестабильный код от стабильных пакетов
+6. Увеличить абстрактность в пакетах Зоны боли
 
-### Metrics Targets
-| Metric | Current | Target |
+### Целевые метрики
+| Метрика | Текущее | Цель |
 |--------|---------|--------|
-| Max Ce per class | 22 | < 10 |
+| Max Ce на класс | 22 | < 10 |
 | Avg LCOM | 0.45 | < 0.3 |
-| Circular deps | 2 | 0 |
-| Zone of Pain packages | 3 | 0 |
+| Циклических зав-тей | 2 | 0 |
+| Пакетов Зоны боли | 3 | 0 |
 ```
 
-## Coupling Reduction Strategies
+## Стратегии снижения связанности
 
-### High Efferent Coupling
+### Высокая Efferent Coupling
 
 ```php
-// BAD: High Ce
+// ПЛОХО: Высокий Ce
 class OrderService
 {
     public function __construct(
@@ -351,7 +351,7 @@ class OrderService
     ) {}
 }
 
-// GOOD: Lower Ce via Facade
+// ХОРОШО: Ниже Ce через Facade
 class OrderService
 {
     public function __construct(
@@ -359,19 +359,19 @@ class OrderService
     ) {}
 }
 
-// Or split into focused classes
-class CreateOrderUseCase { /* uses only 3 deps */ }
-class CalculateOrderUseCase { /* uses only 2 deps */ }
+// Или разделить на сфокусированные классы
+class CreateOrderUseCase { /* использует только 3 зав-ти */ }
+class CalculateOrderUseCase { /* использует только 2 зав-ти */ }
 ```
 
-### Circular Dependencies
+### Циклические зависимости
 
 ```php
-// BAD: Circular
-// Order depends on Payment
-// Payment depends on Order
+// ПЛОХО: Циклические
+// Order зависит от Payment
+// Payment зависит от Order
 
-// GOOD: Domain events
+// ХОРОШО: Domain events
 class Order
 {
     public function pay(): void
@@ -389,16 +389,16 @@ class PaymentSubscriber
 }
 ```
 
-## Quick Analysis Commands
+## Быстрые команды анализа
 
 ```bash
-# Coupling analysis
-echo "=== High Efferent Coupling (Ce) ===" && \
+# Анализ связанности
+echo "=== Высокая Efferent Coupling (Ce) ===" && \
 for f in $(find src -name "*.php"); do \
   count=$(grep -c "^use " "$f" 2>/dev/null || echo 0); \
-  [ $count -gt 10 ] && echo "$f: $count imports"; \
+  [ $count -gt 10 ] && echo "$f: $count импортов"; \
 done && \
-echo "=== Circular Dependencies ===" && \
+echo "=== Циклические зависимости ===" && \
 for ctx in Order User Payment; do \
   for other in Order User Payment; do \
     [ "$ctx" != "$other" ] && \
@@ -408,16 +408,16 @@ for ctx in Order User Payment; do \
 done
 ```
 
-## Integration
+## Интеграция
 
-Works with:
-- `acc-detect-code-smells` — God Class detection
-- `acc-structural-auditor` — Architecture analysis
-- `acc-grasp-knowledge` — GRASP principles (Low Coupling, High Cohesion)
-- `acc-create-mediator` — Reduce coupling via mediator
+Работает с:
+- `acc-detect-code-smells` — обнаружение God Class
+- `acc-structural-auditor` — анализ архитектуры
+- `acc-grasp-knowledge` — принципы GRASP (Low Coupling, High Cohesion)
+- `acc-create-mediator` — снижение связанности через mediator
 
-## References
+## Справочные материалы
 
 - "Agile Software Development" (Robert C. Martin) — Package Coupling Principles
 - "Object-Oriented Metrics in Practice" (Lanza, Marinescu)
-- "A Metrics Suite for Object Oriented Design" (Chidamber, Kemerer) — LCOM metric
+- "A Metrics Suite for Object Oriented Design" (Chidamber, Kemerer) — LCOM метрика

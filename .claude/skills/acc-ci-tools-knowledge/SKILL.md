@@ -1,31 +1,31 @@
 ---
 name: acc-ci-tools-knowledge
-description: PHP CI tools knowledge base. Provides PHPStan levels and configuration, Psalm integration, PHP-CS-Fixer rules, DEPTRAC layer analysis, Rector automated refactoring, and code coverage tools.
+description: База знаний PHP CI-инструментов. Содержит уровни и конфигурацию PHPStan, интеграцию Psalm, правила PHP-CS-Fixer, анализ слоёв DEPTRAC, автоматический рефакторинг Rector и инструменты покрытия кода.
 ---
 
-# PHP CI Tools Knowledge Base
+# База знаний PHP CI-инструментов
 
-Quick reference for PHP static analysis, code quality, and testing tools.
+Краткий справочник по инструментам статического анализа, качества кода и тестирования PHP.
 
 ## PHPStan
 
-### Levels Overview
+### Обзор уровней
 
-| Level | Description | Use Case |
+| Уровень | Описание | Применение |
 |-------|-------------|----------|
-| 0 | Basic checks (undefined variables, classes) | Legacy projects, quick start |
-| 1 | + Undefined methods, properties | Minimal safety |
-| 2 | + Unknown methods on `$this` | Medium safety |
-| 3 | + Return types | Recommended minimum |
-| 4 | + Dead code, unreachable | **Recommended for new projects** |
-| 5 | + Argument types | Standard compliance |
-| 6 | + Missing typehints | Strict typing |
-| 7 | + Union types strict | High strictness |
-| 8 | + No mixed, nullsafe | **Production recommended** |
-| 9 | + Maximum strictness | Clean Architecture |
-| max | Bleeding edge | Experimental only |
+| 0 | Базовые проверки (неопределённые переменные, классы) | Унаследованные проекты, быстрый старт |
+| 1 | + Неопределённые методы, свойства | Минимальная безопасность |
+| 2 | + Неизвестные методы на `$this` | Средняя безопасность |
+| 3 | + Типы возврата | Рекомендуемый минимум |
+| 4 | + Мёртвый код, недостижимый | **Рекомендуется для новых проектов** |
+| 5 | + Типы аргументов | Стандартное соответствие |
+| 6 | + Отсутствующие typehints | Строгая типизация |
+| 7 | + Строгие union-типы | Высокая строгость |
+| 8 | + Без mixed, nullsafe | **Рекомендуется для production** |
+| 9 | + Максимальная строгость | Clean Architecture |
+| max | Экспериментальные правила | Только для экспериментов |
 
-### Configuration Template
+### Шаблон конфигурации
 
 ```neon
 # phpstan.neon
@@ -65,17 +65,17 @@ parameters:
         maximumNumberOfProcesses: 4
 ```
 
-### Common Extensions
+### Распространённые расширения
 
-| Extension | Purpose |
+| Расширение | Назначение |
 |-----------|---------|
-| `phpstan-strict-rules` | Additional strict checks |
-| `phpstan-deprecation-rules` | Deprecated usage detection |
-| `phpstan-phpunit` | PHPUnit support |
-| `phpstan-doctrine` | Doctrine ORM support |
-| `phpstan-symfony` | Symfony container support |
+| `phpstan-strict-rules` | Дополнительные строгие проверки |
+| `phpstan-deprecation-rules` | Обнаружение использования устаревшего кода |
+| `phpstan-phpunit` | Поддержка PHPUnit |
+| `phpstan-doctrine` | Поддержка Doctrine ORM |
+| `phpstan-symfony` | Поддержка контейнера Symfony |
 
-### Baseline Management
+### Управление baseline
 
 ```bash
 # Generate baseline (for existing projects)
@@ -90,17 +90,17 @@ vendor/bin/phpstan analyse --no-progress --error-format=checkstyle > phpstan-rep
 
 ## Psalm
 
-### Error Levels
+### Уровни ошибок
 
-| Level | Description |
+| Уровень | Описание |
 |-------|-------------|
-| 1 | Maximum strictness (recommended for new) |
-| 2 | Very strict |
-| 3 | Strict (recommended for existing) |
-| 4 | Relaxed |
-| 5-8 | Increasingly permissive |
+| 1 | Максимальная строгость (рекомендуется для новых) |
+| 2 | Очень строгий |
+| 3 | Строгий (рекомендуется для существующих) |
+| 4 | Ослабленный |
+| 5-8 | Постепенно более разрешительные |
 
-### Configuration Template
+### Шаблон конфигурации
 
 ```xml
 <!-- psalm.xml -->
@@ -138,7 +138,7 @@ vendor/bin/phpstan analyse --no-progress --error-format=checkstyle > phpstan-rep
 </psalm>
 ```
 
-### Useful Commands
+### Полезные команды
 
 ```bash
 # Full analysis
@@ -156,7 +156,7 @@ vendor/bin/psalm --output-format=checkstyle > psalm-report.xml
 
 ## PHP-CS-Fixer
 
-### Configuration Template
+### Шаблон конфигурации
 
 ```php
 <?php
@@ -212,7 +212,7 @@ return (new Config())
     ->setCacheFile('.php-cs-fixer.cache');
 ```
 
-### Commands
+### Команды
 
 ```bash
 # Check (dry run)
@@ -227,7 +227,7 @@ vendor/bin/php-cs-fixer fix --dry-run --format=checkstyle > cs-report.xml
 
 ## DEPTRAC
 
-### Configuration Template
+### Шаблон конфигурации
 
 ```yaml
 # deptrac.yaml
@@ -276,7 +276,7 @@ deptrac:
       - App\Domain\*
 ```
 
-### Commands
+### Команды
 
 ```bash
 # Analyze
@@ -291,7 +291,7 @@ vendor/bin/deptrac analyse --formatter=junit --output=deptrac-report.xml
 
 ## Rector
 
-### Configuration Template
+### Шаблон конфигурации
 
 ```php
 <?php
@@ -328,7 +328,7 @@ return RectorConfig::configure()
     );
 ```
 
-### Commands
+### Команды
 
 ```bash
 # Preview changes (dry run)
@@ -341,9 +341,9 @@ vendor/bin/rector process
 vendor/bin/rector process src/Domain/Order.php
 ```
 
-## Code Coverage Tools
+## Инструменты покрытия кода
 
-### PHPUnit Coverage
+### Покрытие PHPUnit
 
 ```xml
 <!-- phpunit.xml -->
@@ -364,15 +364,15 @@ vendor/bin/rector process src/Domain/Order.php
 </phpunit>
 ```
 
-### Coverage Drivers
+### Драйверы покрытия
 
-| Driver | Speed | Accuracy | Use Case |
+| Драйвер | Скорость | Точность | Применение |
 |--------|-------|----------|----------|
-| Xdebug | Slow | High | Local dev, accurate metrics |
-| PCOV | Fast | High | CI, fast feedback |
-| PHPDBG | Medium | Medium | Alternative |
+| Xdebug | Медленный | Высокая | Локальная разработка, точные метрики |
+| PCOV | Быстрый | Высокая | CI, быстрая обратная связь |
+| PHPDBG | Средний | Средняя | Альтернатива |
 
-### CI Integration
+### Интеграция с CI
 
 ```yaml
 # GitHub Actions with PCOV
@@ -388,9 +388,9 @@ vendor/bin/rector process src/Domain/Order.php
     files: coverage.xml
 ```
 
-## Infection (Mutation Testing)
+## Infection (мутационное тестирование)
 
-### Configuration
+### Конфигурация
 
 ```json
 {
@@ -410,7 +410,7 @@ vendor/bin/rector process src/Domain/Order.php
 }
 ```
 
-### Commands
+### Команды
 
 ```bash
 # Run with coverage
@@ -420,18 +420,18 @@ vendor/bin/infection --threads=4
 vendor/bin/infection --min-msi=80 --min-covered-msi=90 --threads=max
 ```
 
-## Tool Comparison Matrix
+## Матрица сравнения инструментов
 
-| Aspect | PHPStan | Psalm | DEPTRAC | Rector |
+| Аспект | PHPStan | Psalm | DEPTRAC | Rector |
 |--------|---------|-------|---------|--------|
-| Type analysis | ✅ Deep | ✅ Deep | ❌ | ⚠️ Basic |
-| Architecture | ❌ | ❌ | ✅ | ❌ |
-| Security | ⚠️ | ✅ Taint | ❌ | ❌ |
-| Auto-fix | ❌ | ❌ | ❌ | ✅ |
-| Speed | Fast | Medium | Fast | Slow |
-| Config | NEON | XML | YAML | PHP |
+| Анализ типов | ✅ Глубокий | ✅ Глубокий | ❌ | ⚠️ Базовый |
+| Архитектура | ❌ | ❌ | ✅ | ❌ |
+| Безопасность | ⚠️ | ✅ Taint | ❌ | ❌ |
+| Автоисправление | ❌ | ❌ | ❌ | ✅ |
+| Скорость | Быстро | Средне | Быстро | Медленно |
+| Конфигурация | NEON | XML | YAML | PHP |
 
-## Recommended CI Setup
+## Рекомендуемая настройка CI
 
 ```yaml
 lint:
@@ -447,10 +447,10 @@ lint:
       esac
 ```
 
-## References
+## Справочные материалы
 
-For detailed information, load these reference files:
+Детальная информация в справочных файлах:
 
-- `references/phpstan-rules.md` — Custom PHPStan rules
-- `references/psalm-plugins.md` — Psalm plugins and annotations
-- `references/rector-rules.md` — Rector upgrade sets
+- `references/phpstan-rules.md` — Пользовательские правила PHPStan
+- `references/psalm-plugins.md` — Плагины и аннотации Psalm
+- `references/rector-rules.md` — Наборы обновлений Rector

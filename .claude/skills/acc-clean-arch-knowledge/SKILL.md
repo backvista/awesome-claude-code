@@ -1,15 +1,15 @@
 ---
 name: acc-clean-arch-knowledge
-description: Clean Architecture knowledge base. Provides patterns, antipatterns, and PHP-specific guidelines for Clean Architecture and Hexagonal Architecture audits.
+description: База знаний Clean Architecture. Предоставляет паттерны, антипаттерны и PHP-специфичные рекомендации для аудита Clean Architecture и Hexagonal Architecture.
 ---
 
-# Clean Architecture Knowledge Base
+# База знаний Clean Architecture
 
-Quick reference for Clean Architecture / Hexagonal Architecture patterns and PHP implementation guidelines.
+Краткий справочник по паттернам Clean Architecture / Hexagonal Architecture и рекомендациям по PHP-реализации.
 
-## Core Principles
+## Ключевые принципы
 
-### The Dependency Rule
+### Правило зависимостей
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
@@ -27,10 +27,10 @@ Quick reference for Clean Architecture / Hexagonal Architecture patterns and PHP
 └────────────────────────────────────────────────────────────────┘
                               ▲
                               │
-              Dependencies point INWARD only
+              Зависимости направлены ТОЛЬКО ВНУТРЬ
 ```
 
-**Rule:** Source code dependencies must point INWARD. Inner layers know nothing about outer layers.
+**Правило:** Зависимости исходного кода должны быть направлены ВНУТРЬ. Внутренние слои ничего не знают о внешних.
 
 ### Hexagonal Architecture (Ports & Adapters)
 
@@ -67,52 +67,52 @@ Quick reference for Clean Architecture / Hexagonal Architecture patterns and PHP
                     └─────────────────┘
 ```
 
-**Rule:** Application core defines Ports (interfaces). Adapters implement them.
+**Правило:** Ядро приложения определяет Ports (интерфейсы). Adapters их реализуют.
 
-## Quick Checklists
+## Быстрые чек-листы
 
-### Domain Layer Checklist
+### Чек-лист Domain Layer
 
-- [ ] No imports from outer layers
-- [ ] No framework dependencies
-- [ ] Pure business logic
-- [ ] Value Objects for concepts
-- [ ] Entities with behavior
-- [ ] Repository interfaces only
+- [ ] Нет импортов из внешних слоёв
+- [ ] Нет зависимостей от фреймворков
+- [ ] Чистая бизнес-логика
+- [ ] Value Objects для концепций
+- [ ] Entities с поведением
+- [ ] Только интерфейсы Repository
 
-### Application Layer Checklist
+### Чек-лист Application Layer
 
-- [ ] Use Cases orchestrate domain
-- [ ] Defines Ports (interfaces) for external services
-- [ ] DTOs for input/output
-- [ ] No infrastructure details
-- [ ] No framework dependencies
+- [ ] Use Cases оркестрируют домен
+- [ ] Определены Ports (интерфейсы) для внешних сервисов
+- [ ] DTO для ввода/вывода
+- [ ] Без инфраструктурных деталей
+- [ ] Без зависимостей от фреймворков
 
-### Interface Adapters Checklist
+### Чек-лист Interface Adapters
 
-- [ ] Implements domain/application interfaces
-- [ ] Controllers call Use Cases
-- [ ] Presenters format output
-- [ ] No business logic
+- [ ] Реализуют интерфейсы domain/application
+- [ ] Controllers вызывают Use Cases
+- [ ] Presenters форматируют вывод
+- [ ] Без бизнес-логики
 
-### Frameworks & Drivers Checklist
+### Чек-лист Frameworks & Drivers
 
-- [ ] Configuration only
-- [ ] Wiring/DI setup
-- [ ] Framework-specific code isolated
+- [ ] Только конфигурация
+- [ ] Настройка DI/wiring
+- [ ] Фреймворк-специфичный код изолирован
 
-## Common Violations Quick Reference
+## Краткий справочник частых нарушений
 
-| Violation | Where to Look | Severity |
-|-----------|---------------|----------|
-| Inner layer imports outer | Domain/Application importing Infrastructure | Critical |
-| Framework in core | Doctrine/Symfony in Domain | Critical |
-| Use Case with HTTP details | Request/Response in Application | Critical |
-| Business logic in Controller | if/switch on domain state | Warning |
-| Missing Port | Direct external service call | Warning |
-| Adapter with logic | Repository doing validation | Warning |
+| Нарушение | Где искать | Серьёзность |
+|-----------|-----------|-------------|
+| Внутренний слой импортирует внешний | Domain/Application импортирует Infrastructure | Критично |
+| Фреймворк в ядре | Doctrine/Symfony в Domain | Критично |
+| Use Case с HTTP-деталями | Request/Response в Application | Критично |
+| Бизнес-логика в Controller | if/switch по доменному состоянию | Предупреждение |
+| Отсутствующий Port | Прямой вызов внешнего сервиса | Предупреждение |
+| Adapter с логикой | Repository выполняет валидацию | Предупреждение |
 
-## PHP 8.2 Clean Architecture Patterns
+## Паттерны Clean Architecture для PHP 8.2
 
 ### Port (Driven Port)
 
@@ -214,11 +214,11 @@ final readonly class PaymentController
 }
 ```
 
-## References
+## Ссылки
 
-For detailed information, load these reference files:
+Для подробной информации загрузите файлы ссылок:
 
-- `references/dependency-rule.md` — The Dependency Rule explained
-- `references/layer-boundaries.md` — Layer responsibilities and boundaries
-- `references/port-adapter-patterns.md` — Hexagonal Architecture patterns
-- `references/antipatterns.md` — Common violations with detection patterns
+- `references/dependency-rule.md` — Правило зависимостей с пояснением
+- `references/layer-boundaries.md` — Ответственности и границы слоёв
+- `references/port-adapter-patterns.md` — Паттерны Hexagonal Architecture
+- `references/antipatterns.md` — Частые нарушения с паттернами обнаружения

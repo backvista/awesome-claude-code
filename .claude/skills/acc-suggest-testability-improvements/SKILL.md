@@ -1,28 +1,28 @@
 ---
 name: acc-suggest-testability-improvements
-description: Suggests testability improvements for PHP code. Provides DI refactoring suggestions, mock opportunities, interface extraction, testing strategy recommendations.
+description: Предлагает улучшения тестируемости PHP-кода. Предоставляет рекомендации по рефакторингу DI, возможности мокирования, извлечение интерфейсов, рекомендации по стратегии тестирования.
 ---
 
-# Testability Improvement Suggestions
+# Предложения по улучшению тестируемости
 
-Provide actionable suggestions to improve code testability.
+Предоставляет практические рекомендации по улучшению тестируемости кода.
 
-## Improvement Categories
+## Категории улучшений
 
-### 1. Extract Interface for Dependencies
+### 1. Извлечение интерфейса для зависимостей
 
 ```php
-// BEFORE: Concrete dependency
+// ДО: Конкретная зависимость
 class PaymentProcessor
 {
     public function __construct(
-        private StripeGateway $gateway, // Concrete class
+        private StripeGateway $gateway, // Конкретный класс
     ) {}
 }
 
-// Test problem: Must mock StripeGateway internals
+// Проблема тестирования: необходимо мокировать внутренности StripeGateway
 
-// AFTER: Interface dependency
+// ПОСЛЕ: Зависимость от интерфейса
 interface PaymentGatewayInterface
 {
     public function charge(Money $amount, PaymentMethod $method): PaymentResult;
@@ -35,15 +35,15 @@ class PaymentProcessor
     ) {}
 }
 
-// Test benefit: Simple mock implementation
+// Преимущество для тестов: простая мок-реализация
 $mockGateway = $this->createMock(PaymentGatewayInterface::class);
 $mockGateway->method('charge')->willReturn(PaymentResult::success());
 ```
 
-### 2. Inject Time/Random Dependencies
+### 2. Внедрение зависимостей времени/случайности
 
 ```php
-// BEFORE: Hard to test time-based logic
+// ДО: Трудно тестировать логику на основе времени
 class TokenGenerator
 {
     public function generate(): Token
@@ -55,7 +55,7 @@ class TokenGenerator
     }
 }
 
-// AFTER: Injectable dependencies
+// ПОСЛЕ: Внедряемые зависимости
 interface ClockInterface
 {
     public function now(): DateTimeImmutable;
@@ -82,18 +82,18 @@ class TokenGenerator
     }
 }
 
-// Test with frozen time
+// Тест с замороженным временем
 $clock = new FrozenClock(new DateTimeImmutable('2024-01-01 12:00:00'));
 $random = new FixedRandom('0123456789abcdef...');
 $generator = new TokenGenerator($clock, $random);
 $token = $generator->generate();
-// Now assertions are deterministic
+// Теперь утверждения детерминированы
 ```
 
-### 3. Create Test Builders
+### 3. Создание тестовых билдеров
 
 ```php
-// BEFORE: Tedious test setup
+// ДО: Утомительная настройка тестов
 public function testOrderProcessing(): void
 {
     $customer = new Customer();
@@ -110,10 +110,10 @@ public function testOrderProcessing(): void
     $order = new Order();
     $order->setCustomer($customer);
     $order->addItem(new OrderItem($product, 2));
-    // ... 20 more lines
+    // ... ещё 20 строк
 }
 
-// AFTER: Fluent builder
+// ПОСЛЕ: Fluent-билдер
 public function testOrderProcessing(): void
 {
     $order = OrderBuilder::create()
@@ -127,10 +127,10 @@ public function testOrderProcessing(): void
 }
 ```
 
-### 4. Separate Pure Logic from I/O
+### 4. Разделение чистой логики и I/O
 
 ```php
-// BEFORE: Logic mixed with I/O
+// ДО: Логика смешана с I/O
 class PricingService
 {
     public function calculateOrderPrice(int $orderId): Money
@@ -139,7 +139,7 @@ class PricingService
         $customer = $this->customerRepo->find($order->getCustomerId()); // I/O
         $rates = $this->taxApi->getRates($customer->getCountry()); // I/O
 
-        // Business logic
+        // Бизнес-логика
         $subtotal = $this->calculateSubtotal($order);
         $discount = $this->applyDiscount($customer, $subtotal);
         $tax = $this->calculateTax($subtotal, $rates);
@@ -148,7 +148,7 @@ class PricingService
     }
 }
 
-// AFTER: Pure calculator
+// ПОСЛЕ: Чистый калькулятор
 final readonly class OrderPriceCalculator
 {
     public function calculate(
@@ -164,7 +164,7 @@ final readonly class OrderPriceCalculator
     }
 }
 
-// I/O in thin service
+// I/O в тонком сервисе
 final class PricingService
 {
     public function __construct(
@@ -184,13 +184,13 @@ final class PricingService
     }
 }
 
-// Now calculator is easily testable without mocks
+// Теперь калькулятор легко тестируется без моков
 ```
 
-### 5. Use Repository Pattern for Data Access
+### 5. Использование паттерна Repository для доступа к данным
 
 ```php
-// BEFORE: Direct database access
+// ДО: Прямой доступ к базе данных
 class UserService
 {
     public function __construct(private PDO $pdo) {}
@@ -202,7 +202,7 @@ class UserService
     }
 }
 
-// AFTER: Repository interface
+// ПОСЛЕ: Интерфейс репозитория
 interface UserRepositoryInterface
 {
     /** @return User[] */
@@ -223,7 +223,7 @@ class UserService
     }
 }
 
-// In-memory implementation for tests
+// In-memory реализация для тестов
 class InMemoryUserRepository implements UserRepositoryInterface
 {
     private array $users = [];
@@ -240,10 +240,10 @@ class InMemoryUserRepository implements UserRepositoryInterface
 }
 ```
 
-### 6. Create Test Doubles
+### 6. Создание тестовых двойников
 
 ```php
-// Fake implementation for testing
+// Fake-реализация для тестирования
 final class FakeEmailSender implements EmailSenderInterface
 {
     private array $sentEmails = [];
@@ -270,10 +270,10 @@ final class FakeEmailSender implements EmailSenderInterface
 }
 ```
 
-### 7. Parameter Objects for Complex Methods
+### 7. Объекты-параметры для сложных методов
 
 ```php
-// BEFORE: Many parameters, hard to mock
+// ДО: Много параметров, трудно мокировать
 public function createOrder(
     int $customerId,
     array $items,
@@ -283,7 +283,7 @@ public function createOrder(
     ?string $notes,
 ): Order {}
 
-// AFTER: DTO with builder
+// ПОСЛЕ: DTO с билдером
 final readonly class CreateOrderRequest
 {
     public function __construct(
@@ -296,7 +296,7 @@ final readonly class CreateOrderRequest
     ) {}
 }
 
-// Test with builder
+// Тест с билдером
 $request = CreateOrderRequestBuilder::create()
     ->forCustomer(1)
     ->withItem('SKU-001', 2)
@@ -304,39 +304,39 @@ $request = CreateOrderRequestBuilder::create()
     ->build();
 ```
 
-## Implementation Priority
+## Приоритет реализации
 
-| Improvement | Impact | Effort |
-|-------------|--------|--------|
-| Extract interface | High | Low |
-| Inject time/random | High | Medium |
-| Create test builders | Medium | Medium |
-| Separate pure logic | High | High |
-| Repository pattern | High | Medium |
+| Улучшение | Эффект | Трудозатраты |
+|-----------|--------|-------------|
+| Извлечение интерфейса | Высокий | Низкие |
+| Внедрение времени/случайности | Высокий | Средние |
+| Создание тестовых билдеров | Средний | Средние |
+| Разделение чистой логики | Высокий | Высокие |
+| Паттерн Repository | Высокий | Средние |
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### Testability Improvement: [Description]
+### Улучшение тестируемости: [Описание]
 
-**Location:** `file.php:line`
-**Type:** [Extract Interface|Inject Dependency|Create Builder|...]
-**Impact:** High/Medium/Low
+**Расположение:** `file.php:line`
+**Тип:** [Extract Interface|Inject Dependency|Create Builder|...]
+**Эффект:** Высокий/Средний/Низкий
 
-**Current Problem:**
-[Why current code is hard to test]
+**Текущая проблема:**
+[Почему текущий код трудно тестировать]
 
-**Suggested Improvement:**
+**Предлагаемое улучшение:**
 ```php
-// Improved code
+// Улучшенный код
 ```
 
-**Implementation Steps:**
-1. Create interface XxxInterface
-2. Update class to depend on interface
-3. Create test double/mock
-4. Update test
+**Шаги реализации:**
+1. Создать интерфейс XxxInterface
+2. Обновить класс для зависимости от интерфейса
+3. Создать тестовый двойник/мок
+4. Обновить тест
 
-**Testing Benefit:**
-[How this makes testing easier]
+**Польза для тестирования:**
+[Как это упрощает тестирование]
 ```

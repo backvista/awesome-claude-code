@@ -1,21 +1,21 @@
 ---
 name: acc-docker-buildkit-knowledge
-description: Docker BuildKit knowledge base. Provides cache mount patterns, build secrets, SSH forwarding, and parallel build optimization.
+description: База знаний по Docker BuildKit. Предоставляет паттерны кеш-монтирования, секреты сборки, SSH-проброс и оптимизацию параллельной сборки.
 ---
 
-# Docker BuildKit Knowledge Base
+# База знаний по Docker BuildKit
 
-Quick reference for BuildKit features and optimization patterns.
+Краткий справочник по возможностям BuildKit и паттернам оптимизации.
 
-## BuildKit Syntax Header
+## Заголовок синтаксиса BuildKit
 
 ```dockerfile
 # syntax=docker/dockerfile:1
 ```
 
-Always include this as the first line to enable BuildKit features. This directive tells Docker to use the latest stable Dockerfile syntax with BuildKit support.
+Всегда добавляйте эту строку первой для включения возможностей BuildKit. Эта директива указывает Docker использовать последний стабильный синтаксис Dockerfile с поддержкой BuildKit.
 
-## Mount Types Overview
+## Обзор типов монтирования
 
 ```
 +---------------------------------------------------------------------------+
@@ -31,9 +31,9 @@ Always include this as the first line to enable BuildKit features. This directiv
 +---------------------------------------------------------------------------+
 ```
 
-## Cache Mount Patterns
+## Паттерны кеш-монтирования
 
-### Composer Cache
+### Кеш Composer
 
 ```dockerfile
 # syntax=docker/dockerfile:1
@@ -49,7 +49,7 @@ COPY . .
 RUN composer dump-autoload --optimize --classmap-authoritative
 ```
 
-### APK Cache (Alpine)
+### Кеш APK (Alpine)
 
 ```dockerfile
 # syntax=docker/dockerfile:1
@@ -60,7 +60,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     docker-php-ext-install zip intl pdo_pgsql opcache
 ```
 
-### APT Cache (Debian)
+### Кеш APT (Debian)
 
 ```dockerfile
 # syntax=docker/dockerfile:1
@@ -73,7 +73,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
     docker-php-ext-install zip intl pdo_pgsql opcache
 ```
 
-### NPM Cache (for frontend assets)
+### Кеш NPM (для фронтенд-ресурсов)
 
 ```dockerfile
 # syntax=docker/dockerfile:1
@@ -89,9 +89,9 @@ COPY resources/ resources/
 RUN npm run build
 ```
 
-## Build Secrets
+## Секреты сборки
 
-### Private Composer Repository
+### Приватный репозиторий Composer
 
 ```dockerfile
 # syntax=docker/dockerfile:1
@@ -110,7 +110,7 @@ RUN --mount=type=secret,id=composer_auth,target=/root/.composer/auth.json \
 docker build --secret id=composer_auth,src=auth.json -t myapp .
 ```
 
-### Multiple Secrets
+### Несколько секретов
 
 ```dockerfile
 RUN --mount=type=secret,id=github_token \
@@ -120,7 +120,7 @@ RUN --mount=type=secret,id=github_token \
     composer install --no-dev
 ```
 
-## SSH Forwarding
+## Проброс SSH
 
 ```dockerfile
 # syntax=docker/dockerfile:1
@@ -147,7 +147,7 @@ docker build --ssh default -t myapp .
 docker build --ssh default=$HOME/.ssh/id_rsa -t myapp .
 ```
 
-## Parallel Stage Builds
+## Параллельная сборка этапов
 
 ```dockerfile
 # syntax=docker/dockerfile:1
@@ -184,7 +184,7 @@ COPY --from=frontend /app/public/build /var/www/html/public/build
 COPY . /var/www/html
 ```
 
-BuildKit automatically detects independent stages and builds them in parallel.
+BuildKit автоматически обнаруживает независимые этапы и собирает их параллельно.
 
 ## Inline Cache
 
@@ -207,7 +207,7 @@ docker build \
     -t myapp:latest .
 ```
 
-## Buildx Multi-Platform
+## Мультиплатформенная сборка Buildx
 
 ```bash
 # Create builder instance
@@ -234,18 +234,18 @@ COPY --from=deps /app/vendor /var/www/html/vendor
 COPY . /var/www/html
 ```
 
-## Performance Comparison
+## Сравнение производительности
 
-| Feature | Without BuildKit | With BuildKit |
-|---------|-----------------|---------------|
-| Cache mounts | Not available | Persistent across builds |
-| Parallel stages | Sequential | Automatic parallel |
-| Secret handling | ARG/ENV (insecure) | `--mount=type=secret` |
-| SSH forwarding | Copy keys (insecure) | `--mount=type=ssh` |
-| Build output | Verbose | Structured, progress bar |
-| Cache export | Local only | Registry, inline, local |
+| Возможность | Без BuildKit | С BuildKit |
+|------------|-----------------|---------------|
+| Кеш-монтирование | Недоступно | Постоянный между сборками |
+| Параллельные этапы | Последовательно | Автоматически параллельно |
+| Обработка секретов | ARG/ENV (небезопасно) | `--mount=type=secret` |
+| Проброс SSH | Копирование ключей (небезопасно) | `--mount=type=ssh` |
+| Вывод сборки | Подробный | Структурированный, прогресс-бар |
+| Экспорт кеша | Только локально | Registry, inline, локально |
 
-## Detection Patterns
+## Паттерны обнаружения
 
 ```bash
 # Check for BuildKit usage

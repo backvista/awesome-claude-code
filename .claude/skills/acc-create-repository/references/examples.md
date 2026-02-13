@@ -1,8 +1,8 @@
-# Repository Pattern Examples
+# Примеры Repository Pattern
 
-## Order Repository Interface
+## Интерфейс репозитория заказов
 
-**File:** `src/Domain/Order/Repository/OrderRepositoryInterface.php`
+**Файл:** `src/Domain/Order/Repository/OrderRepositoryInterface.php`
 
 ```php
 <?php
@@ -40,9 +40,9 @@ interface OrderRepositoryInterface
 
 ---
 
-## Doctrine Order Repository
+## Doctrine-репозиторий заказов
 
-**File:** `src/Infrastructure/Persistence/Doctrine/DoctrineOrderRepository.php`
+**Файл:** `src/Infrastructure/Persistence/Doctrine/DoctrineOrderRepository.php`
 
 ```php
 <?php
@@ -112,9 +112,9 @@ final readonly class DoctrineOrderRepository implements OrderRepositoryInterface
 
 ---
 
-## User Repository Interface
+## Интерфейс репозитория пользователей
 
-**File:** `src/Domain/User/Repository/UserRepositoryInterface.php`
+**Файл:** `src/Domain/User/Repository/UserRepositoryInterface.php`
 
 ```php
 <?php
@@ -145,9 +145,9 @@ interface UserRepositoryInterface
 
 ---
 
-## Doctrine User Repository
+## Doctrine-репозиторий пользователей
 
-**File:** `src/Infrastructure/Persistence/Doctrine/DoctrineUserRepository.php`
+**Файл:** `src/Infrastructure/Persistence/Doctrine/DoctrineUserRepository.php`
 
 ```php
 <?php
@@ -218,9 +218,9 @@ final readonly class DoctrineUserRepository implements UserRepositoryInterface
 
 ---
 
-## In-Memory Order Repository (for Testing)
+## In-Memory репозиторий заказов (для тестирования)
 
-**File:** `tests/Infrastructure/Persistence/InMemoryOrderRepository.php`
+**Файл:** `tests/Infrastructure/Persistence/InMemoryOrderRepository.php`
 
 ```php
 <?php
@@ -290,11 +290,11 @@ final class InMemoryOrderRepository implements OrderRepositoryInterface
 
 ---
 
-## Integration Tests
+## Интеграционные тесты
 
 ### DoctrineOrderRepositoryTest
 
-**File:** `tests/Integration/Infrastructure/Persistence/DoctrineOrderRepositoryTest.php`
+**Файл:** `tests/Integration/Infrastructure/Persistence/DoctrineOrderRepositoryTest.php`
 
 ```php
 <?php

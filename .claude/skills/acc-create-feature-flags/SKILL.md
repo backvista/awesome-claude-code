@@ -1,11 +1,11 @@
 ---
 name: acc-create-feature-flags
-description: Generates feature flag implementations for PHP projects. Creates flag services, configuration, percentage rollouts, user targeting, and integration with deployment pipelines.
+description: Генерирует реализации feature flag для PHP проектов. Создает сервисы флагов, конфигурацию, процентный роллаут, таргетинг пользователей и интеграцию с пайплайнами развертывания.
 ---
 
 # Feature Flag Generator
 
-Generates feature flag implementation for progressive deployments.
+Генерирует реализацию feature flag для прогрессивного развертывания.
 
 ## Feature Flag Service Interface
 
@@ -20,27 +20,27 @@ namespace App\Infrastructure\FeatureFlag;
 interface FeatureFlagServiceInterface
 {
     /**
-     * Check if a feature is enabled globally.
+     * Проверить, включена ли функция глобально.
      */
     public function isEnabled(string $feature): bool;
 
     /**
-     * Check if a feature is enabled for a specific user.
+     * Проверить, включена ли функция для конкретного пользователя.
      */
     public function isEnabledForUser(string $feature, string $userId): bool;
 
     /**
-     * Check if a feature is enabled based on percentage rollout.
+     * Проверить, включена ли функция на основе процентного роллаута.
      */
     public function isEnabledForPercentage(string $feature, string $identifier): bool;
 
     /**
-     * Get the variant for A/B testing.
+     * Получить вариант для A/B тестирования.
      */
     public function getVariant(string $feature, string $userId): string;
 
     /**
-     * Get all enabled features for a user.
+     * Получить все включенные функции для пользователя.
      */
     public function getEnabledFeatures(string $userId): array;
 }
@@ -92,42 +92,42 @@ final readonly class FeatureConfig
 }
 ```
 
-See `references/templates.md` for: InMemory implementation, YAML configuration, Config Loader, Attribute, Middleware, Twig Extension, Template usage, CI/CD integration, Redis implementation.
+См. `references/templates.md` для: InMemory реализации, YAML конфигурации, загрузчика конфигурации, атрибута, middleware, Twig расширения, использования в шаблонах, интеграции CI/CD, Redis реализации.
 
-## Generation Instructions
+## Инструкции по генерации
 
-1. **Choose storage backend:**
-   - In-memory (config file)
-   - Redis (dynamic updates)
+1. **Выбрать бэкенд хранения:**
+   - In-memory (конфигурационный файл)
+   - Redis (динамические обновления)
    - Database (audit trail)
-   - External service (LaunchDarkly, etc.)
+   - Внешний сервис (LaunchDarkly, и т.д.)
 
-2. **Define flag types:**
-   - Boolean (on/off)
-   - Percentage rollout
-   - User targeting
-   - A/B variants
+2. **Определить типы флагов:**
+   - Boolean (вкл/выкл)
+   - Процентный роллаут
+   - Таргетинг пользователей
+   - A/B варианты
 
-3. **Integrate with framework:**
-   - Middleware for request context
-   - Twig extension for templates
-   - Service for business logic
+3. **Интеграция с фреймворком:**
+   - Middleware для контекста запроса
+   - Twig расширение для шаблонов
+   - Сервис для бизнес-логики
 
-4. **Set up CI/CD integration:**
-   - Environment-based defaults
-   - Dynamic update endpoints
-   - Rollback capabilities
+4. **Настроить интеграцию CI/CD:**
+   - Значения по умолчанию на основе окружения
+   - Динамические эндпойнты обновления
+   - Возможности отката
 
-## Usage
+## Использование
 
-Provide:
-- Storage backend preference
-- Framework (Symfony, Laravel, etc.)
-- Flag types needed
-- CI/CD platform
+Предоставить:
+- Предпочтительный бэкенд хранения
+- Фреймворк (Symfony, Laravel, и т.д.)
+- Необходимые типы флагов
+- Платформа CI/CD
 
-The generator will:
-1. Create interface and implementation
-2. Add configuration loader
-3. Integrate with framework
-4. Set up CI/CD hooks
+Генератор:
+1. Создаст интерфейс и реализацию
+2. Добавит загрузчик конфигурации
+3. Интегрирует с фреймворком
+4. Настроит хуки CI/CD

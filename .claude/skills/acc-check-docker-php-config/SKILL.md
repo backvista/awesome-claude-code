@@ -1,15 +1,15 @@
 ---
 name: acc-check-docker-php-config
-description: Checks PHP configuration in Docker containers. Verifies php.ini settings, OPcache, PHP-FPM pool, and extension configuration for production.
+description: Проверяет конфигурацию PHP в Docker-контейнерах. Верифицирует настройки php.ini, OPcache, пулы PHP-FPM и конфигурацию расширений для production.
 ---
 
-# Docker PHP Configuration Checker
+# Проверка конфигурации PHP в Docker
 
-Analyze PHP configuration within Docker environments for production readiness.
+Анализ конфигурации PHP в Docker-окружениях на готовность к production.
 
-## Configuration Checks
+## Проверки конфигурации
 
-### 1. php.ini Production vs Development
+### 1. php.ini: Production vs Development
 
 ```dockerfile
 # BAD: Development config
@@ -19,7 +19,7 @@ RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
 ```
 
-### 2. OPcache Configuration
+### 2. Конфигурация OPcache
 
 ```ini
 ; GOOD: OPcache optimized for production
@@ -38,7 +38,7 @@ opcache.jit=1255
 opcache.jit_buffer_size=128M
 ```
 
-### 4. PHP-FPM Pool Configuration
+### 4. Конфигурация пула PHP-FPM
 
 ```ini
 ; BAD: Static pm wastes memory; ondemand has fork overhead
@@ -54,7 +54,7 @@ pm.max_spare_servers = 20
 pm.max_requests = 1000
 ```
 
-### 5. Memory Limit
+### 5. Лимит памяти
 
 ```ini
 ; BAD: Unlimited memory
@@ -66,7 +66,7 @@ memory_limit = 256M   ; workers
 memory_limit = 512M   ; batch
 ```
 
-### 6. Error Reporting
+### 6. Отчёты об ошибках
 
 ```ini
 ; BAD: Development error display
@@ -80,7 +80,7 @@ error_log = /proc/self/fd/2
 error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT
 ```
 
-### 7. Session Handling
+### 7. Управление сессиями
 
 ```ini
 ; BAD: File-based sessions (not scalable)
@@ -91,7 +91,7 @@ session.save_handler = redis
 session.save_path = "tcp://redis:6379"
 ```
 
-### 8. Upload Limits
+### 8. Лимиты загрузки
 
 ```ini
 upload_max_filesize = 20M
@@ -99,13 +99,13 @@ post_max_size = 25M
 max_file_uploads = 10
 ```
 
-### 9. Timezone
+### 9. Часовой пояс
 
 ```ini
 date.timezone = UTC
 ```
 
-### 10. Realpath Cache
+### 10. Кэш Realpath
 
 ```ini
 ; GOOD: Increased for Symfony/Laravel
@@ -113,7 +113,7 @@ realpath_cache_size = 4096K
 realpath_cache_ttl = 600
 ```
 
-## Grep Patterns
+## Grep-паттерны
 
 ```bash
 Grep: "php.ini-(production|development)" --glob "**/Dockerfile*"
@@ -128,48 +128,48 @@ Grep: "realpath_cache" --glob "**/{Dockerfile*,*.ini,*.conf}"
 Grep: "opcache\\.jit" --glob "**/{Dockerfile*,*.ini,*.conf}"
 ```
 
-## Detection Sources
+## Источники обнаружения
 
-1. **Dockerfile RUN echo** — inline php.ini directives
-2. **COPY'd php.ini** — full configuration replacement
-3. **COPY'd conf.d/*.ini** — modular config files
-4. **PHP-FPM pool config** — www.conf or custom pools
-5. **Environment variables** — PHP_INI_SCAN_DIR overrides
+1. **Dockerfile RUN echo** — inline-директивы php.ini
+2. **COPY php.ini** — полная замена конфигурации
+3. **COPY conf.d/*.ini** — модульные конфигурационные файлы
+4. **Конфигурация пула PHP-FPM** — www.conf или пользовательские пулы
+5. **Переменные окружения** — переопределения PHP_INI_SCAN_DIR
 
-## Severity Classification
+## Классификация серьёзности
 
-| Check | Severity | Impact |
-|-------|----------|--------|
-| Using php.ini-development | Critical | Exposes errors, no OPcache |
-| OPcache disabled | Critical | 3-10x slower responses |
-| display_errors = On | Critical | Information disclosure |
-| memory_limit = -1 | Major | OOM risk |
-| validate_timestamps=1 | Major | FS checks per request |
-| File-based sessions | Major | Not scalable, data loss |
-| No timezone set | Minor | Inconsistent dates |
-| Default upload limits | Minor | May block uploads |
-| No realpath cache tuning | Minor | Extra FS lookups |
-| JIT not configured | Minor | Missing perf gains |
+| Проверка | Серьёзность | Влияние |
+|----------|-------------|---------|
+| Использование php.ini-development | Critical | Раскрывает ошибки, нет OPcache |
+| OPcache отключён | Critical | В 3-10 раз медленнее ответы |
+| display_errors = On | Critical | Раскрытие информации |
+| memory_limit = -1 | Major | Риск OOM |
+| validate_timestamps=1 | Major | Проверки FS на каждый запрос |
+| Файловые сессии | Major | Не масштабируется, потеря данных |
+| Не задан часовой пояс | Minor | Несогласованные даты |
+| Стандартные лимиты загрузки | Minor | Может блокировать загрузки |
+| Нет настройки realpath cache | Minor | Лишние обращения к FS |
+| JIT не настроен | Minor | Упущенный прирост производительности |
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### PHP Config Issue: [Description]
+### Проблема конфигурации PHP: [Описание]
 
-**Severity:** Critical/Major/Minor
-**Setting:** `directive = value`
-**Location:** `Dockerfile:line` or `config-file:line`
+**Серьёзность:** Critical/Major/Minor
+**Настройка:** `directive = value`
+**Расположение:** `Dockerfile:line` или `config-file:line`
 
-**Current Value:**
+**Текущее значение:**
 ```ini
 directive = current_value
 ```
 
-**Recommended Value:**
+**Рекомендуемое значение:**
 ```ini
 directive = recommended_value
 ```
 
-**Rationale:**
-[Why this setting matters for production]
+**Обоснование:**
+[Почему эта настройка важна для production]
 ```

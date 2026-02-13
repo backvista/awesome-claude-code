@@ -1,99 +1,102 @@
 ---
 name: acc-create-template-method
-description: Generates Template Method pattern for PHP 8.2. Creates abstract algorithm skeleton with customizable steps, allowing subclasses to override specific parts without changing structure. Includes unit tests.
+description: Генерирует паттерн Template Method для PHP 8.2. Создаёт абстрактный скелет алгоритма с настраиваемыми шагами, позволяя подклассам переопределять отдельные части без изменения структуры. Включает юнит-тесты.
 ---
 
-# Template Method Pattern Generator
+# Генератор паттерна Template Method
 
-Creates Template Method pattern infrastructure for algorithm skeletons with customizable steps.
+Создаёт инфраструктуру паттерна Template Method для скелетов алгоритмов с настраиваемыми шагами.
 
-## When to Use
+## Когда использовать
 
-| Scenario | Example |
+| Сценарий | Пример |
 |----------|---------|
-| Common algorithm structure | Data import/export with format variations |
-| Controlled extension points | Report generation with customizable sections |
-| Code reuse across variants | Order processing with type-specific steps |
-| Invariant parts protection | Template rendering with hooks |
+| Общая структура алгоритма | Импорт/экспорт данных с вариациями форматов |
+| Контролируемые точки расширения | Генерация отчётов с настраиваемыми секциями |
+| Повторное использование кода между вариантами | Обработка заказов с зависящими от типа шагами |
+| Защита инвариантных частей | Рендеринг шаблонов с хуками |
 
-## Component Characteristics
+## Характеристики компонентов
 
-### Abstract Template Class
-- Defines algorithm skeleton
-- Implements invariant steps
-- Declares abstract/hook methods
-- Calls methods in sequence
+### Абстрактный класс Template
 
-### Concrete Implementations
-- Override specific steps
-- Provide algorithm variants
-- Inherit common behavior
-- Maintain overall structure
+- Определяет скелет алгоритма
+- Реализует инвариантные шаги
+- Объявляет абстрактные/хук-методы
+- Вызывает методы в последовательности
 
-### Hook Methods
-- Optional override points
-- Default empty implementation
-- Allow customization
-- Don't break flow
+### Конкретные реализации
 
----
+- Переопределяют конкретные шаги
+- Предоставляют варианты алгоритма
+- Наследуют общее поведение
+- Сохраняют общую структуру
 
-## Generation Process
+### Хук-методы
 
-### Step 1: Generate Abstract Template
-
-**Path:** `src/Domain/{BoundedContext}/Template/`
-
-1. `Abstract{Name}Template.php` — Algorithm skeleton with template method
-
-### Step 2: Generate Concrete Templates
-
-**Path:** `src/Domain/{BoundedContext}/Template/` or `src/Application/{BoundedContext}/`
-
-1. `{Variant1}{Name}Template.php` — First variant implementation
-2. `{Variant2}{Name}Template.php` — Second variant implementation
-3. `{Variant3}{Name}Template.php` — Third variant implementation
-
-### Step 3: Generate Support Classes (Optional)
-
-**Path:** `src/Domain/{BoundedContext}/ValueObject/`
-
-1. `{Name}Result.php` — Result value object
-2. `{Name}Config.php` — Configuration value object
-
-### Step 4: Generate Tests
-
-1. `{Variant}{Name}TemplateTest.php` — Individual template tests
-2. `Abstract{Name}TemplateTest.php` — Template skeleton tests
+- Опциональные точки переопределения
+- Пустая реализация по умолчанию
+- Позволяют настройку
+- Не нарушают поток
 
 ---
 
-## File Placement
+## Процесс генерации
 
-| Component | Path |
+### Шаг 1: Генерация абстрактного Template
+
+**Путь:** `src/Domain/{BoundedContext}/Template/`
+
+1. `Abstract{Name}Template.php` — Скелет алгоритма с шаблонным методом
+
+### Шаг 2: Генерация конкретных Templates
+
+**Путь:** `src/Domain/{BoundedContext}/Template/` или `src/Application/{BoundedContext}/`
+
+1. `{Variant1}{Name}Template.php` — Первый вариант реализации
+2. `{Variant2}{Name}Template.php` — Второй вариант реализации
+3. `{Variant3}{Name}Template.php` — Третий вариант реализации
+
+### Шаг 3: Генерация вспомогательных классов (опционально)
+
+**Путь:** `src/Domain/{BoundedContext}/ValueObject/`
+
+1. `{Name}Result.php` — Value object результата
+2. `{Name}Config.php` — Value object конфигурации
+
+### Шаг 4: Генерация тестов
+
+1. `{Variant}{Name}TemplateTest.php` — Тесты отдельных шаблонов
+2. `Abstract{Name}TemplateTest.php` — Тесты скелета шаблона
+
+---
+
+## Размещение файлов
+
+| Компонент | Путь |
 |-----------|------|
-| Abstract Template | `src/Domain/{BoundedContext}/Template/` |
-| Concrete Templates (Domain logic) | `src/Domain/{BoundedContext}/Template/` |
-| Concrete Templates (App logic) | `src/Application/{BoundedContext}/` |
-| Unit Tests | `tests/Unit/Domain/{BoundedContext}/Template/` |
+| Абстрактный Template | `src/Domain/{BoundedContext}/Template/` |
+| Конкретные Templates (доменная логика) | `src/Domain/{BoundedContext}/Template/` |
+| Конкретные Templates (логика приложения) | `src/Application/{BoundedContext}/` |
+| Юнит-тесты | `tests/Unit/Domain/{BoundedContext}/Template/` |
 
 ---
 
-## Naming Conventions
+## Соглашения об именовании
 
-| Component | Pattern | Example |
+| Компонент | Паттерн | Пример |
 |-----------|---------|---------|
-| Abstract | `Abstract{Name}Template` | `AbstractDataImporterTemplate` |
-| Concrete | `{Variant}{Name}Template` | `CsvDataImporterTemplate` |
-| Template Method | `execute()` or `process()` | `execute()` |
-| Hook Method | `before{Step}()`, `after{Step}()` | `beforeValidation()` |
-| Test | `{ClassName}Test` | `CsvDataImporterTemplateTest` |
+| Абстрактный | `Abstract{Name}Template` | `AbstractDataImporterTemplate` |
+| Конкретный | `{Variant}{Name}Template` | `CsvDataImporterTemplate` |
+| Шаблонный метод | `execute()` или `process()` | `execute()` |
+| Хук-метод | `before{Step}()`, `after{Step}()` | `beforeValidation()` |
+| Тест | `{ClassName}Test` | `CsvDataImporterTemplateTest` |
 
 ---
 
-## Quick Template Reference
+## Краткий справочник по шаблонам
 
-### Abstract Template
+### Абстрактный Template
 
 ```php
 abstract readonly class Abstract{Name}Template
@@ -114,75 +117,75 @@ abstract readonly class Abstract{Name}Template
 
     protected function validate({InputType} $input): void
     {
-        // Default validation
+        // Валидация по умолчанию
     }
 
     protected function afterLoad({OutputType} $result): void
     {
-        // Hook method - optional override
+        // Хук-метод — опциональное переопределение
     }
 }
 ```
 
-### Concrete Template
+### Конкретный Template
 
 ```php
 final readonly class {Variant}{Name}Template extends Abstract{Name}Template
 {
     protected function extract({InputType} $input): array
     {
-        // Variant-specific extraction
+        // Извлечение специфичное для варианта
     }
 
     protected function transform(array $data): array
     {
-        // Variant-specific transformation
+        // Трансформация специфичная для варианта
     }
 }
 ```
 
 ---
 
-## Usage Example
+## Пример использования
 
 ```php
-// Create templates for different formats
+// Создаём шаблоны для разных форматов
 $csvImporter = new CsvDataImporterTemplate();
 $jsonImporter = new JsonDataImporterTemplate();
 $xmlImporter = new XmlDataImporterTemplate();
 
-// Use same interface
+// Используем одинаковый интерфейс
 $result = $csvImporter->execute($fileContent);
 ```
 
 ---
 
-## Common Template Method Variants
+## Общие варианты Template Method
 
-| Domain | Variants |
+| Домен | Варианты |
 |--------|----------|
-| Data Import | CSV, JSON, XML, Excel |
-| Report Generation | PDF, Excel, HTML, Email |
-| Order Processing | Standard, Express, International |
-| Document Rendering | Markdown, LaTeX, HTML |
-| Payment Flow | Card, Bank Transfer, Digital Wallet |
+| Импорт данных | CSV, JSON, XML, Excel |
+| Генерация отчётов | PDF, Excel, HTML, Email |
+| Обработка заказов | Standard, Express, International |
+| Рендеринг документов | Markdown, LaTeX, HTML |
+| Поток оплаты | Card, Bank Transfer, Digital Wallet |
 
 ---
 
-## Anti-patterns to Avoid
+## Антипаттерны, которых следует избегать
 
-| Anti-pattern | Problem | Solution |
+| Антипаттерн | Проблема | Решение |
 |--------------|---------|----------|
-| Too many abstract methods | Hard to implement | Use hook methods with defaults |
-| Public template steps | Breaks encapsulation | Make steps protected/private |
-| Mutable state | Side effects | Use readonly classes, pass data |
-| Deep inheritance | Complexity | Limit to 2-3 levels max |
-| Breaking LSP | Inconsistent behavior | Maintain contract in overrides |
+| Слишком много абстрактных методов | Сложно реализовать | Использовать хук-методы с реализацией по умолчанию |
+| Публичные шаги шаблона | Нарушает инкапсуляцию | Делать шаги protected/private |
+| Изменяемое состояние | Побочные эффекты | Использовать readonly классы, передавать данные |
+| Глубокое наследование | Сложность | Ограничить 2-3 уровнями |
+| Нарушение LSP | Несогласованное поведение | Сохранять контракт в переопределениях |
 
 ---
 
-## References
+## Ссылки
 
-For complete PHP templates and examples, see:
-- `references/templates.md` — Abstract Template, Concrete Template, Hook Methods templates
-- `references/examples.md` — DataImporter, ReportGenerator, OrderProcessor with tests
+Для полных PHP-шаблонов и примеров см.:
+- `references/templates.md` — Abstract Template, Concrete Template, Hook Methods шаблоны
+- `references/examples.md` — DataImporter, ReportGenerator, OrderProcessor с тестами

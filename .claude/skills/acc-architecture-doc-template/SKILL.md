@@ -1,48 +1,48 @@
 ---
 name: acc-architecture-doc-template
-description: Generates ARCHITECTURE.md files for PHP projects. Creates layer documentation, component descriptions, and architectural diagrams.
+description: Генерирует файлы ARCHITECTURE.md для PHP-проектов. Создаёт документацию слоёв, описания компонентов и архитектурные диаграммы.
 ---
 
-# Architecture Documentation Template Generator
+# Генератор шаблонов архитектурной документации
 
-Generate comprehensive architecture documentation for PHP projects.
+Генерация комплексной архитектурной документации для PHP-проектов.
 
-## Document Structure
+## Структура документа
 
 ```markdown
 # Architecture
 
 ## Overview
-{high-level description}
+{высокоуровневое описание}
 
 ## Directory Structure
-{annotated project tree}
+{аннотированное дерево проекта}
 
 ## System Context
-{C4 context diagram}
+{C4 контекстная диаграмма}
 
 ## Architecture Layers
-{layer descriptions}
+{описания слоёв}
 
 ## Components
-{component descriptions}
+{описания компонентов}
 
 ## Data Flow
-{sequence diagrams}
+{диаграммы последовательностей}
 
 ## Technology Stack
-{technology decisions}
+{технологические решения}
 
 ## Architecture Decisions
-{link to ADRs}
+{ссылки на ADR}
 
 ## Deployment
-{deployment diagram}
+{диаграмма развёртывания}
 ```
 
-## Section Templates
+## Шаблоны разделов
 
-### Directory Structure Section
+### Раздел структуры директорий
 
 ```markdown
 ## Directory Structure
@@ -82,35 +82,35 @@ project/
     └── api/                       # API documentation
 ```
 
-### Generation Command
+### Команда генерации
 
 ```bash
 tree -L 3 -I 'vendor|node_modules|.git|var|cache' --dirsfirst
 ```
 
-### Annotation Rules
+### Правила аннотации
 
-| Rule | Description |
-|------|-------------|
-| Layer name | Add DDD layer in comment |
-| Purpose | Describe directory purpose |
-| Depth | Max 3 levels in main docs |
-| Details | Link to subdirectory READMEs |
+| Правило | Описание |
+|---------|----------|
+| Имя слоя | Добавить DDD-слой в комментарии |
+| Назначение | Описать назначение директории |
+| Глубина | Максимум 3 уровня в основной документации |
+| Детали | Ссылка на README поддиректорий |
 ```
 
-### Overview Section
+### Раздел обзора
 
 ```markdown
 ## Overview
 
-{Project Name} follows {Architecture Style} (e.g., Clean Architecture, DDD, Hexagonal).
+{Project Name} следует {Architecture Style} (например, Clean Architecture, DDD, Hexagonal).
 
 ### Key Principles
 
-- **Separation of Concerns** — Each layer has distinct responsibility
-- **Dependency Rule** — Dependencies point inward (Domain is center)
-- **Testability** — Business logic isolated from infrastructure
-- **Framework Independence** — Core logic doesn't depend on frameworks
+- **Separation of Concerns** — Каждый слой имеет чёткую ответственность
+- **Dependency Rule** — Зависимости направлены внутрь (Domain в центре)
+- **Testability** — Бизнес-логика изолирована от инфраструктуры
+- **Framework Independence** — Ядро логики не зависит от фреймворков
 
 ### High-Level Structure
 
@@ -131,7 +131,7 @@ tree -L 3 -I 'vendor|node_modules|.git|var|cache' --dirsfirst
 ```
 ```
 
-### System Context Section
+### Раздел системного контекста
 
 ```markdown
 ## System Context
@@ -153,88 +153,88 @@ flowchart TB
     S -->|"{integration}"| ES2
 ```
 
-### Actors
+### Акторы
 
-| Actor | Description |
-|-------|-------------|
-| {Actor 1} | {Description} |
-| {Actor 2} | {Description} |
+| Актор | Описание |
+|-------|----------|
+| {Actor 1} | {Описание} |
+| {Actor 2} | {Описание} |
 
-### External Systems
+### Внешние системы
 
-| System | Purpose | Integration |
-|--------|---------|-------------|
-| {System 1} | {Purpose} | {Protocol/API} |
-| {System 2} | {Purpose} | {Protocol/API} |
+| Система | Назначение | Интеграция |
+|---------|------------|------------|
+| {System 1} | {Назначение} | {Protocol/API} |
+| {System 2} | {Назначение} | {Protocol/API} |
 ```
 
-### Architecture Layers Section
+### Раздел архитектурных слоёв
 
 ```markdown
 ## Architecture Layers
 
 ### Presentation Layer
 
-**Responsibility:** Handle HTTP requests and responses
+**Ответственность:** Обработка HTTP-запросов и ответов
 
-**Components:**
+**Компоненты:**
 - `Api/` — REST API endpoints (Actions + Responders)
-- `Web/` — Web interface (Actions + Responders)
-- `Console/` — CLI commands
+- `Web/` — Веб-интерфейс (Actions + Responders)
+- `Console/` — CLI-команды
 
-**Rules:**
-- No business logic
-- Validate input
-- Call Application layer
-- Format output
+**Правила:**
+- Без бизнес-логики
+- Валидация входных данных
+- Вызов Application layer
+- Форматирование вывода
 
 ### Application Layer
 
-**Responsibility:** Orchestrate business operations
+**Ответственность:** Оркестрация бизнес-операций
 
-**Components:**
-- `UseCase/` — Application-specific business rules
-- `Service/` — Cross-cutting application services
-- `DTO/` — Data transfer objects
+**Компоненты:**
+- `UseCase/` — Бизнес-правила уровня приложения
+- `Service/` — Сквозные сервисы приложения
+- `DTO/` — Data Transfer Objects
 
-**Rules:**
-- Orchestrate Domain objects
-- Handle transactions
-- No infrastructure concerns
+**Правила:**
+- Оркестрация доменных объектов
+- Управление транзакциями
+- Без инфраструктурных деталей
 
 ### Domain Layer
 
-**Responsibility:** Core business logic
+**Ответственность:** Ядро бизнес-логики
 
-**Components:**
-- `Entity/` — Business objects with identity
-- `ValueObject/` — Immutable value concepts
+**Компоненты:**
+- `Entity/` — Бизнес-объекты с идентичностью
+- `ValueObject/` — Неизменяемые концепции-значения
 - `Event/` — Domain events
-- `Repository/` — Repository interfaces
+- `Repository/` — Интерфейсы репозиториев
 - `Service/` — Domain services
 
-**Rules:**
-- No external dependencies
-- Pure business logic
-- Self-validating objects
+**Правила:**
+- Без внешних зависимостей
+- Чистая бизнес-логика
+- Самовалидирующиеся объекты
 
 ### Infrastructure Layer
 
-**Responsibility:** Technical implementations
+**Ответственность:** Технические реализации
 
-**Components:**
-- `Persistence/` — Repository implementations
-- `Adapter/` — External service adapters
-- `Cache/` — Caching implementations
-- `Queue/` — Queue implementations
+**Компоненты:**
+- `Persistence/` — Реализации репозиториев
+- `Adapter/` — Адаптеры внешних сервисов
+- `Cache/` — Реализации кеширования
+- `Queue/` — Реализации очередей
 
-**Rules:**
-- Implement Domain interfaces
-- Handle technical concerns
-- No business logic
+**Правила:**
+- Реализовать интерфейсы Domain
+- Обрабатывать технические аспекты
+- Без бизнес-логики
 ```
 
-### Components Section
+### Раздел компонентов
 
 ```markdown
 ## Components
@@ -271,24 +271,24 @@ flowchart TB
     RP --> CA
 ```
 
-### Component Descriptions
+### Описания компонентов
 
-| Component | Layer | Responsibility |
-|-----------|-------|----------------|
-| Action | Presentation | HTTP request handling |
-| Responder | Presentation | HTTP response building |
-| UseCase | Application | Business operation orchestration |
-| Entity | Domain | Business object with identity |
-| ValueObject | Domain | Immutable value concept |
-| Repository | Infrastructure | Data persistence |
+| Компонент | Слой | Ответственность |
+|-----------|------|-----------------|
+| Action | Presentation | Обработка HTTP-запросов |
+| Responder | Presentation | Формирование HTTP-ответов |
+| UseCase | Application | Оркестрация бизнес-операций |
+| Entity | Domain | Бизнес-объект с идентичностью |
+| ValueObject | Domain | Неизменяемая концепция-значение |
+| Repository | Infrastructure | Хранение данных |
 ```
 
-### Data Flow Section
+### Раздел потока данных
 
 ```markdown
 ## Data Flow
 
-### {Operation Name} Flow
+### Поток {Operation Name}
 
 ```mermaid
 sequenceDiagram
@@ -317,57 +317,57 @@ sequenceDiagram
 ```
 ```
 
-### Technology Stack Section
+### Раздел технологического стека
 
 ```markdown
 ## Technology Stack
 
-| Layer | Technology | Purpose |
-|-------|------------|---------|
-| Language | PHP 8.2 | Type safety, modern features |
-| Framework | Symfony 7.x | HTTP, DI, Console |
-| ORM | Doctrine 3.x | Database abstraction |
-| Database | PostgreSQL 16 | Primary storage |
-| Cache | Redis 7.x | Session, cache |
-| Queue | RabbitMQ 3.x | Async processing |
-| API | OpenAPI 3.1 | API specification |
+| Слой | Технология | Назначение |
+|------|------------|------------|
+| Язык | PHP 8.2 | Типобезопасность, современные возможности |
+| Фреймворк | Symfony 7.x | HTTP, DI, Console |
+| ORM | Doctrine 3.x | Абстракция БД |
+| База данных | PostgreSQL 16 | Основное хранилище |
+| Кеш | Redis 7.x | Сессии, кеш |
+| Очереди | RabbitMQ 3.x | Асинхронная обработка |
+| API | OpenAPI 3.1 | Спецификация API |
 
-### Technology Decisions
+### Технологические решения
 
-| Decision | Rationale |
-|----------|-----------|
-| PostgreSQL over MySQL | JSONB support, better type system |
-| Symfony over Laravel | More explicit, better DI |
-| Redis over Memcached | Data structures, persistence |
+| Решение | Обоснование |
+|---------|-------------|
+| PostgreSQL вместо MySQL | Поддержка JSONB, лучшая система типов |
+| Symfony вместо Laravel | Более явный, лучший DI |
+| Redis вместо Memcached | Структуры данных, персистентность |
 ```
 
-### ADR Link Section
+### Раздел ссылки на ADR
 
 ```markdown
 ## Architecture Decisions
 
-Key decisions are documented as ADRs:
+Ключевые решения документированы как ADR:
 
-| ADR | Status | Title |
-|-----|--------|-------|
-| [ADR-001](docs/adr/001-use-ddd.md) | Accepted | Use DDD Architecture |
-| [ADR-002](docs/adr/002-cqrs.md) | Accepted | Implement CQRS |
-| [ADR-003](docs/adr/003-event-sourcing.md) | Proposed | Consider Event Sourcing |
+| ADR | Статус | Заголовок |
+|-----|--------|-----------|
+| [ADR-001](docs/adr/001-use-ddd.md) | Принято | Использовать DDD Architecture |
+| [ADR-002](docs/adr/002-cqrs.md) | Принято | Реализовать CQRS |
+| [ADR-003](docs/adr/003-event-sourcing.md) | Предложено | Рассмотреть Event Sourcing |
 ```
 
-## Complete Example
+## Полный пример
 
 ```markdown
 # Architecture
 
 ## Overview
 
-Order Management System follows Domain-Driven Design with Clean Architecture principles.
+Order Management System следует Domain-Driven Design с принципами Clean Architecture.
 
 ### Key Principles
 
-- **Domain-Centric** — Business logic in Domain layer
-- **Dependency Inversion** — Abstractions over implementations
+- **Domain-Centric** — Бизнес-логика в Domain layer
+- **Dependency Inversion** — Абстракции вместо реализаций
 - **Bounded Contexts** — Order, Inventory, Shipping
 
 ## Directory Structure
@@ -408,34 +408,34 @@ flowchart TB
 
 ## Architecture Layers
 
-[... layer descriptions ...]
+[... описания слоёв ...]
 
 ## Technology Stack
 
-| Layer | Technology | Purpose |
-|-------|------------|---------|
-| Language | PHP 8.2 | Type safety |
-| Framework | Symfony 7.2 | HTTP, DI |
-| Database | PostgreSQL 16 | Storage |
-| Cache | Redis 7.4 | Performance |
-| Queue | RabbitMQ 3.13 | Async |
+| Слой | Технология | Назначение |
+|------|------------|------------|
+| Язык | PHP 8.2 | Типобезопасность |
+| Фреймворк | Symfony 7.2 | HTTP, DI |
+| База данных | PostgreSQL 16 | Хранилище |
+| Кеш | Redis 7.4 | Производительность |
+| Очереди | RabbitMQ 3.13 | Асинхронность |
 
 ## Architecture Decisions
 
-| ADR | Status | Title |
-|-----|--------|-------|
-| [ADR-001](docs/adr/001-ddd.md) | Accepted | Use DDD |
-| [ADR-002](docs/adr/002-cqrs.md) | Accepted | Use CQRS |
+| ADR | Статус | Заголовок |
+|-----|--------|-----------|
+| [ADR-001](docs/adr/001-ddd.md) | Принято | Использовать DDD |
+| [ADR-002](docs/adr/002-cqrs.md) | Принято | Использовать CQRS |
 ```
 
-## Generation Instructions
+## Инструкции по генерации
 
-When generating ARCHITECTURE.md:
+При генерации ARCHITECTURE.md:
 
-1. **Analyze** project structure for layer organization
-2. **Identify** architectural style (DDD, Clean, Hexagonal)
-3. **Map** components to layers
-4. **Create** context diagram with actors/systems
-5. **Generate** component diagram
-6. **List** technology stack from `composer.json`
-7. **Link** existing ADRs if present
+1. **Проанализировать** структуру проекта для определения организации слоёв
+2. **Определить** архитектурный стиль (DDD, Clean, Hexagonal)
+3. **Сопоставить** компоненты со слоями
+4. **Создать** контекстную диаграмму с акторами и системами
+5. **Сгенерировать** диаграмму компонентов
+6. **Перечислить** технологический стек из `composer.json`
+7. **Привязать** существующие ADR при наличии

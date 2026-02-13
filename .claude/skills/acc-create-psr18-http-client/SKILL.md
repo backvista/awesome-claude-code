@@ -1,22 +1,22 @@
 ---
 name: acc-create-psr18-http-client
-description: Generates PSR-18 HTTP Client implementation for PHP 8.2. Creates ClientInterface with request sending and exception handling. Includes unit tests.
+description: Генерирует реализацию PSR-18 HTTP-клиента для PHP 8.2. Создаёт ClientInterface с отправкой запросов и обработкой исключений. Включает модульные тесты.
 ---
 
-# PSR-18 HTTP Client Generator
+# Генератор PSR-18 HTTP-клиента
 
-## Overview
+## Обзор
 
-Generates PSR-18 compliant HTTP client implementations for external API communication.
+Генерирует PSR-18-совместимые реализации HTTP-клиента для взаимодействия с внешними API.
 
-## When to Use
+## Когда использовать
 
-- External API integrations
-- Microservice communication
-- HTTP-based service calls
-- Building HTTP client wrappers
+- Интеграция с внешними API
+- Взаимодействие между микросервисами
+- HTTP-вызовы к сервисам
+- Создание обёрток над HTTP-клиентом
 
-## Template: HTTP Client
+## Шаблон: HTTP-клиент
 
 ```php
 <?php
@@ -125,7 +125,7 @@ final readonly class CurlHttpClient implements ClientInterface
 }
 ```
 
-## Template: Exceptions
+## Шаблон: Исключения
 
 ```php
 <?php
@@ -178,7 +178,7 @@ final class RequestException extends \RuntimeException implements RequestExcepti
 }
 ```
 
-## Template: Logging Client Decorator
+## Шаблон: Декоратор с логированием
 
 ```php
 <?php
@@ -234,7 +234,7 @@ final readonly class LoggingHttpClient implements ClientInterface
 }
 ```
 
-## Usage Example
+## Пример использования
 
 ```php
 <?php
@@ -264,7 +264,7 @@ $request = $factory->createRequest('POST', 'https://api.example.com/users')
 $response = $client->sendRequest($request);
 ```
 
-## Requirements
+## Требования
 
 ```json
 {

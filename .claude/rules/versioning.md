@@ -7,21 +7,21 @@ paths:
   - llms.txt
 ---
 
-# Versioning
+# Версионирование
 
-1. Update `CHANGELOG.md` with new section (format: `[X.Y.Z] - YYYY-MM-DD`)
-2. Run `make validate-claude`
-3. Update component counts in `README.md`, `docs/quick-reference.md`, `composer.json` if changed
-4. Add comparison link at bottom of `CHANGELOG.md`
-5. Run `make release` (validates + prints git tag instructions)
+1. Обновите `CHANGELOG.md` новой секцией (формат: `[X.Y.Z] - YYYY-MM-DD`)
+2. Запустите `make validate-claude`
+3. Обновите количество компонентов в `README.md`, `docs/quick-reference.md`, `composer.json` при изменениях
+4. Добавьте ссылку сравнения в конец `CHANGELOG.md`
+5. Запустите `make release` (валидация + вывод инструкций git tag)
 
-## Documentation Files
+## Файлы документации
 
-| File                      | What to Update                                                          |
-|---------------------------|-------------------------------------------------------------------------|
-| `docs/commands.md`        | New/changed slash commands — overview table + detailed section          |
-| `docs/agents.md`          | New/changed agents — category table + description section               |
-| `docs/skills.md`          | New/changed skills — categorized by type (knowledge/analyzer/generator) |
-| `docs/hooks.md`           | New hooks for `settings.json`                                           |
-| `docs/component-flow.md`  | Dependency graph when adding command→agent→skill chains                 |
-| `docs/quick-reference.md` | Component counts, file structure diagram, statistics table              |
+| Файл                      | Что обновлять                                                                          |
+|---------------------------|----------------------------------------------------------------------------------------|
+| `docs/commands.md`        | Новые/измененные slash-команды — обзорная таблица + детальная секция                   |
+| `docs/agents.md`          | Новые/измененные агенты — таблица по категориям + секция описания                      |
+| `docs/skills.md`          | Новые/измененные навыки — категоризация по типам (знания/анализаторы/генераторы)      |
+| `docs/hooks.md`           | Новые хуки для `settings.json`                                                         |
+| `docs/component-flow.md`  | Граф зависимостей при добавлении цепочек команда→агент→навык                           |
+| `docs/quick-reference.md` | Количество компонентов, диаграмма структуры файлов, таблица статистики                 |

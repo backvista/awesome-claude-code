@@ -1,97 +1,97 @@
 ---
 name: acc-analyze-ci-config
-description: Analyzes existing CI/CD configurations. Detects issues in GitHub Actions and GitLab CI files, checks for best practices, caching efficiency, and security concerns.
+description: Анализирует существующие CI/CD конфигурации. Обнаруживает проблемы в файлах GitHub Actions и GitLab CI, проверяет лучшие практики, эффективность кеширования и проблемы безопасности.
 ---
 
-# CI Configuration Analyzer
+# Анализатор CI конфигураций
 
-Analyzes CI/CD configurations for issues, optimizations, and best practices.
+Анализирует CI/CD конфигурации на предмет проблем, оптимизаций и лучших практик.
 
-## Analysis Categories
+## Категории анализа
 
-### 1. Structure Analysis
+### 1. Анализ структуры
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    CI CONFIG ANALYSIS                           │
+│                    АНАЛИЗ CI КОНФИГА                            │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  ✓ Stages defined: install → lint → test → build → deploy      │
-│  ✓ Jobs properly ordered                                        │
-│  ✗ Missing concurrency control                                  │
-│  ✗ No timeout configuration                                     │
+│  ✓ Определены стадии: install → lint → test → build → deploy   │
+│  ✓ Jobs правильно упорядочены                                   │
+│  ✗ Отсутствует контроль concurrency                             │
+│  ✗ Не настроен timeout                                          │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 2. Caching Analysis
+### 2. Анализ кеширования
 
-| Issue | Severity | Location | Recommendation |
+| Проблема | Критичность | Расположение | Рекомендация |
 |-------|----------|----------|----------------|
-| No Composer cache | 🟠 Major | `lint` job | Add `actions/cache` for `~/.composer/cache` |
-| Invalid cache key | 🟡 Minor | Line 23 | Use `hashFiles('composer.lock')` |
-| Missing vendor cache | 🟠 Major | All jobs | Share vendor between jobs with artifacts |
+| Нет Composer кеша | 🟠 Major | `lint` job | Добавить `actions/cache` для `~/.composer/cache` |
+| Невалидный ключ кеша | 🟡 Minor | Line 23 | Использовать `hashFiles('composer.lock')` |
+| Отсутствует vendor кеш | 🟠 Major | Все jobs | Делиться vendor между jobs через artifacts |
 
-### 3. Security Analysis
+### 3. Анализ безопасности
 
-| Issue | Severity | Location | Risk |
+| Проблема | Критичность | Расположение | Риск |
 |-------|----------|----------|------|
-| `pull_request_target` misuse | 🔴 Critical | Line 5 | Code injection from forks |
-| Secrets in logs | 🔴 Critical | Line 45 | `echo ${{ secrets.API_KEY }}` exposed |
-| Outdated actions | 🟠 Major | Lines 12, 18 | Using `@v1` instead of `@v4` |
-| No permissions defined | 🟡 Minor | - | Uses default (write-all) |
+| Неправильное использование `pull_request_target` | 🔴 Critical | Line 5 | Code injection из forks |
+| Secrets в логах | 🔴 Critical | Line 45 | `echo ${{ secrets.API_KEY }}` раскрыт |
+| Устаревшие actions | 🟠 Major | Lines 12, 18 | Используется `@v1` вместо `@v4` |
+| Не определены permissions | 🟡 Minor | - | Используются по умолчанию (write-all) |
 
-## GitHub Actions Analysis
+## Анализ GitHub Actions
 
-### Checklist
+### Чек-лист
 
 ```markdown
-## GitHub Actions Analysis Report
+## Отчёт анализа GitHub Actions
 
-### Configuration: `.github/workflows/ci.yml`
+### Конфигурация: `.github/workflows/ci.yml`
 
-#### Structure ✓
-- [x] Valid YAML syntax
-- [x] Proper job dependencies (needs)
-- [ ] Concurrency configuration
-- [ ] Timeout defined for jobs
-- [x] Workflow triggers appropriate
+#### Структура ✓
+- [x] Валидный YAML синтаксис
+- [x] Правильные зависимости job (needs)
+- [ ] Конфигурация concurrency
+- [ ] Определён timeout для jobs
+- [x] Триггеры workflow подходящие
 
-#### Caching ⚠️
-- [ ] Composer dependencies cached
-- [ ] Node modules cached (if applicable)
+#### Кеширование ⚠️
+- [ ] Зависимости Composer закешированы
+- [ ] Node modules закешированы (если применимо)
 - [x] Docker layer caching
-- [ ] Cache keys use file hashes
+- [ ] Ключи кеша используют хеши файлов
 
-#### Security 🔴
-- [ ] Permissions explicitly defined
-- [ ] No secrets echoed
-- [x] Actions pinned to SHA
-- [ ] pull_request_target safe usage
+#### Безопасность 🔴
+- [ ] Permissions явно определены
+- [ ] Secrets не выводятся
+- [x] Actions закреплены к SHA
+- [ ] pull_request_target безопасное использование
 
-#### Performance ⚠️
-- [ ] Jobs run in parallel where possible
-- [x] Matrix strategy for PHP versions
-- [ ] Fail-fast disabled for matrix
-- [ ] Artifacts shared between jobs
+#### Производительность ⚠️
+- [ ] Jobs выполняются параллельно где возможно
+- [x] Matrix стратегия для версий PHP
+- [ ] Fail-fast отключён для matrix
+- [ ] Artifacts используются между jobs
 
-#### Best Practices ✓
-- [x] Uses specific action versions
-- [x] Environment variables centralized
-- [ ] Reusable workflows
-- [x] Clear job names
+#### Лучшие практики ✓
+- [x] Используются конкретные версии action
+- [x] Environment переменные централизованы
+- [ ] Переиспользуемые workflows
+- [x] Понятные имена jobs
 ```
 
-### Common Issues
+### Распространённые проблемы
 
-#### 1. Missing Concurrency
+#### 1. Отсутствующий Concurrency
 
 ```yaml
-# ❌ BAD: No concurrency control
+# ❌ ПЛОХО: Нет контроля concurrency
 name: CI
 on: [push, pull_request]
 
-# ✅ GOOD: Cancel redundant runs
+# ✅ ХОРОШО: Отмена избыточных запусков
 name: CI
 on: [push, pull_request]
 
@@ -100,16 +100,16 @@ concurrency:
   cancel-in-progress: true
 ```
 
-#### 2. Inefficient Caching
+#### 2. Неэффективное кеширование
 
 ```yaml
-# ❌ BAD: Cache key doesn't include lock file
+# ❌ ПЛОХО: Ключ кеша не включает lock file
 - uses: actions/cache@v4
   with:
     path: vendor
     key: vendor-${{ github.sha }}
 
-# ✅ GOOD: Cache key based on lock file
+# ✅ ХОРОШО: Ключ кеша основан на lock file
 - uses: actions/cache@v4
   with:
     path: |
@@ -119,10 +119,10 @@ concurrency:
     restore-keys: composer-
 ```
 
-#### 3. Security Issues
+#### 3. Проблемы безопасности
 
 ```yaml
-# ❌ BAD: Dangerous with forks
+# ❌ ПЛОХО: Опасно с forks
 on:
   pull_request_target:
     types: [opened]
@@ -133,66 +133,66 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}  # Runs untrusted code
+          ref: ${{ github.event.pull_request.head.sha }}  # Выполняет недоверенный код
 
-# ✅ GOOD: Separate trusted/untrusted
+# ✅ ХОРОШО: Разделение доверенного/недоверенного
 on:
-  pull_request:  # Safe: runs in context of base
+  pull_request:  # Безопасно: выполняется в контексте base
 ```
 
-## GitLab CI Analysis
+## Анализ GitLab CI
 
-### Checklist
+### Чек-лист
 
 ```markdown
-## GitLab CI Analysis Report
+## Отчёт анализа GitLab CI
 
-### Configuration: `.gitlab-ci.yml`
+### Конфигурация: `.gitlab-ci.yml`
 
-#### Structure ✓
-- [x] Valid YAML syntax
-- [x] Stages defined
-- [x] Jobs assigned to stages
-- [ ] Global variables defined
-- [x] Default image set
+#### Структура ✓
+- [x] Валидный YAML синтаксис
+- [x] Определены стадии
+- [x] Jobs назначены на стадии
+- [ ] Определены глобальные переменные
+- [x] Установлен default image
 
-#### Caching ⚠️
-- [ ] Cache key uses files hash
-- [ ] Cache policy appropriate (pull/push)
-- [x] Cache paths correct
-- [ ] Artifacts used for job sharing
+#### Кеширование ⚠️
+- [ ] Ключ кеша использует хеш файлов
+- [ ] Cache policy подходящий (pull/push)
+- [x] Пути кеша корректные
+- [ ] Artifacts используются для sharing между jobs
 
-#### Security ⚠️
-- [x] Secrets in CI/CD variables (not code)
-- [ ] Protected branches configured
-- [ ] No sensitive data in artifacts
-- [x] Image from trusted registry
+#### Безопасность ⚠️
+- [x] Secrets в CI/CD переменных (не в коде)
+- [ ] Настроены protected branches
+- [ ] Нет чувствительных данных в artifacts
+- [x] Image из доверенного registry
 
-#### Performance ⚠️
-- [ ] Jobs run in parallel
-- [x] Needs keyword for dependencies
-- [ ] Rules/only properly configured
-- [ ] DAG mode enabled
+#### Производительность ⚠️
+- [ ] Jobs выполняются параллельно
+- [x] Ключевое слово needs для зависимостей
+- [ ] Rules/only правильно настроены
+- [ ] Включён DAG режим
 
-#### Best Practices ✓
-- [x] Uses extends for reuse
-- [x] Clear job names
-- [ ] Include for modular config
-- [x] Appropriate timeouts
+#### Лучшие практики ✓
+- [x] Используется extends для переиспользования
+- [x] Понятные имена jobs
+- [ ] Include для модульного конфига
+- [x] Подходящие timeouts
 ```
 
-### Common Issues
+### Распространённые проблемы
 
-#### 1. Cache Key Without Hash
+#### 1. Ключ кеша без хеша
 
 ```yaml
-# ❌ BAD: Cache never invalidates properly
+# ❌ ПЛОХО: Кеш никогда не инвалидируется правильно
 cache:
   key: composer-cache
   paths:
     - vendor/
 
-# ✅ GOOD: Cache invalidates on lock change
+# ✅ ХОРОШО: Кеш инвалидируется при изменении lock
 cache:
   key:
     files:
@@ -201,10 +201,10 @@ cache:
     - vendor/
 ```
 
-#### 2. Missing Needs
+#### 2. Отсутствующий Needs
 
 ```yaml
-# ❌ BAD: Sequential stages, no parallelism
+# ❌ ПЛОХО: Последовательные стадии, нет параллелизма
 stages:
   - lint
   - test
@@ -214,62 +214,62 @@ phpstan:
   script: vendor/bin/phpstan
 
 phpunit:
-  stage: test  # Waits for ALL lint jobs
+  stage: test  # Ждёт ВСЕ lint jobs
 
-# ✅ GOOD: DAG with needs
+# ✅ ХОРОШО: DAG с needs
 phpunit:
   stage: test
-  needs: [composer-install]  # Only waits for install
+  needs: [composer-install]  # Ждёт только install
 ```
 
-## Analysis Output Format
+## Формат вывода анализа
 
 ```markdown
-# CI/CD Configuration Analysis
+# Анализ CI/CD конфигурации
 
-**File:** `.github/workflows/ci.yml`
-**Platform:** GitHub Actions
-**Date:** 2024-01-15
+**Файл:** `.github/workflows/ci.yml`
+**Платформа:** GitHub Actions
+**Дата:** 2024-01-15
 
-## Summary
+## Сводка
 
-| Category | Status | Issues |
+| Категория | Статус | Проблемы |
 |----------|--------|--------|
-| Structure | ✅ Good | 0 |
-| Caching | ⚠️ Warning | 3 |
-| Security | 🔴 Critical | 2 |
-| Performance | ⚠️ Warning | 4 |
-| Best Practices | ✅ Good | 1 |
+| Структура | ✅ Good | 0 |
+| Кеширование | ⚠️ Warning | 3 |
+| Безопасность | 🔴 Critical | 2 |
+| Производительность | ⚠️ Warning | 4 |
+| Лучшие практики | ✅ Good | 1 |
 
-**Total Issues:** 10 (2 Critical, 4 Major, 4 Minor)
+**Всего проблем:** 10 (2 Critical, 4 Major, 4 Minor)
 
-## Critical Issues
+## Критичные проблемы
 
-### SEC-001: Exposed Secret in Logs
-**Location:** Line 45
-**Code:**
+### SEC-001: Раскрытый Secret в логах
+**Расположение:** Line 45
+**Код:**
 ```yaml
 - run: echo "Deploying with ${{ secrets.DEPLOY_KEY }}"
 ```
-**Risk:** Secret visible in workflow logs
-**Fix:**
+**Риск:** Secret виден в логах workflow
+**Исправление:**
 ```yaml
 - run: echo "Deploying..."
   env:
     DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
 ```
 
-### SEC-002: pull_request_target with Checkout
-**Location:** Lines 3, 15
-**Risk:** Arbitrary code execution from forks
-**Fix:** Use `pull_request` event instead, or don't checkout PR code
+### SEC-002: pull_request_target с Checkout
+**Расположение:** Lines 3, 15
+**Риск:** Произвольное выполнение кода из forks
+**Исправление:** Использовать событие `pull_request` вместо этого, или не делать checkout PR-кода
 
-## Major Issues
+## Крупные проблемы
 
-### CACHE-001: Missing Composer Cache
-**Location:** `lint` job
-**Impact:** +2-3 minutes per run
-**Fix:**
+### CACHE-001: Отсутствующий Composer кеш
+**Расположение:** `lint` job
+**Влияние:** +2-3 минуты на запуск
+**Исправление:**
 ```yaml
 - uses: actions/cache@v4
   with:
@@ -277,69 +277,69 @@ phpunit:
     key: composer-${{ hashFiles('composer.lock') }}
 ```
 
-### PERF-001: Sequential Jobs Could Run Parallel
-**Location:** `test-unit`, `test-integration`
-**Impact:** +5 minutes total
-**Fix:** Remove `needs` dependency between test jobs
+### PERF-001: Последовательные jobs могут выполняться параллельно
+**Расположение:** `test-unit`, `test-integration`
+**Влияние:** +5 минут всего
+**Исправление:** Убрать зависимость `needs` между test jobs
 
-## Minor Issues
+## Небольшие проблемы
 
-### BP-001: Using Outdated Action Version
-**Location:** Line 12
-**Current:** `actions/checkout@v2`
-**Recommended:** `actions/checkout@v4`
+### BP-001: Использование устаревшей версии Action
+**Расположение:** Line 12
+**Текущая:** `actions/checkout@v2`
+**Рекомендуемая:** `actions/checkout@v4`
 
-## Recommendations
+## Рекомендации
 
-1. **Immediate:** Fix security issues SEC-001 and SEC-002
-2. **Short-term:** Implement caching improvements
-3. **Long-term:** Restructure for parallel execution
+1. **Немедленно:** Исправить проблемы безопасности SEC-001 и SEC-002
+2. **Краткосрочно:** Реализовать улучшения кеширования
+3. **Долгосрочно:** Реструктурировать для параллельного выполнения
 
-## Optimized Configuration
+## Оптимизированная конфигурация
 
-See [Appendix A](#appendix-a) for complete optimized configuration.
+См. [Приложение A](#appendix-a) для полной оптимизированной конфигурации.
 ```
 
-## Analysis Instructions
+## Инструкции по анализу
 
-1. **Parse configuration:**
-   - Validate YAML syntax
-   - Identify platform (GitHub/GitLab)
-   - Extract jobs, stages, triggers
+1. **Разобрать конфигурацию:**
+   - Валидировать YAML синтаксис
+   - Определить платформу (GitHub/GitLab)
+   - Извлечь jobs, stages, triggers
 
-2. **Check structure:**
-   - Proper job ordering
-   - Dependencies (needs/stages)
-   - Concurrency settings
+2. **Проверить структуру:**
+   - Правильный порядок job
+   - Зависимости (needs/stages)
+   - Настройки concurrency
    - Timeouts
 
-3. **Analyze caching:**
-   - Cache keys use file hashes
-   - Appropriate cache paths
+3. **Анализировать кеширование:**
+   - Ключи кеша используют хеши файлов
+   - Подходящие пути кеша
    - Cache policy (pull/push)
-   - Artifacts for job sharing
+   - Artifacts для sharing между jobs
 
-4. **Security review:**
-   - Secret exposure
+4. **Проверка безопасности:**
+   - Раскрытие секретов
    - Permissions
-   - Unsafe triggers
-   - Action versions
+   - Небезопасные триггеры
+   - Версии action
 
-5. **Performance audit:**
-   - Parallel execution opportunities
-   - Unnecessary sequential jobs
-   - Matrix optimization
-   - Fail-fast settings
+5. **Аудит производительности:**
+   - Возможности параллельного выполнения
+   - Ненужные последовательные jobs
+   - Оптимизация matrix
+   - Настройки fail-fast
 
-## Usage
+## Использование
 
-Provide:
-- Path to CI configuration file(s)
-- Specific areas to focus on (optional)
+Предоставьте:
+- Путь к CI конфигурационным файлам
+- Конкретные области для фокуса (опционально)
 
-The analyzer will:
-1. Parse and validate configuration
-2. Check against best practices
-3. Identify issues by severity
-4. Provide specific fixes
-5. Generate optimized configuration
+Анализатор будет:
+1. Парсить и валидировать конфигурацию
+2. Проверять на соответствие лучшим практикам
+3. Идентифицировать проблемы по критичности
+4. Предоставлять конкретные исправления
+5. Генерировать оптимизированную конфигурацию

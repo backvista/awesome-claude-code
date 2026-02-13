@@ -1,8 +1,8 @@
-# Rate Limiter Templates
+# Шаблоны Rate Limiter
 
 ## RateLimiterInterface
 
-**File:** `src/Infrastructure/Resilience/RateLimiter/RateLimiterInterface.php`
+**Файл:** `src/Infrastructure/Resilience/RateLimiter/RateLimiterInterface.php`
 
 ```php
 <?php
@@ -25,9 +25,9 @@ interface RateLimiterInterface
 
 ---
 
-## RateLimitResult Value Object
+## Value Object RateLimitResult
 
-**File:** `src/Infrastructure/Resilience/RateLimiter/RateLimitResult.php`
+**Файл:** `src/Infrastructure/Resilience/RateLimiter/RateLimitResult.php`
 
 ```php
 <?php
@@ -102,7 +102,7 @@ final readonly class RateLimitResult
 
 ## RateLimitExceededException
 
-**File:** `src/Infrastructure/Resilience/RateLimiter/RateLimitExceededException.php`
+**Файл:** `src/Infrastructure/Resilience/RateLimiter/RateLimitExceededException.php`
 
 ```php
 <?php
@@ -129,7 +129,7 @@ final class RateLimitExceededException extends \RuntimeException
 
 ## TokenBucketRateLimiter
 
-**File:** `src/Infrastructure/Resilience/RateLimiter/TokenBucketRateLimiter.php`
+**Файл:** `src/Infrastructure/Resilience/RateLimiter/TokenBucketRateLimiter.php`
 
 ```php
 <?php
@@ -208,7 +208,7 @@ final class TokenBucketRateLimiter implements RateLimiterInterface
 
 ## SlidingWindowRateLimiter
 
-**File:** `src/Infrastructure/Resilience/RateLimiter/SlidingWindowRateLimiter.php`
+**Файл:** `src/Infrastructure/Resilience/RateLimiter/SlidingWindowRateLimiter.php`
 
 ```php
 <?php
@@ -268,7 +268,7 @@ final class SlidingWindowRateLimiter implements RateLimiterInterface
 
 ## FixedWindowRateLimiter
 
-**File:** `src/Infrastructure/Resilience/RateLimiter/FixedWindowRateLimiter.php`
+**Файл:** `src/Infrastructure/Resilience/RateLimiter/FixedWindowRateLimiter.php`
 
 ```php
 <?php
@@ -321,7 +321,7 @@ final class FixedWindowRateLimiter implements RateLimiterInterface
 
 ## StorageInterface
 
-**File:** `src/Infrastructure/Resilience/RateLimiter/StorageInterface.php`
+**Файл:** `src/Infrastructure/Resilience/RateLimiter/StorageInterface.php`
 
 ```php
 <?php
@@ -344,9 +344,9 @@ interface StorageInterface
 
 ---
 
-## RedisStorage Implementation
+## Реализация RedisStorage
 
-**File:** `src/Infrastructure/Resilience/RateLimiter/RedisStorage.php`
+**Файл:** `src/Infrastructure/Resilience/RateLimiter/RedisStorage.php`
 
 ```php
 <?php

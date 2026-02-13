@@ -1,72 +1,72 @@
 ---
 name: acc-create-repository
-description: Generates DDD Repository interfaces and implementation stubs for PHP 8.2. Creates domain interfaces in Domain layer, implementation in Infrastructure.
+description: Генерирует интерфейсы DDD-репозиториев и заготовки реализаций для PHP 8.2. Создаёт доменные интерфейсы в слое Domain, реализацию в Infrastructure.
 ---
 
-# Repository Generator
+# Генератор репозиториев
 
-Generate DDD-compliant Repository interfaces and implementation stubs.
+Генерирует DDD-совместимые интерфейсы репозиториев и заготовки реализаций.
 
-## Repository Characteristics
+## Характеристики репозиториев
 
-- **Interface in Domain**: Contract defined in Domain layer
-- **Implementation in Infrastructure**: Doctrine/Eloquent/etc. implementation
-- **Works with Aggregates**: Not entities directly
-- **Collection-like**: Find, save, remove operations
-- **No business logic**: Only persistence operations
-
----
-
-## Generation Process
-
-### Step 1: Generate Interface
-
-**Path:** `src/Domain/{BoundedContext}/Repository/`
-
-1. `{AggregateRoot}RepositoryInterface.php` — Domain contract
-
-### Step 2: Generate Implementation
-
-**Path:** `src/Infrastructure/Persistence/Doctrine/`
-
-1. `Doctrine{AggregateRoot}Repository.php` — Doctrine implementation
-
-### Step 3: Generate In-Memory Repository (Optional)
-
-**Path:** `tests/Infrastructure/Persistence/`
-
-1. `InMemory{AggregateRoot}Repository.php` — For unit testing
-
-### Step 4: Generate Integration Tests
-
-**Path:** `tests/Integration/Infrastructure/Persistence/`
+- **Интерфейс в Domain**: Контракт определён в слое Domain
+- **Реализация в Infrastructure**: Реализация Doctrine/Eloquent/и т.д.
+- **Работа с агрегатами**: Не с сущностями напрямую
+- **Подобен коллекции**: Операции find, save, remove
+- **Без бизнес-логики**: Только операции персистенции
 
 ---
 
-## File Placement
+## Процесс генерации
 
-| Component | Path |
+### Шаг 1: Генерация интерфейса
+
+**Путь:** `src/Domain/{BoundedContext}/Repository/`
+
+1. `{AggregateRoot}RepositoryInterface.php` — Доменный контракт
+
+### Шаг 2: Генерация реализации
+
+**Путь:** `src/Infrastructure/Persistence/Doctrine/`
+
+1. `Doctrine{AggregateRoot}Repository.php` — Реализация Doctrine
+
+### Шаг 3: Генерация In-Memory репозитория (опционально)
+
+**Путь:** `tests/Infrastructure/Persistence/`
+
+1. `InMemory{AggregateRoot}Repository.php` — Для модульного тестирования
+
+### Шаг 4: Генерация интеграционных тестов
+
+**Путь:** `tests/Integration/Infrastructure/Persistence/`
+
+---
+
+## Размещение файлов
+
+| Компонент | Путь |
 |-----------|------|
-| Interface | `src/Domain/{BoundedContext}/Repository/` |
-| Doctrine Impl | `src/Infrastructure/Persistence/Doctrine/` |
+| Интерфейс | `src/Domain/{BoundedContext}/Repository/` |
+| Реализация Doctrine | `src/Infrastructure/Persistence/Doctrine/` |
 | In-Memory | `tests/Infrastructure/Persistence/` |
-| Integration Tests | `tests/Integration/Infrastructure/Persistence/` |
+| Интеграционные тесты | `tests/Integration/Infrastructure/Persistence/` |
 
 ---
 
-## Naming Conventions
+## Соглашения об именовании
 
-| Component | Pattern | Example |
-|-----------|---------|---------|
-| Interface | `{AggregateRoot}RepositoryInterface` | `OrderRepositoryInterface` |
-| Doctrine Impl | `Doctrine{AggregateRoot}Repository` | `DoctrineOrderRepository` |
+| Компонент | Шаблон | Пример |
+|-----------|--------|--------|
+| Интерфейс | `{AggregateRoot}RepositoryInterface` | `OrderRepositoryInterface` |
+| Реализация Doctrine | `Doctrine{AggregateRoot}Repository` | `DoctrineOrderRepository` |
 | In-Memory | `InMemory{AggregateRoot}Repository` | `InMemoryOrderRepository` |
 
 ---
 
-## Quick Template Reference
+## Краткий справочник шаблонов
 
-### Interface
+### Интерфейс
 
 ```php
 interface {AggregateRoot}RepositoryInterface
@@ -81,7 +81,7 @@ interface {AggregateRoot}RepositoryInterface
 }
 ```
 
-### Doctrine Implementation
+### Реализация Doctrine
 
 ```php
 final readonly class Doctrine{AggregateRoot}Repository implements {AggregateRoot}RepositoryInterface
@@ -114,7 +114,7 @@ final readonly class Doctrine{AggregateRoot}Repository implements {AggregateRoot
 }
 ```
 
-### In-Memory Implementation
+### Реализация In-Memory
 
 ```php
 final class InMemory{AggregateRoot}Repository implements {AggregateRoot}RepositoryInterface
@@ -140,31 +140,31 @@ final class InMemory{AggregateRoot}Repository implements {AggregateRoot}Reposito
 
 ---
 
-## Design Rules
+## Правила проектирования
 
-| Rule | Good | Bad |
-|------|------|-----|
-| Layer Placement | Interface in Domain | Interface in Infrastructure |
-| Aggregate Scope | Repository per aggregate root | Repository per entity |
-| Query Methods | Simple filters | Business logic in queries |
-| Identity | `nextIdentity()` method | External ID generation |
-
----
-
-## Anti-patterns to Avoid
-
-| Anti-pattern | Problem | Solution |
-|--------------|---------|----------|
-| Entity Repository | Bypasses aggregate | Only aggregate roots |
-| Business Queries | Logic in repository | Use Specification pattern |
-| Infrastructure Leak | Domain depends on ORM | Interface in Domain |
-| Generic Repository | Too abstract | Specific per aggregate |
-| Missing nextIdentity | Can't generate IDs | Add to interface |
+| Правило | Правильно | Неправильно |
+|---------|-----------|-------------|
+| Размещение по слоям | Интерфейс в Domain | Интерфейс в Infrastructure |
+| Область агрегата | Репозиторий на корень агрегата | Репозиторий на сущность |
+| Методы запросов | Простые фильтры | Бизнес-логика в запросах |
+| Идентификация | Метод `nextIdentity()` | Внешняя генерация ID |
 
 ---
 
-## References
+## Антипаттерны, которых следует избегать
 
-For complete PHP templates and examples, see:
-- `references/templates.md` — Interface, Doctrine, In-Memory, Test templates
-- `references/examples.md` — Order, User repositories with Doctrine and In-Memory implementations
+| Антипаттерн | Проблема | Решение |
+|-------------|----------|---------|
+| Репозиторий сущности | Обходит агрегат | Только корни агрегатов |
+| Бизнес-запросы | Логика в репозитории | Используйте паттерн Specification |
+| Утечка инфраструктуры | Домен зависит от ORM | Интерфейс в Domain |
+| Универсальный репозиторий | Слишком абстрактный | Специфичный для каждого агрегата |
+| Без nextIdentity | Невозможно генерировать ID | Добавьте в интерфейс |
+
+---
+
+## Ссылки
+
+Полные PHP-шаблоны и примеры см. в:
+- `references/templates.md` — Шаблоны интерфейса, Doctrine, In-Memory, тестов
+- `references/examples.md` — Репозитории Order, User с реализациями Doctrine и In-Memory

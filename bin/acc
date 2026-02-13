@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 #
 # ACC - Awesome Claude Code CLI
-# Force upgrade Claude components with backup support
+# Принудительное обновление компонентов Claude с поддержкой резервного копирования
 #
 
 set -euo pipefail
 
-# Colors
+# Цвета
 readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
 readonly YELLOW='\033[0;33m'
 readonly CYAN='\033[0;36m'
 readonly RESET='\033[0m'
 
-# Configuration
+# Конфигурация
 readonly PACKAGE_NAME="backvista/awesome-claude-code"
 readonly COMPONENTS=("commands" "agents" "skills")
 
-# Globals
+# Глобальные переменные
 CREATE_BACKUP=true
 COMPONENT_FILTER=""
 COMMAND=""
@@ -26,26 +26,26 @@ print_usage() {
     cat << EOF
 ${CYAN}ACC - Awesome Claude Code CLI${RESET}
 
-Usage: acc <command> [options]
+Использование: acc <команда> [опции]
 
-Commands:
-  upgrade     Force upgrade Claude components from vendor
+Команды:
+  upgrade     Принудительное обновление компонентов Claude из vendor
 
-Options:
-  --no-backup           Skip backup creation
-  --component=<name>    Upgrade only specific component (commands|agents|skills)
-  -h, --help            Show this help message
+Опции:
+  --no-backup           Пропустить создание резервной копии
+  --component=<name>    Обновить только указанный компонент (commands|agents|skills)
+  -h, --help            Показать эту справку
 
-Examples:
-  acc upgrade                          # Full upgrade with backup
-  acc upgrade --no-backup              # Upgrade without backup
-  acc upgrade --component=commands     # Upgrade only commands
+Примеры:
+  acc upgrade                          # Полное обновление с резервной копией
+  acc upgrade --no-backup              # Обновление без резервной копии
+  acc upgrade --component=commands     # Обновить только команды
 
 EOF
 }
 
 print_error() {
-    echo -e "${RED}Error:${RESET} $1" >&2
+    echo -e "${RED}Ошибка:${RESET} $1" >&2
 }
 
 print_success() {
@@ -89,7 +89,7 @@ create_backup() {
     local project_root="$2"
 
     if [[ ! -d "$target_dir" ]]; then
-        print_info "No existing .claude directory to backup"
+        print_info "Нет существующей директории .claude для резервного копирования"
         return 0
     fi
 
@@ -97,9 +97,9 @@ create_backup() {
     timestamp=$(date +"%Y-%m-%d-%H%M%S")
     local backup_dir="${project_root}/.claude.backup.${timestamp}"
 
-    print_info "Creating backup: ${backup_dir}"
+    print_info "Создание резервной копии: ${backup_dir}"
     cp -r "$target_dir" "$backup_dir"
-    print_success "Backup created"
+    print_success "Резервная копия создана"
 }
 
 remove_components() {
@@ -109,7 +109,7 @@ remove_components() {
     for component in "${components[@]}"; do
         local component_path="${target_dir}/${component}"
         if [[ -d "$component_path" ]]; then
-            print_info "Removing: .claude/${component}/"
+            print_info "Удаление: .claude/${component}/"
             rm -rf "$component_path"
         fi
     done
@@ -127,48 +127,48 @@ copy_components() {
         local target_path="${target_dir}/${component}"
 
         if [[ -d "$source_path" ]]; then
-            print_info "Copying: .claude/${component}/"
+            print_info "Копирование: .claude/${component}/"
             cp -r "$source_path" "$target_path"
 
             local count
             count=$(find "$target_path" -type f -name "*.md" | wc -l | tr -d ' ')
-            print_success "Copied ${count} files to .claude/${component}/"
+            print_success "Скопировано ${count} файлов в .claude/${component}/"
         else
-            print_warning "Source not found: ${source_path}"
+            print_warning "Источник не найден: ${source_path}"
         fi
     done
 }
 
 cmd_upgrade() {
     echo ""
-    echo -e "${CYAN}ACC Upgrade${RESET}"
+    echo -e "${CYAN}ACC Обновление${RESET}"
     echo ""
 
-    # Find project root
+    # Поиск корня проекта
     local project_root
     if ! project_root=$(find_project_root); then
-        print_error "Cannot find composer.json in current or parent directories"
+        print_error "Не найден composer.json в текущей или родительских директориях"
         exit 1
     fi
 
-    # Find vendor source
+    # Поиск источника в vendor
     local source_dir
     if ! source_dir=$(find_vendor_source "$project_root"); then
-        print_error "Package not found in vendor. Run 'composer require ${PACKAGE_NAME}' first."
+        print_error "Пакет не найден в vendor. Сначала выполните 'composer require ${PACKAGE_NAME}'."
         exit 1
     fi
 
     local target_dir="${project_root}/.claude"
 
-    print_info "Project root: ${project_root}"
-    print_info "Source: ${source_dir}"
-    print_info "Target: ${target_dir}"
+    print_info "Корень проекта: ${project_root}"
+    print_info "Источник: ${source_dir}"
+    print_info "Назначение: ${target_dir}"
     echo ""
 
-    # Determine which components to upgrade
+    # Определение компонентов для обновления
     local components_to_upgrade=()
     if [[ -n "$COMPONENT_FILTER" ]]; then
-        # Validate component name
+        # Валидация имени компонента
         local valid=false
         for c in "${COMPONENTS[@]}"; do
             if [[ "$c" == "$COMPONENT_FILTER" ]]; then
@@ -178,37 +178,37 @@ cmd_upgrade() {
         done
 
         if [[ "$valid" == false ]]; then
-            print_error "Invalid component: ${COMPONENT_FILTER}"
-            print_error "Valid components: ${COMPONENTS[*]}"
+            print_error "Некорректный компонент: ${COMPONENT_FILTER}"
+            print_error "Допустимые компоненты: ${COMPONENTS[*]}"
             exit 1
         fi
 
         components_to_upgrade=("$COMPONENT_FILTER")
-        print_info "Upgrading component: ${COMPONENT_FILTER}"
+        print_info "Обновление компонента: ${COMPONENT_FILTER}"
     else
         components_to_upgrade=("${COMPONENTS[@]}")
-        print_info "Upgrading all components: ${COMPONENTS[*]}"
+        print_info "Обновление всех компонентов: ${COMPONENTS[*]}"
     fi
     echo ""
 
-    # Create backup if needed
+    # Создание резервной копии при необходимости
     if [[ "$CREATE_BACKUP" == true ]]; then
         create_backup "$target_dir" "$project_root"
         echo ""
     else
-        print_warning "Skipping backup (--no-backup)"
+        print_warning "Пропуск резервного копирования (--no-backup)"
         echo ""
     fi
 
-    # Remove old components
+    # Удаление старых компонентов
     remove_components "$target_dir" "${components_to_upgrade[@]}"
     echo ""
 
-    # Copy new components
+    # Копирование новых компонентов
     copy_components "$source_dir" "$target_dir" "${components_to_upgrade[@]}"
     echo ""
 
-    print_success "Upgrade complete!"
+    print_success "Обновление завершено!"
     echo ""
 }
 
@@ -232,7 +232,7 @@ parse_args() {
                 exit 0
                 ;;
             *)
-                print_error "Unknown option: $1"
+                print_error "Неизвестная опция: $1"
                 print_usage
                 exit 1
                 ;;
@@ -258,7 +258,7 @@ main() {
             cmd_upgrade
             ;;
         *)
-            print_error "Unknown command: $COMMAND"
+            print_error "Неизвестная команда: $COMMAND"
             print_usage
             exit 1
             ;;

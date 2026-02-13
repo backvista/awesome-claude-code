@@ -1,13 +1,13 @@
 ---
 name: acc-docker-compose-knowledge
-description: Docker Compose knowledge base for PHP stacks. Provides service configuration patterns, health checks, networking, and environment management.
+description: База знаний по Docker Compose для PHP-стеков. Предоставляет паттерны конфигурации сервисов, проверки здоровья, сетевые настройки и управление окружением.
 ---
 
-# Docker Compose Knowledge Base for PHP Stacks
+# База знаний по Docker Compose для PHP-стеков
 
-Service configuration patterns and best practices for Docker Compose in PHP applications.
+Паттерны конфигурации сервисов и лучшие практики Docker Compose для PHP-приложений.
 
-## PHP Stack Architecture
+## Архитектура PHP-стека
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -52,7 +52,7 @@ Service configuration patterns and best practices for Docker Compose in PHP appl
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Compose File Structure
+## Структура Compose-файла
 
 ```yaml
 # docker-compose.yml — base configuration
@@ -133,7 +133,7 @@ networks:
     driver: bridge
 ```
 
-## Health Check Patterns
+## Паттерны проверки здоровья
 
 ### PostgreSQL
 
@@ -211,17 +211,17 @@ php:
     start_period: 15s
 ```
 
-## Volume Strategies
+## Стратегии томов
 
-| Strategy | Syntax | Performance | Use Case |
+| Стратегия | Синтаксис | Производительность | Применение |
 |----------|--------|-------------|----------|
-| Bind mount | `./src:/app/src` | Native (Linux), slow (Mac) | Development source |
-| Bind + cached | `./src:/app/src:cached` | Better on Mac | Dev source on macOS |
-| Named volume | `vendor:/app/vendor` | Fast | Dependencies, data |
-| tmpfs | `tmpfs: /tmp` | Fastest | Temporary files, cache |
-| Anonymous | `/app/var` | Fast | Ephemeral data |
+| Bind mount | `./src:/app/src` | Нативная (Linux), медленная (Mac) | Исходный код для разработки |
+| Bind + cached | `./src:/app/src:cached` | Лучше на Mac | Код на macOS |
+| Named volume | `vendor:/app/vendor` | Быстрая | Зависимости, данные |
+| tmpfs | `tmpfs: /tmp` | Самая быстрая | Временные файлы, кеш |
+| Anonymous | `/app/var` | Быстрая | Эфемерные данные |
 
-### Recommended Volume Layout
+### Рекомендуемая структура томов
 
 ```yaml
 volumes:
@@ -230,9 +230,9 @@ volumes:
   - ./docker/php/php.ini:/usr/local/etc/php/php.ini:ro  # Config (bind, ro)
 ```
 
-## Environment Management
+## Управление окружением
 
-### .env File Hierarchy
+### Иерархия файлов .env
 
 ```
 .env                  # Defaults (committed to git)
@@ -266,7 +266,7 @@ POSTGRES_PASSWORD=secret
 POSTGRES_DB=app
 ```
 
-## Override Files Pattern
+## Паттерн override-файлов
 
 ```yaml
 # docker-compose.override.yml — development overrides (auto-loaded)
@@ -301,7 +301,7 @@ services:
     restart: unless-stopped
 ```
 
-Usage:
+Использование:
 
 ```bash
 # Development (auto-loads override)
@@ -314,7 +314,7 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 docker compose -f docker-compose.yml -f docker-compose.test.yml up -d
 ```
 
-## Profiles
+## Профили
 
 ```yaml
 services:
@@ -348,7 +348,7 @@ docker compose --profile monitoring up -d
 docker compose --profile search --profile monitoring --profile dev up -d
 ```
 
-## Network Configuration
+## Конфигурация сети
 
 ```yaml
 networks:
@@ -366,22 +366,22 @@ networks:
     driver: bridge
 ```
 
-### Service Network Assignment
+### Распределение сервисов по сетям
 
-| Service | frontend | backend | monitoring |
-|---------|----------|---------|------------|
-| nginx | yes | - | - |
-| php-fpm | yes | yes | - |
-| worker | - | yes | - |
-| postgres | - | yes | - |
-| redis | - | yes | - |
-| rabbitmq | - | yes | - |
-| prometheus | - | - | yes |
-| grafana | - | - | yes |
+| Сервис | frontend | backend | monitoring |
+|--------|----------|---------|------------|
+| nginx | да | - | - |
+| php-fpm | да | да | - |
+| worker | - | да | - |
+| postgres | - | да | - |
+| redis | - | да | - |
+| rabbitmq | - | да | - |
+| prometheus | - | - | да |
+| grafana | - | - | да |
 
-## Common Patterns
+## Общие паттерны
 
-### Wait for Dependencies
+### Ожидание зависимостей
 
 ```yaml
 php:
@@ -394,7 +394,7 @@ php:
       condition: service_healthy
 ```
 
-### Resource Limits
+### Лимиты ресурсов
 
 ```yaml
 php:
@@ -408,7 +408,7 @@ php:
         memory: 256M
 ```
 
-### Logging Configuration
+### Конфигурация логирования
 
 ```yaml
 php:
@@ -419,7 +419,7 @@ php:
       max-file: "3"
 ```
 
-## References
+## Ссылки
 
-For complete service configurations, see `references/service-configs.md`.
-For networking details, see `acc-docker-networking-knowledge`.
+Полные конфигурации сервисов описаны в `references/service-configs.md`.
+Подробности по сетям см. в `acc-docker-networking-knowledge`.

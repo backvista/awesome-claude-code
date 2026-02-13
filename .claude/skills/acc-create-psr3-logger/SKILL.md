@@ -1,40 +1,40 @@
 ---
 name: acc-create-psr3-logger
-description: Generates PSR-3 Logger implementation for PHP 8.2. Creates LoggerInterface implementations with log levels, context interpolation, and LoggerAwareTrait usage. Includes unit tests.
+description: Генерирует реализацию PSR-3 Logger для PHP 8.2. Создаёт реализации LoggerInterface с уровнями логирования, интерполяцией контекста и использованием LoggerAwareTrait. Включает модульные тесты.
 ---
 
-# PSR-3 Logger Generator
+# Генератор PSR-3 Logger
 
-## Overview
+## Обзор
 
-Generates PSR-3 compliant logger implementations following `Psr\Log\LoggerInterface`.
+Генерирует PSR-3-совместимые реализации логгера на основе `Psr\Log\LoggerInterface`.
 
-## When to Use
+## Когда использовать
 
-- Implementing custom logging solutions
-- Creating application-specific loggers
-- Building logging adapters for external services
-- Testing with mock/null loggers
+- Реализация собственных решений для логирования
+- Создание логгеров, специфичных для приложения
+- Построение адаптеров логирования для внешних сервисов
+- Тестирование с mock/null-логгерами
 
-## Generated Components
+## Генерируемые компоненты
 
-| Component | Description | Location |
-|-----------|-------------|----------|
-| Logger Implementation | Concrete logger class | `src/Infrastructure/Logger/` |
-| LoggerAware Trait | For classes needing logger | `src/Infrastructure/Logger/` |
-| Null Logger | Testing/no-op logger | `src/Infrastructure/Logger/` |
-| Unit Tests | PHPUnit tests | `tests/Unit/Infrastructure/Logger/` |
+| Компонент | Описание | Расположение |
+|-----------|----------|--------------|
+| Реализация логгера | Конкретный класс логгера | `src/Infrastructure/Logger/` |
+| LoggerAware Trait | Для классов, нуждающихся в логгере | `src/Infrastructure/Logger/` |
+| Null Logger | Логгер для тестирования/без операций | `src/Infrastructure/Logger/` |
+| Модульные тесты | PHPUnit тесты | `tests/Unit/Infrastructure/Logger/` |
 
-## File Naming
+## Именование файлов
 
-| Type | Pattern | Example |
-|------|---------|---------|
-| File Logger | `{Name}Logger.php` | `FileLogger.php` |
-| Stream Logger | `StreamLogger.php` | `StreamLogger.php` |
-| Null Logger | `NullLogger.php` | `NullLogger.php` |
+| Тип | Шаблон | Пример |
+|-----|--------|--------|
+| Файловый логгер | `{Name}Logger.php` | `FileLogger.php` |
+| Потоковый логгер | `StreamLogger.php` | `StreamLogger.php` |
+| Null-логгер | `NullLogger.php` | `NullLogger.php` |
 | Trait | `LoggerAwareTrait.php` | `LoggerAwareTrait.php` |
 
-## Template: File Logger
+## Шаблон: Файловый логгер
 
 ```php
 <?php
@@ -167,7 +167,7 @@ final class FileLogger implements LoggerInterface
 }
 ```
 
-## Template: Null Logger
+## Шаблон: Null-логгер
 
 ```php
 <?php
@@ -219,7 +219,7 @@ final readonly class NullLogger implements LoggerInterface
 }
 ```
 
-## Template: Logger Aware
+## Шаблон: Logger Aware
 
 ```php
 <?php
@@ -246,7 +246,7 @@ trait LoggerAwareTrait
 }
 ```
 
-## Template: Unit Test
+## Шаблон: Модульный тест
 
 ```php
 <?php
@@ -331,9 +331,9 @@ final class FileLoggerTest extends TestCase
 }
 ```
 
-## Usage Examples
+## Примеры использования
 
-### Basic Logging
+### Базовое логирование
 
 ```php
 <?php
@@ -347,7 +347,7 @@ $logger->info('Application started');
 $logger->error('Something went wrong', ['exception' => $e->getMessage()]);
 ```
 
-### With Context Interpolation
+### С интерполяцией контекста
 
 ```php
 <?php
@@ -360,7 +360,7 @@ $logger->info('User {user_id} performed {action}', [
 // Output: User 123 performed login {"ip":"192.168.1.1"}
 ```
 
-### Logger Aware Service
+### Сервис с поддержкой логгера
 
 ```php
 <?php
@@ -387,7 +387,7 @@ final class CreateUserHandler implements LoggerAwareInterface
 }
 ```
 
-## Requirements
+## Требования
 
 ```json
 {
@@ -397,7 +397,7 @@ final class CreateUserHandler implements LoggerAwareInterface
 }
 ```
 
-## See Also
+## См. также
 
-- `references/templates.md` - Additional logger implementations
-- `references/examples.md` - Real-world usage examples
+- `references/templates.md` - Дополнительные реализации логгера
+- `references/examples.md` - Примеры использования в реальных проектах

@@ -1,30 +1,30 @@
 ---
 name: acc-create-psr6-cache
-description: Generates PSR-6 Cache implementation for PHP 8.2. Creates CacheItemPoolInterface and CacheItemInterface implementations with TTL handling and deferred saves. Includes unit tests.
+description: Генерирует реализацию PSR-6 Cache для PHP 8.2. Создаёт реализации CacheItemPoolInterface и CacheItemInterface с обработкой TTL и отложенным сохранением. Включает модульные тесты.
 ---
 
-# PSR-6 Cache Generator
+# Генератор PSR-6 Cache
 
-## Overview
+## Обзор
 
-Generates PSR-6 compliant cache implementations following `Psr\Cache\CacheItemPoolInterface` and `Psr\Cache\CacheItemInterface`.
+Генерирует PSR-6-совместимые реализации кэша на основе `Psr\Cache\CacheItemPoolInterface` и `Psr\Cache\CacheItemInterface`.
 
-## When to Use
+## Когда использовать
 
-- Complex caching with cache items as objects
-- Need for deferred/batched saves
-- Building cache frameworks
-- Need for cache item metadata
+- Сложное кэширование с элементами кэша как объектами
+- Необходимость отложенного/пакетного сохранения
+- Построение фреймворков кэширования
+- Необходимость метаданных элементов кэша
 
-## Generated Components
+## Генерируемые компоненты
 
-| Component | Description | Location |
-|-----------|-------------|----------|
-| CacheItemPool | Pool implementation | `src/Infrastructure/Cache/` |
-| CacheItem | Item implementation | `src/Infrastructure/Cache/` |
-| Unit Tests | PHPUnit tests | `tests/Unit/Infrastructure/Cache/` |
+| Компонент | Описание | Расположение |
+|-----------|----------|--------------|
+| CacheItemPool | Реализация пула | `src/Infrastructure/Cache/` |
+| CacheItem | Реализация элемента | `src/Infrastructure/Cache/` |
+| Модульные тесты | PHPUnit тесты | `tests/Unit/Infrastructure/Cache/` |
 
-## Template: Cache Item
+## Шаблон: Элемент кэша
 
 ```php
 <?php
@@ -122,7 +122,7 @@ final class CacheItem implements CacheItemInterface
 }
 ```
 
-## Template: Array Cache Pool
+## Шаблон: Пул кэша на массиве
 
 ```php
 <?php
@@ -260,7 +260,7 @@ final class ArrayCachePool implements CacheItemPoolInterface
 }
 ```
 
-## Template: Unit Test
+## Шаблон: Модульный тест
 
 ```php
 <?php
@@ -350,7 +350,7 @@ final class ArrayCachePoolTest extends TestCase
 }
 ```
 
-## Usage Example
+## Пример использования
 
 ```php
 <?php
@@ -380,7 +380,7 @@ $pool->saveDeferred($item2);
 $pool->commit();
 ```
 
-## Requirements
+## Требования
 
 ```json
 {
@@ -390,7 +390,7 @@ $pool->commit();
 }
 ```
 
-## See Also
+## См. также
 
-- `references/templates.md` - Redis and file-based implementations
-- `references/examples.md` - Integration examples
+- `references/templates.md` - Реализации на Redis и файловой системе
+- `references/examples.md` - Примеры интеграции

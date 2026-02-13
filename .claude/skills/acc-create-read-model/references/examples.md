@@ -1,8 +1,8 @@
-# Read Model / Projection Examples
+# Примеры Read Model / Projection
 
-## Order Summary Read Model
+## Read Model сводки заказа
 
-**File:** `src/Domain/Order/ReadModel/OrderSummaryReadModel.php`
+**Файл:** `src/Domain/Order/ReadModel/OrderSummaryReadModel.php`
 
 ```php
 <?php
@@ -92,9 +92,9 @@ final readonly class OrderSummaryReadModel
 
 ---
 
-## Order Summary Repository
+## Репозиторий сводки заказа
 
-**File:** `src/Infrastructure/Order/ReadModel/DoctrineOrderSummaryRepository.php`
+**Файл:** `src/Infrastructure/Order/ReadModel/DoctrineOrderSummaryRepository.php`
 
 ```php
 <?php
@@ -181,9 +181,9 @@ final readonly class DoctrineOrderSummaryRepository implements OrderSummaryReadM
 
 ---
 
-## Order Summary Projection
+## Проекция сводки заказа
 
-**File:** `src/Application/Order/Projection/OrderSummaryProjection.php`
+**Файл:** `src/Application/Order/Projection/OrderSummaryProjection.php`
 
 ```php
 <?php
@@ -271,11 +271,11 @@ final class OrderSummaryProjection implements OrderSummaryProjectionInterface
 
 ---
 
-## Unit Tests
+## Модульные тесты
 
-### Read Model Test
+### Тест Read Model
 
-**File:** `tests/Unit/Domain/Order/ReadModel/OrderSummaryReadModelTest.php`
+**Файл:** `tests/Unit/Domain/Order/ReadModel/OrderSummaryReadModelTest.php`
 
 ```php
 <?php
@@ -338,9 +338,9 @@ final class OrderSummaryReadModelTest extends TestCase
 }
 ```
 
-### Projection Test
+### Тест Projection
 
-**File:** `tests/Unit/Application/Order/Projection/OrderSummaryProjectionTest.php`
+**Файл:** `tests/Unit/Application/Order/Projection/OrderSummaryProjectionTest.php`
 
 ```php
 <?php

@@ -1,93 +1,93 @@
 # Awesome Claude Code
 
-> Claude Code extension for PHP with DDD, CQRS, Clean Architecture generators, and documentation tools.
+> Расширение Claude Code для PHP с генераторами DDD, CQRS, Clean Architecture и инструментами документации.
 
-## Quick Facts
+## Краткие факты
 
-- 26 commands, 57 agents, 242 skills, 21 hooks
-- PHP 8.2, PSR-12, readonly classes
-- DDD/CQRS/Hexagonal patterns
-- Testing, Documentation generation and audit
-- MCP servers support (Database, GitHub, etc.)
+- 26 команд, 57 агентов, 242 навыка, 21 хук
+- PHP 8.2, PSR-12, readonly классы
+- Паттерны DDD/CQRS/Hexagonal
+- Генерация тестов, документации и аудит
+- Поддержка MCP серверов (Database, GitHub и т.д.)
 
-## Installation
+## Установка
 
 ```bash
 composer require backvista/awesome-claude-code
 ```
 
-Components auto-copy to `.claude/` directory.
+Компоненты автоматически копируются в `.claude/` директорию.
 
-## Key Commands
+## Основные команды
 
-| Command | Purpose |
+| Команда | Назначение |
 |---------|---------|
-| `/acc-audit-architecture <path>` | Multi-pattern architecture audit |
-| `/acc-audit-ddd <path>` | DDD compliance analysis |
-| `/acc-audit-psr <path>` | PSR compliance audit |
-| `/acc-audit-documentation <path>` | Audit documentation quality |
-| `/acc-audit-claude-components` | Audit .claude folder structure |
-| `/acc-generate-documentation <path>` | Generate documentation |
-| `/acc-generate-claude-component` | Create commands/agents/skills |
-| `/acc-commit` | Auto-generate commit message |
-| `/acc-generate-test <path>` | Generate tests for file/folder |
-| `/acc-audit-test <path>` | Audit test quality |
-| `/acc-code-review [branch] [level]` | Multi-level code review |
-| `/acc-bug-fix <target>` | Automated bug diagnosis and fix |
-| `/acc-explain <path> [mode]` | Explain code: structure, logic, data flows |
+| `/acc-audit-architecture <path>` | Многоуровневый аудит архитектуры |
+| `/acc-audit-ddd <path>` | Анализ соответствия DDD |
+| `/acc-audit-psr <path>` | Аудит соответствия PSR |
+| `/acc-audit-documentation <path>` | Аудит качества документации |
+| `/acc-audit-claude-components` | Аудит структуры .claude папки |
+| `/acc-generate-documentation <path>` | Генерация документации |
+| `/acc-generate-claude-component` | Создание команд/агентов/навыков |
+| `/acc-commit` | Автогенерация commit сообщения |
+| `/acc-generate-test <path>` | Генерация тестов для файла/папки |
+| `/acc-audit-test <path>` | Аудит качества тестов |
+| `/acc-code-review [branch] [level]` | Многоуровневый code review |
+| `/acc-bug-fix <target>` | Автоматическая диагностика и исправление багов |
+| `/acc-explain <path> [mode]` | Объяснение кода: структура, логика, потоки данных |
 
-## Agents
+## Агенты
 
-| Agent | Purpose |
+| Агент | Назначение |
 |-------|---------|
-| `acc-architecture-auditor` | Multi-pattern architecture auditor |
-| `acc-ddd-auditor` | DDD compliance auditor |
-| `acc-ddd-generator` | DDD component generator |
-| `acc-pattern-generator` | Design pattern generator |
-| `acc-psr-generator` | PSR implementation generator |
-| `acc-documentation-writer` | Technical documentation writer |
-| `acc-documentation-auditor` | Documentation quality auditor |
-| `acc-diagram-designer` | Mermaid diagram designer |
-| `acc-test-auditor` | Test quality auditor |
-| `acc-test-generator` | Test generator |
-| `acc-bug-fix-coordinator` | Bug diagnosis → fix → test workflow |
-| `acc-bug-fixer` | Safe minimal bug fix generator |
-| `acc-explain-coordinator` | Code explanation (5 modes) |
-| `acc-codebase-navigator` | Structure scanning and pattern detection |
-| `acc-business-logic-analyst` | Business rules and process extraction |
-| `acc-data-flow-analyst` | Request lifecycle and data flow tracing |
+| `acc-architecture-auditor` | Многоуровневый аудитор архитектуры |
+| `acc-ddd-auditor` | Аудитор соответствия DDD |
+| `acc-ddd-generator` | Генератор DDD компонентов |
+| `acc-pattern-generator` | Генератор паттернов проектирования |
+| `acc-psr-generator` | Генератор PSR реализаций |
+| `acc-documentation-writer` | Автор технической документации |
+| `acc-documentation-auditor` | Аудитор качества документации |
+| `acc-diagram-designer` | Дизайнер Mermaid диаграмм |
+| `acc-test-auditor` | Аудитор качества тестов |
+| `acc-test-generator` | Генератор тестов |
+| `acc-bug-fix-coordinator` | Координатор исправления багов: диагностика → фикс → тест |
+| `acc-bug-fixer` | Генератор безопасных минимальных исправлений |
+| `acc-explain-coordinator` | Координатор объяснения кода (5 режимов) |
+| `acc-codebase-navigator` | Сканирование структуры и определение паттернов |
+| `acc-business-logic-analyst` | Извлечение бизнес-правил и процессов |
+| `acc-data-flow-analyst` | Трассировка жизненного цикла запроса и потоков данных |
 
-## Skills by Category
+## Навыки по категориям
 
-### Knowledge (38)
-- Architecture: DDD, CQRS, Clean, Hexagonal, Layered, EDA, Event Sourcing
-- Patterns: Saga, Outbox, Stability (Circuit Breaker, Retry, Rate Limiter, Bulkhead), ADR
-- Principles: SOLID, GRASP
-- Standards: PSR-1/4/12, PSR overview
-- Documentation: types, diagrams, QA
-- Testing: principles, pyramid, DDD testing
-- Bug Fix: categories, symptoms, fix patterns
-- CI/CD: pipeline, tools, deployment
-- Docker: core, multistage, base-images, php-extensions, compose, networking, security, buildkit, production, troubleshooting, orchestration, scanning
-- Task Progress: coordinator tracking guidelines
+### Знания (38)
+- Архитектура: DDD, CQRS, Clean, Hexagonal, Layered, EDA, Event Sourcing
+- Паттерны: Saga, Outbox, Stability (Circuit Breaker, Retry, Rate Limiter, Bulkhead), ADR
+- Принципы: SOLID, GRASP
+- Стандарты: PSR-1/4/12, обзор PSR
+- Документация: типы, диаграммы, QA
+- Тестирование: принципы, пирамида, DDD тестирование
+- Исправление багов: категории, симптомы, паттерны исправления
+- CI/CD: pipeline, инструменты, deployment
+- Docker: основы, multistage, base-images, php-extensions, compose, networking, security, buildkit, production, troubleshooting, orchestration, scanning
+- Прогресс задач: руководство по отслеживанию координаторов
 
-### Analyzers (99)
-- Architecture: SOLID violations, code smells, coupling/cohesion, bounded contexts, immutability, leaky abstractions, encapsulation
-- Testing: test coverage, test smells
-- Bug Detection: logic errors, null pointers, boundary, race conditions, resource leaks, exceptions, types, infinite loops
-- Security: input validation, output encoding, authentication, authorization, sensitive data, CSRF, crypto, dependencies, SQL injection, SSRF, command injection, deserialization, XXE, path traversal, insecure design, logging failures, secure headers, CORS, mass assignment, type juggling
-- Performance: N+1, query efficiency, memory, caching, loops, lazy loading, batch processing, complexity, connection pool, serialization, index usage, async patterns, file I/O
+### Анализаторы (99)
+- Архитектура: нарушения SOLID, code smells, coupling/cohesion, bounded contexts, immutability, leaky abstractions, encapsulation
+- Тестирование: покрытие тестов, test smells
+- Обнаружение багов: логические ошибки, null pointers, boundary, race conditions, resource leaks, exceptions, types, infinite loops
+- Безопасность: input validation, output encoding, authentication, authorization, sensitive data, CSRF, crypto, dependencies, SQL injection, SSRF, command injection, deserialization, XXE, path traversal, insecure design, logging failures, secure headers, CORS, mass assignment, type juggling
+- Производительность: N+1, query efficiency, memory, caching, loops, lazy loading, batch processing, complexity, connection pool, serialization, index usage, async patterns, file I/O
 - DDD: aggregate consistency, CQRS alignment, context communication
-- Documentation: link validation, code examples verification, version consistency
-- Stability: timeout strategy, cascading failures, fallback strategy
+- Документация: валидация ссылок, верификация примеров кода, согласованность версий
+- Стабильность: timeout strategy, cascading failures, fallback strategy
 - Creational: singleton anti-pattern, abstract factory audit
-- Readability: naming, code style, method/class length, nesting, comments, magic values, consistency
-- Testability: DI, pure functions, side effects, test quality
+- Читаемость: naming, code style, method/class length, nesting, comments, magic values, consistency
+- Тестируемость: DI, pure functions, side effects, test quality
 - CI/CD: CI config, CI logs, CI antipatterns
 - Docker: build errors, runtime errors, image size, security, secrets, user permissions, compose config, production readiness, antipatterns, layer efficiency, PHP config, healthcheck
 - Code Explainer: scan structure, identify entry points, detect architecture, resolve entry point, extract business rules, explain process, extract domain concepts, extract state machine, trace lifecycle, trace transformation, map async flows
 
-### Generators (86)
+### Генераторы (86)
 - DDD: Value Objects, Entities, Aggregates, Domain Events, Repositories, Domain Services, Factories, Specifications, DTOs, Anti-Corruption Layer
 - CQRS: Commands, Queries, Use Cases, Read Models
 - Stability: Circuit Breaker, Retry, Rate Limiter, Bulkhead
@@ -104,59 +104,59 @@ Components auto-copy to `.claude/` directory.
 - Docker Optimizers: layers, build time, image size, PHP-FPM, Compose resources, OPcache, startup
 - Deployment: deploy strategy, feature flags
 
-### Templates (10)
+### Шаблоны (10)
 - README, Architecture, ADR, API docs
 - Getting Started, Troubleshooting
 - Code Examples, Mermaid diagrams, Changelog
 - Explain output template
 
-## Project Structure
+## Структура проекта
 
 ```
 .claude/
-├── commands/        # Slash commands (26)
-├── agents/          # Subagents (57)
-├── skills/          # Knowledge + generators + analyzers (242)
-└── settings.json    # Hooks and permissions
+├── commands/        # Slash команды (26)
+├── agents/          # Субагенты (57)
+├── skills/          # Знания + генераторы + анализаторы (242)
+└── settings.json    # Хуки и разрешения
 ```
 
-## Documentation
+## Документация
 
-- Main README: [README.md](README.md)
-- Detailed docs: [docs/](docs/)
+- Основное README: [README.md](README.md)
+- Подробная документация: [docs/](docs/)
 - Changelog: [CHANGELOG.md](CHANGELOG.md)
 
-## Usage Examples
+## Примеры использования
 
 ```bash
-# Audit architecture
+# Аудит архитектуры
 /acc-audit-architecture ./src
 
-# Generate documentation
+# Генерация документации
 /acc-generate-documentation ./src
 
-# Check documentation quality
+# Проверка качества документации
 /acc-audit-documentation ./docs
 
-# Create new DDD component
+# Создание нового DDD компонента
 /acc-create-value-object Email
 
-# Generate tests
+# Генерация тестов
 /acc-generate-test ./src/Domain/Order/
 
-# Audit test quality
+# Аудит качества тестов
 /acc-audit-test ./tests
 
-# Fix bug by description or file reference
+# Исправление бага по описанию или ссылке на файл
 /acc-bug-fix ./src/Domain/Order/Order.php:42
 ```
 
-## Links
+## Ссылки
 
 - GitHub: https://github.com/backvista/awesome-claude-code
 - Packagist: https://packagist.org/packages/backvista/awesome-claude-code
 - Author: https://github.com/backvista
 
-## Version
+## Версия
 
-v2.10.0 - Strengthen audit system: +21 skills, conditional rules, unified severity, audit levels
+v2.10.0 - Усиление системы аудита: +21 навык, условные правила, единая система severity, уровни аудита

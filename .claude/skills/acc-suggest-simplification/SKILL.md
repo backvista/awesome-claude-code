@@ -1,18 +1,18 @@
 ---
 name: acc-suggest-simplification
-description: Suggests code simplification opportunities. Identifies extract method candidates, complex expressions, redundant code, refactoring opportunities.
+description: Предлагает возможности упрощения кода. Определяет кандидатов для извлечения методов, сложные выражения, избыточный код, возможности рефакторинга.
 ---
 
-# Code Simplification Suggestions
+# Предложения по упрощению кода
 
-Analyze PHP code for simplification and refactoring opportunities.
+Анализирует PHP-код на предмет возможностей упрощения и рефакторинга.
 
-## Simplification Patterns
+## Паттерны упрощения
 
-### 1. Extract Method
+### 1. Извлечение метода
 
 ```php
-// BEFORE: Long inline code block
+// ДО: Длинный встроенный блок кода
 public function processOrder(Order $order): void
 {
     // Validate order (5 lines)
@@ -36,7 +36,7 @@ public function processOrder(Order $order): void
     $this->mailer->send($order->getCustomer()->getEmail(), 'order_confirmed');
 }
 
-// AFTER: Extracted methods
+// ПОСЛЕ: Извлечённые методы
 public function processOrder(Order $order): void
 {
     $this->validateOrder($order);
@@ -49,10 +49,10 @@ private function processPayment(Order $order): Payment {}
 private function sendConfirmation(Order $order): void {}
 ```
 
-### 2. Introduce Explaining Variable
+### 2. Введение поясняющей переменной
 
 ```php
-// BEFORE: Complex expression
+// ДО: Сложное выражение
 if ($user->getSubscription()?->isActive()
     && $user->getCreatedAt() < new DateTime('-30 days')
     && !$user->hasUsedTrial()
@@ -60,7 +60,7 @@ if ($user->getSubscription()?->isActive()
     $this->offerUpgrade($user);
 }
 
-// AFTER: Named variables
+// ПОСЛЕ: Именованные переменные
 $hasActiveSubscription = $user->getSubscription()?->isActive();
 $isEstablishedUser = $user->getCreatedAt() < new DateTime('-30 days');
 $eligibleForUpgrade = !$user->hasUsedTrial() && $user->getOrderCount() > 0;
@@ -69,48 +69,48 @@ if ($hasActiveSubscription && $isEstablishedUser && $eligibleForUpgrade) {
     $this->offerUpgrade($user);
 }
 
-// EVEN BETTER: Extract to method
+// ЕЩЁ ЛУЧШЕ: Извлечение в метод
 if ($user->isEligibleForUpgrade()) {
     $this->offerUpgrade($user);
 }
 ```
 
-### 3. Remove Redundant Code
+### 3. Удаление избыточного кода
 
 ```php
-// BEFORE: Redundant checks
+// ДО: Дублирующие проверки
 if ($value !== null) {
-    if ($value !== null) {  // Duplicate check
+    if ($value !== null) {  // Повторная проверка
         $this->process($value);
     }
 }
 
-// BEFORE: Unnecessary else
+// ДО: Ненужный else
 if ($condition) {
     return $a;
 } else {
     return $b;
 }
 
-// AFTER: Simplified
+// ПОСЛЕ: Упрощённо
 if ($condition) {
     return $a;
 }
 return $b;
 
-// BEFORE: Redundant boolean
+// ДО: Избыточное булево сравнение
 if ($condition === true) {}
 return $value === true;
 
-// AFTER: Simplified
+// ПОСЛЕ: Упрощённо
 if ($condition) {}
 return $value;
 ```
 
-### 4. Simplify Conditionals
+### 4. Упрощение условий
 
 ```php
-// BEFORE: Nested conditionals
+// ДО: Вложенные условия
 if ($user !== null) {
     if ($user->isActive()) {
         if ($user->hasPermission('edit')) {
@@ -120,41 +120,41 @@ if ($user !== null) {
 }
 return false;
 
-// AFTER: Combined condition
+// ПОСЛЕ: Объединённое условие
 return $user !== null
     && $user->isActive()
     && $user->hasPermission('edit');
 
-// BEFORE: Negative condition
+// ДО: Отрицательное условие
 if (!$items->isEmpty()) {
     $this->process($items);
 }
 
-// AFTER: Positive condition
+// ПОСЛЕ: Положительное условие
 if ($items->isNotEmpty()) {
     $this->process($items);
 }
 ```
 
-### 5. Replace Temp with Query
+### 5. Замена временной переменной запросом
 
 ```php
-// BEFORE: Temporary variable used once
+// ДО: Временная переменная используется один раз
 $basePrice = $order->getBasePrice();
 $discount = $basePrice * 0.1;
 return $basePrice - $discount;
 
-// AFTER: Inline or method
+// ПОСЛЕ: Встраивание или метод
 return $order->getBasePrice() * 0.9;
 
-// Or if complex:
+// Или если сложно:
 return $order->getBasePrice() - $this->calculateDiscount($order);
 ```
 
-### 6. Use Collection Methods
+### 6. Использование методов коллекций
 
 ```php
-// BEFORE: Manual loop
+// ДО: Ручной цикл
 $active = [];
 foreach ($users as $user) {
     if ($user->isActive()) {
@@ -162,19 +162,19 @@ foreach ($users as $user) {
     }
 }
 
-// AFTER: array_filter
+// ПОСЛЕ: array_filter
 $active = array_filter($users, fn($user) => $user->isActive());
 
-// BEFORE: Manual map
+// ДО: Ручной маппинг
 $emails = [];
 foreach ($users as $user) {
     $emails[] = $user->getEmail();
 }
 
-// AFTER: array_map
+// ПОСЛЕ: array_map
 $emails = array_map(fn($user) => $user->getEmail(), $users);
 
-// BEFORE: Manual find
+// ДО: Ручной поиск
 $found = null;
 foreach ($items as $item) {
     if ($item->getId() === $id) {
@@ -183,14 +183,14 @@ foreach ($items as $item) {
     }
 }
 
-// AFTER: Collection method
+// ПОСЛЕ: Метод коллекции
 $found = $collection->first(fn($item) => $item->getId() === $id);
 ```
 
-### 7. Replace Switch with Polymorphism
+### 7. Замена switch полиморфизмом
 
 ```php
-// BEFORE: Switch on type
+// ДО: Switch по типу
 public function calculateShipping(Order $order): Money
 {
     switch ($order->getShippingMethod()) {
@@ -205,7 +205,7 @@ public function calculateShipping(Order $order): Money
     }
 }
 
-// AFTER: Strategy pattern
+// ПОСЛЕ: Паттерн Strategy
 interface ShippingCalculator {
     public function calculate(Order $order): Money;
 }
@@ -221,17 +221,17 @@ public function calculateShipping(Order $order): Money
 }
 ```
 
-### 8. Null Object Pattern
+### 8. Паттерн Null Object
 
 ```php
-// BEFORE: Null checks everywhere
+// ДО: Проверки на null повсюду
 if ($user->getAddress() !== null) {
     echo $user->getAddress()->getCity();
 } else {
     echo 'Unknown';
 }
 
-// AFTER: Null Object
+// ПОСЛЕ: Null Object
 class NullAddress implements AddressInterface
 {
     public function getCity(): string
@@ -240,14 +240,14 @@ class NullAddress implements AddressInterface
     }
 }
 
-// Always safe to call
+// Всегда безопасный вызов
 echo $user->getAddress()->getCity();
 ```
 
-### 9. Guard Clauses
+### 9. Guard-выражения
 
 ```php
-// BEFORE: Deeply nested
+// ДО: Глубокая вложенность
 public function process(Request $request): Response
 {
     if ($request !== null) {
@@ -265,7 +265,7 @@ public function process(Request $request): Response
     }
 }
 
-// AFTER: Guard clauses
+// ПОСЛЕ: Guard-выражения
 public function process(Request $request): Response
 {
     if ($request === null) {
@@ -284,25 +284,25 @@ public function process(Request $request): Response
 }
 ```
 
-### 10. Use Modern PHP Features
+### 10. Использование современных возможностей PHP
 
 ```php
-// BEFORE: Old syntax
+// ДО: Старый синтаксис
 $name = isset($data['name']) ? $data['name'] : 'default';
 
-// AFTER: Null coalescing
+// ПОСЛЕ: Null coalescing
 $name = $data['name'] ?? 'default';
 
-// BEFORE: Property assignment
+// ДО: Присвоение свойства
 $value = $object->getValue();
 if ($value !== null) {
     echo $value;
 }
 
-// AFTER: Nullsafe operator
+// ПОСЛЕ: Nullsafe-оператор
 echo $object?->getValue();
 
-// BEFORE: Match as if/else
+// ДО: Match как if/else
 if ($status === 'active') {
     $color = 'green';
 } elseif ($status === 'pending') {
@@ -311,7 +311,7 @@ if ($status === 'active') {
     $color = 'red';
 }
 
-// AFTER: Match expression
+// ПОСЛЕ: Выражение match
 $color = match($status) {
     'active' => 'green',
     'pending' => 'yellow',
@@ -319,41 +319,41 @@ $color = match($status) {
 };
 ```
 
-## Severity Classification
+## Классификация серьёзности
 
-| Pattern | Severity |
-|---------|----------|
-| Deeply nested code | 🟠 Major |
-| Repeated code blocks | 🟠 Major |
-| Complex boolean expressions | 🟡 Minor |
-| Old syntax available in modern PHP | 🟢 Suggestion |
-| Verbose but clear code | 🟢 Suggestion |
+| Паттерн | Серьёзность |
+|---------|------------|
+| Глубоко вложенный код | 🟠 Значительная |
+| Повторяющиеся блоки кода | 🟠 Значительная |
+| Сложные булевы выражения | 🟡 Незначительная |
+| Старый синтаксис при наличии современного PHP | 🟢 Рекомендация |
+| Многословный, но понятный код | 🟢 Рекомендация |
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### Simplification: [Description]
+### Упрощение: [Описание]
 
-**Severity:** 🟠/🟡/🟢
-**Location:** `file.php:line`
-**Type:** [Extract Method|Guard Clause|Collection Method|...]
+**Серьёзность:** 🟠/🟡/🟢
+**Расположение:** `file.php:line`
+**Тип:** [Extract Method|Guard Clause|Collection Method|...]
 
-**Issue:**
-[Description of the complexity]
+**Проблема:**
+[Описание сложности]
 
-**Current:**
+**Текущий код:**
 ```php
-// Complex code
+// Сложный код
 ```
 
-**Suggested:**
+**Предложение:**
 ```php
-// Simplified code
+// Упрощённый код
 ```
 
-**Benefits:**
-- Improved readability
-- Reduced cognitive load
-- Easier testing
-- Better reusability
+**Преимущества:**
+- Улучшенная читаемость
+- Сниженная когнитивная нагрузка
+- Упрощённое тестирование
+- Лучшая переиспользуемость
 ```

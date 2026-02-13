@@ -1,184 +1,193 @@
 ---
-description: DDD architecture audit with pattern recommendations. Analyzes layer separation, domain model richness, and architectural violations. Provides actionable recommendations with links to generation skills.
+description: Аудит архитектуры DDD с рекомендациями по паттернам. Анализирует разделение слоёв, богатство доменной модели и архитектурные нарушения. Предоставляет практические рекомендации со ссылками на навыки генерации.
 allowed-tools: Read, Grep, Glob, Bash, Task
 model: opus
-argument-hint: <path> [-- additional instructions]
+argument-hint: <path> [-- дополнительные инструкции]
 ---
 
-# DDD Architecture Audit
+# Аудит архитектуры DDD
 
-Perform a comprehensive DDD architecture audit with actionable pattern recommendations.
+Выполняет комплексный аудит архитектуры DDD с практическими рекомендациями по паттернам.
 
-## Input Parsing
+## Парсинг входных данных
 
-Parse `$ARGUMENTS` to extract path and optional meta-instructions:
+Парсит `$ARGUMENTS` для извлечения пути и опциональных мета-инструкций:
 
 ```
-Format: <path> [-- <meta-instructions>]
+Формат: <path> [-- <мета-инструкции>]
 
-Examples:
+Примеры:
 - /acc-audit-ddd ./src
 - /acc-audit-ddd ./src -- focus on Order bounded context
 - /acc-audit-ddd ./src -- skip Infrastructure, check aggregates only
 - /acc-audit-ddd ./src -- особое внимание на Event Sourcing паттерны
 ```
 
-**Parsing rules:**
-1. Split `$ARGUMENTS` by ` -- ` (space-dash-dash-space)
-2. First part = **path** (required, default: current directory)
-3. Second part = **meta-instructions** (optional, additional focus/filters)
+**Правила парсинга:**
+1. Разделить `$ARGUMENTS` по ` -- ` (пробел-тире-тире-пробел)
+2. Первая часть = **path** (обязательно, по умолчанию: текущая директория)
+3. Вторая часть = **мета-инструкции** (опционально, дополнительный фокус/фильтры)
 
-## Target
+## Цель
 
-- **Path**: First part of `$ARGUMENTS` (before `--`)
-- **Meta-instructions**: Second part (after `--`) — use to customize audit focus
+- **Path**: Первая часть `$ARGUMENTS` (до `--`)
+- **Мета-инструкции**: Вторая часть (после `--`) — используется для настройки фокуса аудита
 
-If meta-instructions provided, adjust audit to:
-- Focus on specific areas mentioned
-- Skip areas if requested
-- Apply additional checks
-- Modify output format if requested
+Если мета-инструкции указаны, настроить аудит для:
+- Фокуса на конкретных областях, упомянутых в инструкциях
+- Пропуска областей по запросу
+- Применения дополнительных проверок
+- Модификации формата вывода по запросу
 
-## Pre-flight Check
+## Предварительная проверка
 
-1. Verify the path exists:
-   - If `$ARGUMENTS` is empty, ask user for the project path
-   - If path doesn't exist, report error and stop
+1. Проверить существование пути:
+   - Если `$ARGUMENTS` пуст, запросить у пользователя путь к проекту
+   - Если путь не существует, сообщить об ошибке и остановиться
 
-2. Verify it's a PHP project:
-   - Check for `composer.json` or `*.php` files
-   - If not a PHP project, report and stop
+2. Проверить, что это PHP-проект:
+   - Проверить наличие `composer.json` или `*.php` файлов
+   - Если это не PHP-проект, сообщить и остановиться
 
-## Instructions
+## Инструкции
 
-Extract audit level from meta-instructions: `level:quick`, `level:standard`, `level:deep`. Default: `standard`.
+Извлечь уровень аудита из мета-инструкций: `level:quick`, `level:standard`, `level:deep`. По умолчанию: `standard`.
 
-Use the `acc-ddd-auditor` agent to perform a comprehensive DDD audit. Pass: `"Audit level: [LEVEL]. Use TaskCreate/TaskUpdate for progress visibility."`
+Использовать агент `acc-ddd-auditor` для выполнения комплексного аудита DDD. Передать: `"Уровень аудита: [LEVEL]. Используйте TaskCreate/TaskUpdate для отображения прогресса."`
 
-### Analysis Scope
+### Область анализа
 
-1. **Layer Structure** — Domain, Application, Infrastructure, Presentation
-2. **Domain Model** — Entities, Value Objects, Aggregates, Domain Services
-3. **Application Layer** — UseCases, DTOs, Command/Query Handlers
-4. **Infrastructure** — Repository implementations, external integrations
-5. **Presentation Layer** — Actions/Controllers, Request/Response DTOs, Middleware
-6. **Dependencies** — layer violations, circular dependencies
+1. **Структура слоёв** — Domain, Application, Infrastructure, Presentation
+2. **Доменная модель** — Entities, Value Objects, Aggregates, Domain Services
+3. **Слой приложения** — UseCases, DTOs, Command/Query Handlers
+4. **Инфраструктура** — Реализации Repository, внешние интеграции
+5. **Слой представления** — Actions/Controllers, Request/Response DTOs, Middleware
+6. **Зависимости** — нарушения слоёв, циклические зависимости
 
-### Generate Recommendations
+### Генерация рекомендаций
 
-Based on detected issues, map problems to solutions:
+На основе обнаруженных проблем сопоставить проблемы с решениями:
 
-| Issue Type | Pattern | Generation Skill |
+| Тип проблемы | Паттерн | Навык генерации |
 |------------|---------|------------------|
-| Primitive obsession | Value Object | `acc-create-value-object` |
-| Anemic entities | Rich Entity | `acc-create-entity` |
-| Missing invariants | Aggregate Root | `acc-create-aggregate` |
-| Complex object creation | Factory | `acc-create-factory` |
-| Complex business rules | Specification | `acc-create-specification` |
-| Cross-layer data transfer | DTO | `acc-create-dto` |
-| External system integration | Anti-Corruption Layer | `acc-create-anti-corruption-layer` |
-| Missing domain events | Domain Event | `acc-create-domain-event` |
-| Stateless business logic | Domain Service | `acc-create-domain-service` |
-| Write operations | Command + Handler | `acc-create-command` |
-| Read operations | Query + Handler | `acc-create-query` |
-| Data persistence | Repository | `acc-create-repository` |
-| Business orchestration | Use Case | `acc-create-use-case` |
+| Примитивная одержимость | Value Object | `acc-create-value-object` |
+| Анемичные сущности | Rich Entity | `acc-create-entity` |
+| Отсутствие инвариантов | Aggregate Root | `acc-create-aggregate` |
+| Сложное создание объектов | Factory | `acc-create-factory` |
+| Сложные бизнес-правила | Specification | `acc-create-specification` |
+| Передача данных между слоями | DTO | `acc-create-dto` |
+| Интеграция внешних систем | Anti-Corruption Layer | `acc-create-anti-corruption-layer` |
+| Отсутствие доменных событий | Domain Event | `acc-create-domain-event` |
+| Stateless бизнес-логика | Domain Service | `acc-create-domain-service` |
+| Операции записи | Command + Handler | `acc-create-command` |
+| Операции чтения | Query + Handler | `acc-create-query` |
+| Персистентность данных | Repository | `acc-create-repository` |
+| Оркестрация бизнес-логики | Use Case | `acc-create-use-case` |
 
-## Expected Output
+## Ожидаемый результат
 
-A structured markdown report containing:
+Структурированный markdown-отчёт, содержащий:
 
-### 1. Executive Summary
-- Overall DDD compliance score
-- Layer structure overview
-- Critical issues count
+### 1. Краткая сводка
 
-### 2. Layer Compliance Matrix
-| Layer | Found | Compliance | Issues |
+- Общий показатель соответствия DDD
+- Обзор структуры слоёв
+- Количество критичных проблем
+
+### 2. Матрица соответствия слоёв
+
+| Слой | Обнаружен | Соответствие | Проблемы |
 |-------|-------|------------|--------|
 
-### 3. Critical Issues
-Architecture violations requiring immediate attention:
-- Domain → Infrastructure dependencies
-- Framework leakage into Domain
-- Business logic in wrong layers
+### 3. Критичные проблемы
 
-### 4. Warnings
-Antipatterns detected:
-- Anemic domain models
-- Primitive obsession
-- Magic strings (should be Enums)
-- Public setters (breaks encapsulation)
+Архитектурные нарушения, требующие немедленного внимания:
+- Зависимости Domain → Infrastructure
+- Утечка фреймворка в Domain
+- Бизнес-логика в неправильных слоях
 
-### 5. Pattern Recommendations
+### 4. Предупреждения
 
-**Actionable recommendations linking issues to solutions:**
+Обнаруженные антипаттерны:
+- Анемичные доменные модели
+- Примитивная одержимость
+- Магические строки (должны быть Enums)
+- Публичные сеттеры (нарушают инкапсуляцию)
 
-#### Domain Model Improvements
-| Problem Found | Recommended | Skill to Use |
+### 5. Рекомендации по паттернам
+
+**Практические рекомендации, связывающие проблемы с решениями:**
+
+#### Улучшения доменной модели
+
+| Обнаруженная проблема | Рекомендуется | Навык для использования |
 |---------------|-------------|--------------|
-| String email field | Value Object | Run `/acc-create-value-object Email` |
-| Entity with only getters | Rich Entity | Run `/acc-create-entity` |
-| No aggregate boundaries | Aggregate | Run `/acc-create-aggregate` |
+| Строковое поле email | Value Object | Запустите `/acc-create-value-object Email` |
+| Сущность только с геттерами | Rich Entity | Запустите `/acc-create-entity` |
+| Нет границ агрегатов | Aggregate | Запустите `/acc-create-aggregate` |
 
-#### Application Layer Improvements
-| Problem Found | Recommended | Skill to Use |
+#### Улучшения слоя приложения
+
+| Обнаруженная проблема | Рекомендуется | Навык для использования |
 |---------------|-------------|--------------|
-| Missing orchestration | Use Case | Run `/acc-create-use-case` |
-| No command separation | Command | Run `/acc-create-command` |
-| No query separation | Query | Run `/acc-create-query` |
+| Отсутствие оркестрации | Use Case | Запустите `/acc-create-use-case` |
+| Нет разделения команд | Command | Запустите `/acc-create-command` |
+| Нет разделения запросов | Query | Запустите `/acc-create-query` |
 
-#### Infrastructure Improvements
-| Problem Found | Recommended | Skill to Use |
+#### Улучшения инфраструктуры
+
+| Обнаруженная проблема | Рекомендуется | Навык для использования |
 |---------------|-------------|--------------|
-| No repository interface | Repository | Run `/acc-create-repository` |
-| Direct external API calls | ACL | Run `/acc-create-anti-corruption-layer` |
+| Нет интерфейса репозитория | Repository | Запустите `/acc-create-repository` |
+| Прямые вызовы внешних API | ACL | Запустите `/acc-create-anti-corruption-layer` |
 
-#### Presentation Layer Improvements
-| Problem Found | Recommended | Skill to Use |
+#### Улучшения слоя представления
+
+| Обнаруженная проблема | Рекомендуется | Навык для использования |
 |---------------|-------------|--------------|
-| Fat controller | Action (ADR) | Run `acc-create-action` |
-| Missing response DTO | Responder | Run `acc-create-responder` |
-| No input validation | Request DTO | Run `acc-create-dto` |
+| Толстый контроллер | Action (ADR) | Запустите `acc-create-action` |
+| Отсутствует DTO ответа | Responder | Запустите `acc-create-responder` |
+| Нет валидации входных данных | Request DTO | Запустите `acc-create-dto` |
 
-### 6. Prioritized Action Items
-1. **Critical:** [Action with skill reference]
-2. **High:** [Action with skill reference]
-3. **Medium:** [Action with skill reference]
+### 6. Приоритизированные задачи
 
-## Audit Levels
+1. **Критично:** [Действие со ссылкой на навык]
+2. **Высоко:** [Действие со ссылкой на навык]
+3. **Средне:** [Действие со ссылкой на навык]
 
-Extract audit level from meta-instructions: `level:quick`, `level:standard`, `level:deep`. Default: `standard`.
+## Уровни аудита
 
-| Level | Scope | What's Checked |
+Извлечь уровень аудита из мета-инструкций: `level:quick`, `level:standard`, `level:deep`. По умолчанию: `standard`.
+
+| Уровень | Область | Что проверяется |
 |-------|-------|----------------|
-| `quick` | Layer check | Layer structure detection, basic dependency direction |
-| `standard` | Full 10-phase | All 6 analysis areas, domain model quality, full compliance matrix |
-| `deep` | Standard + consistency | Standard + aggregate consistency, bounded context communication, event flow |
+| `quick` | Проверка слоёв | Обнаружение структуры слоёв, базовое направление зависимостей |
+| `standard` | Полные 10 фаз | Все 6 областей анализа, качество доменной модели, полная матрица соответствия |
+| `deep` | Standard + согласованность | Standard + согласованность агрегатов, коммуникация между контекстами, поток событий |
 
-## Severity Levels
+## Уровни критичности
 
-| Level | Symbol | Criteria |
+| Уровень | Символ | Критерий |
 |-------|--------|----------|
-| Critical | 🔴 | Domain → Infrastructure dependency, business logic in Presentation |
-| High | 🟠 | Anemic domain models, primitive obsession, missing aggregates |
-| Medium | 🟡 | Naming violations, missing Value Objects, suboptimal layering |
-| Low | 🟢 | Optional improvements, style suggestions |
+| Критичный | 🔴 | Зависимость Domain → Infrastructure, бизнес-логика в Presentation |
+| Высокий | 🟠 | Анемичные доменные модели, примитивная одержимость, отсутствие агрегатов |
+| Средний | 🟡 | Нарушения именования, отсутствие Value Objects, неоптимальное разделение слоёв |
+| Низкий | 🟢 | Опциональные улучшения, предложения по стилю |
 
-## Meta-Instructions Guide
+## Руководство по мета-инструкциям
 
-| Instruction | Effect |
+| Инструкция | Эффект |
 |-------------|--------|
-| `focus on aggregates` | Deep aggregate analysis |
-| `focus on [Context]` | Analyze specific bounded context |
-| `skip Infrastructure` | Exclude infrastructure audit |
-| `check aggregates only` | Only aggregate consistency |
-| `level:quick` | Fast audit (layer check only) |
-| `level:deep` | Deep audit (+ aggregate consistency + context communication) |
-| `detailed report` | Maximum detail in report |
-| `на русском` | Report in Russian |
+| `focus on aggregates` | Глубокий анализ агрегатов |
+| `focus on [Context]` | Анализ конкретного ограниченного контекста |
+| `skip Infrastructure` | Исключить аудит инфраструктуры |
+| `check aggregates only` | Только согласованность агрегатов |
+| `level:quick` | Быстрый аудит (только проверка слоёв) |
+| `level:deep` | Глубокий аудит (+ согласованность агрегатов + коммуникация контекстов) |
+| `detailed report` | Максимальная детализация в отчёте |
+| `на русском` | Отчёт на русском языке |
 
-## Usage Examples
+## Примеры использования
 
 ```bash
 /acc-audit-ddd ./src
@@ -186,4 +195,3 @@ Extract audit level from meta-instructions: `level:quick`, `level:standard`, `le
 /acc-audit-ddd ./src -- level:deep
 /acc-audit-ddd ./src -- level:quick
 ```
-

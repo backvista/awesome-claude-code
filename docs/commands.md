@@ -1,16 +1,16 @@
-# Commands
+# Команды
 
-Slash commands for Claude Code. Commands are user-invoked actions triggered by typing `/command-name` in the CLI.
+Slash-команды для Claude Code. Команды -- это действия, вызываемые пользователем через `/command-name` в CLI.
 
-## Meta-Instructions Support
+## Поддержка мета-инструкций
 
-All commands support optional meta-instructions via `--` separator:
+Все команды поддерживают необязательные мета-инструкции через разделитель `--`:
 
 ```
-/command <arguments> -- <meta-instructions>
+/command <аргументы> -- <мета-инструкции>
 ```
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-audit-ddd ./src -- focus on aggregate boundaries
 /acc-generate-test src/Order.php -- only unit tests, skip integration
@@ -18,135 +18,135 @@ All commands support optional meta-instructions via `--` separator:
 /acc-audit-architecture ./src -- на русском языке
 ```
 
-Meta-instructions allow you to:
-- Focus analysis on specific aspects
-- Include/exclude certain checks
-- Request specific output language
-- Add custom context to the task
+Мета-инструкции позволяют:
+- Сфокусировать анализ на конкретных аспектах
+- Включить/исключить определенные проверки
+- Запросить определенный язык вывода
+- Добавить пользовательский контекст к задаче
 
-## Overview
+## Обзор
 
-| Command | Arguments | Purpose |
+| Команда | Аргументы | Назначение |
 |---------|-----------|---------|
-| `/acc-commit` | `[tag] [-- instructions]` | Auto-generate commit message and push |
-| `/acc-generate-claude-component` | `[type] [-- instructions]` | Create commands, agents, or skills |
-| `/acc-audit-claude-components` | `[-- instructions]` | Audit `.claude/` folder quality |
-| `/acc-audit-architecture` | `<path> [-- instructions]` | Multi-pattern architecture audit |
-| `/acc-audit-ddd` | `<path> [-- instructions]` | DDD compliance analysis |
-| `/acc-audit-psr` | `<path> [-- instructions]` | PSR compliance audit |
-| `/acc-audit-security` | `<path> [-- instructions]` | OWASP Top 10 + PHP security audit |
-| `/acc-audit-performance` | `<path> [-- instructions]` | N+1, memory, caching, complexity audit |
-| `/acc-audit-patterns` | `<path> [-- instructions]` | Design patterns + SOLID/GRASP audit |
-| `/acc-generate-ddd` | `<type> <name> [-- instructions]` | Generate DDD components (entity, VO, aggregate, etc.) |
-| `/acc-generate-psr` | `<psr> <name> [-- instructions]` | Generate PSR-compliant components |
-| `/acc-generate-patterns` | `<pattern> <name> [-- instructions]` | Generate design pattern implementations |
-| `/acc-refactor` | `<path> [-- instructions]` | Guided refactoring with analysis |
-| `/acc-generate-documentation` | `<path> [-- instructions]` | Generate documentation |
-| `/acc-audit-documentation` | `<path> [-- instructions]` | Audit documentation quality |
-| `/acc-generate-test` | `<path> [-- instructions]` | Generate tests for PHP code |
-| `/acc-audit-test` | `<path> [-- instructions]` | Audit test quality and coverage |
-| `/acc-code-review` | `[branch] [level] [-- task]` | Multi-level code review with task matching |
-| `/acc-bug-fix` | `<description\|file:line\|trace>` | Diagnose and fix bug with regression testing |
-| `/acc-ci-setup` | `<platform> [path] [-- instructions]` | Setup CI pipeline from scratch |
-| `/acc-ci-fix` | `<pipeline-url\|log-file\|description> [-- instructions]` | Fix CI pipeline issues with interactive approval |
-| `/acc-ci-optimize` | `[path] [-- focus areas]` | Optimize CI pipeline performance |
-| `/acc-audit-ci` | `[path] [-- focus areas]` | Comprehensive CI/CD audit |
-| `/acc-audit-docker` | `[path] [-- focus areas]` | Audit Docker config: Dockerfile, Compose, security, performance |
-| `/acc-generate-docker` | `<type> [name] [-- instructions]` | Generate Docker components (Dockerfile, Compose, Nginx, etc.) |
-| `/acc-explain` | `<path\|route\|command> [mode] [-- instructions]` | Explain code: structure, business logic, data flows, architecture |
+| `/acc-commit` | `[tag] [-- instructions]` | Автогенерация commit-сообщения и push |
+| `/acc-generate-claude-component` | `[type] [-- instructions]` | Создание команд, агентов или навыков |
+| `/acc-audit-claude-components` | `[-- instructions]` | Аудит качества папки `.claude/` |
+| `/acc-audit-architecture` | `<path> [-- instructions]` | Многоуровневый аудит архитектуры |
+| `/acc-audit-ddd` | `<path> [-- instructions]` | Анализ соответствия DDD |
+| `/acc-audit-psr` | `<path> [-- instructions]` | Аудит соответствия PSR |
+| `/acc-audit-security` | `<path> [-- instructions]` | Аудит безопасности OWASP Top 10 + PHP |
+| `/acc-audit-performance` | `<path> [-- instructions]` | Аудит N+1, памяти, кэширования, сложности |
+| `/acc-audit-patterns` | `<path> [-- instructions]` | Аудит паттернов проектирования + SOLID/GRASP |
+| `/acc-generate-ddd` | `<type> <name> [-- instructions]` | Генерация DDD-компонентов (entity, VO, aggregate и др.) |
+| `/acc-generate-psr` | `<psr> <name> [-- instructions]` | Генерация PSR-совместимых компонентов |
+| `/acc-generate-patterns` | `<pattern> <name> [-- instructions]` | Генерация реализаций паттернов проектирования |
+| `/acc-refactor` | `<path> [-- instructions]` | Управляемый рефакторинг с анализом |
+| `/acc-generate-documentation` | `<path> [-- instructions]` | Генерация документации |
+| `/acc-audit-documentation` | `<path> [-- instructions]` | Аудит качества документации |
+| `/acc-generate-test` | `<path> [-- instructions]` | Генерация тестов для PHP-кода |
+| `/acc-audit-test` | `<path> [-- instructions]` | Аудит качества тестов и покрытия |
+| `/acc-code-review` | `[branch] [level] [-- task]` | Многоуровневый code review с привязкой к задаче |
+| `/acc-bug-fix` | `<description\|file:line\|trace>` | Диагностика и исправление бага с регрессионным тестированием |
+| `/acc-ci-setup` | `<platform> [path] [-- instructions]` | Настройка CI-пайплайна с нуля |
+| `/acc-ci-fix` | `<pipeline-url\|log-file\|description> [-- instructions]` | Исправление проблем CI-пайплайна с интерактивным подтверждением |
+| `/acc-ci-optimize` | `[path] [-- focus areas]` | Оптимизация производительности CI-пайплайна |
+| `/acc-audit-ci` | `[path] [-- focus areas]` | Комплексный аудит CI/CD |
+| `/acc-audit-docker` | `[path] [-- focus areas]` | Аудит Docker-конфигурации: Dockerfile, Compose, безопасность, производительность |
+| `/acc-generate-docker` | `<type> [name] [-- instructions]` | Генерация Docker-компонентов (Dockerfile, Compose, Nginx и др.) |
+| `/acc-explain` | `<path\|route\|command> [mode] [-- instructions]` | Объяснение кода: структура, бизнес-логика, потоки данных, архитектура |
 
 ---
 
 ## `/acc-generate-claude-component`
 
-**Path:** `commands/acc-generate-claude-component.md`
+**Путь:** `commands/acc-generate-claude-component.md`
 
-Interactive wizard for creating Claude Code components.
+Интерактивный мастер создания компонентов Claude Code.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-generate-claude-component [type] [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `type` | No | Component type: `command`, `agent`, `skill`, `hook` |
-| `-- instructions` | No | Additional context for generation |
+| `type` | Нет | Тип компонента: `command`, `agent`, `skill`, `hook` |
+| `-- instructions` | Нет | Дополнительный контекст для генерации |
 
-**Examples:**
+**Примеры:**
 ```bash
-/acc-generate-claude-component                        # Interactive mode
-/acc-generate-claude-component command                # Skip type selection
+/acc-generate-claude-component                        # Интерактивный режим
+/acc-generate-claude-component command                # Пропуск выбора типа
 /acc-generate-claude-component agent -- for DDD auditing
 /acc-generate-claude-component skill -- generates Value Objects
 ```
 
-**Process:**
-1. Asks what to create (command/agent/skill/hook) — skipped if type provided
-2. Gathers requirements through questions
-3. Uses `acc-claude-code-expert` agent with `acc-claude-code-knowledge` skill
-4. Creates component with proper structure
-5. Validates and shows result
+**Процесс:**
+1. Спрашивает, что создать (command/agent/skill/hook) -- пропускается, если тип указан
+2. Собирает требования через вопросы
+3. Использует агент `acc-claude-code-expert` с навыком `acc-claude-code-knowledge`
+4. Создает компонент с правильной структурой
+5. Валидирует и показывает результат
 
 ---
 
 ## `/acc-audit-claude-components`
 
-**Path:** `commands/acc-audit-claude-components.md`
+**Путь:** `commands/acc-audit-claude-components.md`
 
-Audit `.claude/` folder structure and configuration quality.
+Аудит структуры и качества конфигурации папки `.claude/`.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-audit-claude-components [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `-- instructions` | No | Focus audit on specific aspects |
+| `-- instructions` | Нет | Фокусировка аудита на конкретных аспектах |
 
-**Examples:**
+**Примеры:**
 ```bash
-/acc-audit-claude-components                           # Full audit
+/acc-audit-claude-components                           # Полный аудит
 /acc-audit-claude-components -- focus on agents only
 /acc-audit-claude-components -- check for unused skills
 ```
 
-**Analyzes:**
-- Commands (YAML frontmatter, descriptions, tool restrictions)
-- Agents (naming, skills references, tool permissions)
-- Skills (structure, size, references)
-- Settings (hooks, permissions, secrets)
-- Cross-references integrity
+**Анализирует:**
+- Команды (YAML frontmatter, описания, ограничения инструментов)
+- Агенты (именование, ссылки на навыки, права инструментов)
+- Навыки (структура, размер, ссылки)
+- Настройки (хуки, разрешения, секреты)
+- Целостность перекрестных ссылок
 
-**Output:**
-- File tree with status indicators
-- Detailed issues analysis
-- Prioritized recommendations
-- Ready-to-apply quick fixes
+**Результат:**
+- Дерево файлов с индикаторами статуса
+- Детальный анализ проблем
+- Приоритизированные рекомендации
+- Готовые к применению быстрые исправления
 
 ---
 
 ## `/acc-commit`
 
-**Path:** `commands/acc-commit.md`
+**Путь:** `commands/acc-commit.md`
 
-Auto-generate commit message from diff and push to current branch.
+Автогенерация commit-сообщения из diff и push в текущую ветку.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-commit [tag-name] [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `tag-name` | No | Version tag to create (e.g., `v2.5.0`) |
-| `-- instructions` | No | Hints for commit message |
+| `tag-name` | Нет | Тег версии для создания (например, `v2.5.0`) |
+| `-- instructions` | Нет | Подсказки для commit-сообщения |
 
-**Examples:**
+**Примеры:**
 ```bash
-/acc-commit                                      # Commit and push
-/acc-commit v2.5.0                               # Commit, push, and tag
+/acc-commit                                      # Commit и push
+/acc-commit v2.5.0                               # Commit, push и создание тега
 /acc-commit -- focus on security changes
 /acc-commit v2.5.0 -- mention breaking changes
 /acc-commit -- use Russian for commit message
@@ -156,21 +156,21 @@ Auto-generate commit message from diff and push to current branch.
 
 ## `/acc-audit-architecture`
 
-**Path:** `commands/acc-audit-architecture.md`
+**Путь:** `commands/acc-audit-architecture.md`
 
-Comprehensive multi-pattern architecture audit for PHP projects.
+Комплексный многоуровневый аудит архитектуры для PHP-проектов.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-audit-architecture <path> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `path` | **Yes** | Path to project or folder to audit |
-| `-- instructions` | No | Focus or customize the audit |
+| `path` | **Да** | Путь к проекту или папке для аудита |
+| `-- instructions` | Нет | Фокусировка или настройка аудита |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-audit-architecture ./src
 /acc-audit-architecture ./src -- only check CQRS patterns
@@ -178,9 +178,9 @@ Comprehensive multi-pattern architecture audit for PHP projects.
 /acc-audit-architecture ./src -- на русском языке
 ```
 
-**Analyzes:**
-- DDD compliance
-- CQRS patterns
+**Анализирует:**
+- Соответствие DDD
+- Паттерны CQRS
 - Clean Architecture
 - Hexagonal Architecture
 - Layered Architecture
@@ -188,29 +188,29 @@ Comprehensive multi-pattern architecture audit for PHP projects.
 - Event-Driven Architecture
 - Outbox Pattern
 - Saga Pattern
-- Stability Patterns (Circuit Breaker, Retry, Rate Limiter, Bulkhead)
-- Behavioral Patterns (Strategy, State, Chain, Decorator, Null Object, Template Method, Visitor, Iterator, Memento)
-- GoF Structural Patterns (Adapter, Facade, Proxy, Composite, Bridge, Flyweight)
+- Паттерны стабильности (Circuit Breaker, Retry, Rate Limiter, Bulkhead)
+- Поведенческие паттерны (Strategy, State, Chain, Decorator, Null Object, Template Method, Visitor, Iterator, Memento)
+- Структурные паттерны GoF (Adapter, Facade, Proxy, Composite, Bridge, Flyweight)
 
 ---
 
 ## `/acc-audit-ddd`
 
-**Path:** `commands/acc-audit-ddd.md`
+**Путь:** `commands/acc-audit-ddd.md`
 
-DDD compliance analysis for PHP projects.
+Анализ соответствия DDD для PHP-проектов.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-audit-ddd <path> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `path` | **Yes** | Path to project or folder to audit |
-| `-- instructions` | No | Focus on specific DDD aspects |
+| `path` | **Да** | Путь к проекту или папке для аудита |
+| `-- instructions` | Нет | Фокусировка на конкретных аспектах DDD |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-audit-ddd ./src
 /acc-audit-ddd ./src/Domain/Order -- focus on aggregate boundaries
@@ -221,51 +221,51 @@ DDD compliance analysis for PHP projects.
 
 ## `/acc-audit-psr`
 
-**Path:** `commands/acc-audit-psr.md`
+**Путь:** `commands/acc-audit-psr.md`
 
-PSR compliance analysis for PHP projects.
+Анализ соответствия PSR для PHP-проектов.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-audit-psr <path> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `path` | **Yes** | Path to project or folder to audit |
-| `-- instructions` | No | Focus on specific PSR standards |
+| `path` | **Да** | Путь к проекту или папке для аудита |
+| `-- instructions` | Нет | Фокусировка на конкретных стандартах PSR |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-audit-psr ./src
 /acc-audit-psr ./src -- only PSR-12 style check
 /acc-audit-psr ./src -- generate missing PSR interfaces
 ```
 
-**Checks:**
-- PSR-1/PSR-12 coding style compliance
-- PSR-4 autoloading structure
-- PSR interface implementations
+**Проверяет:**
+- Соответствие стилю PSR-1/PSR-12
+- Структуру автозагрузки PSR-4
+- Реализации PSR-интерфейсов
 
 ---
 
 ## `/acc-generate-documentation`
 
-**Path:** `commands/acc-generate-documentation.md`
+**Путь:** `commands/acc-generate-documentation.md`
 
-Generate documentation for a file, folder, or project.
+Генерация документации для файла, папки или проекта.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-generate-documentation <path> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `path` | **Yes** | Path to file/folder to document (`.` for project root) |
-| `-- instructions` | No | Customize documentation output |
+| `path` | **Да** | Путь к файлу/папке для документирования (`.` для корня проекта) |
+| `-- instructions` | Нет | Настройка формата документации |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-generate-documentation ./
 /acc-generate-documentation src/ -- focus on API documentation
@@ -274,63 +274,63 @@ Generate documentation for a file, folder, or project.
 /acc-generate-documentation ./ -- на русском языке
 ```
 
-**Generates:**
-- README.md for projects
-- ARCHITECTURE.md with diagrams
-- API documentation
-- Getting started guides
+**Генерирует:**
+- README.md для проектов
+- ARCHITECTURE.md с диаграммами
+- API-документацию
+- Руководства по началу работы
 
 ---
 
 ## `/acc-audit-documentation`
 
-**Path:** `commands/acc-audit-documentation.md`
+**Путь:** `commands/acc-audit-documentation.md`
 
-Audit documentation quality.
+Аудит качества документации.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-audit-documentation <path> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `path` | **Yes** | Path to documentation folder to audit |
-| `-- instructions` | No | Focus on specific quality aspects |
+| `path` | **Да** | Путь к папке документации для аудита |
+| `-- instructions` | Нет | Фокусировка на конкретных аспектах качества |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-audit-documentation ./docs
 /acc-audit-documentation ./docs -- only check code examples
 /acc-audit-documentation ./ -- fix broken links
 ```
 
-**Checks:**
-- Completeness (all APIs documented)
-- Accuracy (code matches docs)
-- Clarity (no jargon, working examples)
-- Consistency (uniform style)
-- Navigation (working links)
+**Проверяет:**
+- Полноту (все API задокументированы)
+- Точность (код соответствует документации)
+- Ясность (нет жаргона, рабочие примеры)
+- Единообразие (единый стиль)
+- Навигацию (рабочие ссылки)
 
 ---
 
 ## `/acc-generate-test`
 
-**Path:** `commands/acc-generate-test.md`
+**Путь:** `commands/acc-generate-test.md`
 
-Generate tests for PHP file or folder.
+Генерация тестов для PHP-файла или папки.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-generate-test <path> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `path` | **Yes** | Path to PHP file or folder to test |
-| `-- instructions` | No | Customize test generation |
+| `path` | **Да** | Путь к PHP-файлу или папке для тестирования |
+| `-- instructions` | Нет | Настройка генерации тестов |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-generate-test src/Domain/Order/Order.php
 /acc-generate-test src/Domain/Order/ -- only unit tests, skip integration
@@ -339,32 +339,32 @@ Generate tests for PHP file or folder.
 /acc-generate-test src/Application/ -- focus on happy path scenarios
 ```
 
-**Generates:**
-- Unit tests for Value Objects, Entities, Services
-- Integration tests for Repositories, HTTP clients
-- Test Data Builders and Object Mothers
-- InMemory repository implementations
-- Test doubles (Mocks, Stubs, Fakes, Spies)
+**Генерирует:**
+- Модульные тесты для Value Objects, Entities, Services
+- Интеграционные тесты для Repositories, HTTP-клиентов
+- Test Data Builders и Object Mothers
+- InMemory-реализации репозиториев
+- Тестовые дублеры (Mocks, Stubs, Fakes, Spies)
 
 ---
 
 ## `/acc-audit-test`
 
-**Path:** `commands/acc-audit-test.md`
+**Путь:** `commands/acc-audit-test.md`
 
-Audit test quality and coverage.
+Аудит качества тестов и покрытия.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-audit-test <path> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `path` | **Yes** | Path to tests folder or project |
-| `-- instructions` | No | Focus on specific quality aspects |
+| `path` | **Да** | Путь к папке с тестами или проекту |
+| `-- instructions` | Нет | Фокусировка на конкретных аспектах качества |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-audit-test ./tests
 /acc-audit-test ./src -- check coverage gaps only
@@ -372,86 +372,86 @@ Audit test quality and coverage.
 /acc-audit-test ./tests/Unit/Domain -- generate missing tests
 ```
 
-**Checks:**
-- Coverage gaps (untested classes, methods, branches)
-- Test smells (15 antipatterns)
-- Naming convention compliance
-- Test isolation issues
+**Проверяет:**
+- Пробелы в покрытии (непротестированные классы, методы, ветки)
+- Тестовые антипаттерны (15 видов)
+- Соблюдение соглашений об именовании
+- Проблемы изоляции тестов
 
-**Output:**
-- Quality metrics with scores
-- Prioritized issues list
-- Skill recommendations for fixes
+**Результат:**
+- Метрики качества с баллами
+- Приоритизированный список проблем
+- Рекомендации навыков для исправления
 
 ---
 
 ## `/acc-code-review`
 
-**Path:** `commands/acc-code-review.md`
+**Путь:** `commands/acc-code-review.md`
 
-Multi-level code review with git diff analysis and task matching.
+Многоуровневый code review с анализом git diff и привязкой к задаче.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-code-review [branch] [level] [-- task-description]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `branch` | No | Branch to review (default: current branch) |
-| `level` | No | Review depth: `low`, `medium`, `high` (default: high) |
-| `-- task-description` | No | Expected task for matching analysis |
+| `branch` | Нет | Ветка для ревью (по умолчанию: текущая) |
+| `level` | Нет | Глубина ревью: `low`, `medium`, `high` (по умолчанию: high) |
+| `-- task-description` | Нет | Ожидаемая задача для анализа соответствия |
 
-**Examples:**
+**Примеры:**
 ```bash
-/acc-code-review                                    # Current branch, high level
+/acc-code-review                                    # Текущая ветка, уровень high
 /acc-code-review feature/payment                    # feature/payment vs main, high
-/acc-code-review medium                             # Current branch, medium level
+/acc-code-review medium                             # Текущая ветка, уровень medium
 /acc-code-review feature/payment medium             # feature/payment vs main, medium
-/acc-code-review feature/payment -- add auth        # With task matching
-/acc-code-review -- implement JWT auth              # Current branch + task matching
-/acc-code-review feature/payment low -- add tests   # All options combined
+/acc-code-review feature/payment -- add auth        # С привязкой к задаче
+/acc-code-review -- implement JWT auth              # Текущая ветка + привязка к задаче
+/acc-code-review feature/payment low -- add tests   # Все опции вместе
 ```
 
-**Review Levels:**
+**Уровни ревью:**
 
-| Level | Checks | Use Case |
+| Уровень | Проверки | Сценарий использования |
 |-------|--------|----------|
-| **LOW** | PSR compliance, test quality, encapsulation, code smells | Quick PR check |
-| **MEDIUM** | LOW + bug detection, readability, SOLID violations | Standard review |
-| **HIGH** | MEDIUM + security, performance, testability, DDD, architecture | Full audit |
+| **LOW** | PSR, тесты, инкапсуляция, code smells | Быстрая проверка PR |
+| **MEDIUM** | LOW + баги, читаемость, нарушения SOLID | Стандартное ревью |
+| **HIGH** | MEDIUM + безопасность, производительность, тестируемость, DDD, архитектура | Полный аудит |
 
-**Output:**
-- Change summary (files, commits, lines changed)
-- Findings by severity (Critical/Major/Minor/Suggestion)
-- Task match analysis with percentage score (if task provided)
-- Verdict: APPROVE / APPROVE WITH COMMENTS / REQUEST CHANGES
+**Результат:**
+- Сводка изменений (файлы, коммиты, измененные строки)
+- Находки по серьезности (Critical/Major/Minor/Suggestion)
+- Анализ соответствия задаче с процентной оценкой (если задача указана)
+- Вердикт: APPROVE / APPROVE WITH COMMENTS / REQUEST CHANGES
 
 ---
 
 ## `/acc-bug-fix`
 
-**Path:** `commands/acc-bug-fix.md`
+**Путь:** `commands/acc-bug-fix.md`
 
-Automated bug diagnosis, fix generation, and regression testing.
+Автоматическая диагностика бага, генерация исправления и регрессионное тестирование.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-bug-fix <description|file:line|stack-trace> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `description` | **Yes** | Bug description, file:line reference, or stack trace |
-| `-- instructions` | No | Focus or customize the fix process |
+| `description` | **Да** | Описание бага, ссылка file:line или stack trace |
+| `-- instructions` | Нет | Фокусировка или настройка процесса исправления |
 
-**Input Formats:**
-- Text description: `"NullPointerException in OrderService::process()"`
-- File:line reference: `src/Domain/Order.php:45 "off-by-one error"`
-- Stack trace: Paste full trace
-- Log file: `@storage/logs/error.log`
+**Форматы ввода:**
+- Текстовое описание: `"NullPointerException in OrderService::process()"`
+- Ссылка file:line: `src/Domain/Order.php:45 "off-by-one error"`
+- Stack trace: Вставьте полный trace
+- Лог-файл: `@storage/logs/error.log`
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-bug-fix "NullPointerException in OrderService::process()"
 /acc-bug-fix src/Domain/Order.php:45 "off-by-one error in loop"
@@ -461,47 +461,47 @@ Automated bug diagnosis, fix generation, and regression testing.
 /acc-bug-fix "Race condition in inventory" -- dry-run
 ```
 
-**Meta-Instructions:**
-| Instruction | Effect |
+**Мета-инструкции:**
+| Инструкция | Эффект |
 |-------------|--------|
-| `-- focus on <area>` | Prioritize specific code area |
-| `-- skip tests` | Don't generate regression test |
-| `-- dry-run` | Show fix without applying |
-| `-- verbose` | Include detailed analysis |
+| `-- focus on <area>` | Приоритизировать конкретную область кода |
+| `-- skip tests` | Не генерировать регрессионный тест |
+| `-- dry-run` | Показать исправление без применения |
+| `-- verbose` | Включить детальный анализ |
 
-**Workflow:**
-1. **Parse Input** — Extract file, line, description
-2. **Diagnose** — `acc-bug-hunter` categorizes bug (9 types)
-3. **Fix** — `acc-bug-fixer` generates minimal, safe fix
-4. **Test** — `acc-test-generator` creates regression test
-5. **Apply** — Apply changes and run tests
+**Рабочий процесс:**
+1. **Разбор ввода** -- Извлечение файла, строки, описания
+2. **Диагностика** -- `acc-bug-hunter` категоризирует баг (9 типов)
+3. **Исправление** -- `acc-bug-fixer` генерирует минимальное безопасное исправление
+4. **Тестирование** -- `acc-test-generator` создает регрессионный тест
+5. **Применение** -- Применение изменений и запуск тестов
 
-**Output:**
-- Bug category and severity
-- Root cause analysis
-- Diff of applied fix
-- Regression test file
-- Test execution results
+**Результат:**
+- Категория и серьезность бага
+- Анализ первопричины
+- Diff примененного исправления
+- Файл регрессионного теста
+- Результаты выполнения тестов
 
 ---
 
 ## `/acc-audit-security`
 
-**Path:** `commands/acc-audit-security.md`
+**Путь:** `commands/acc-audit-security.md`
 
-Security audit covering OWASP Top 10 and PHP-specific vulnerabilities.
+Аудит безопасности, охватывающий OWASP Top 10 и PHP-специфичные уязвимости.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-audit-security <path> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `path` | **Yes** | Path to project or folder to audit |
-| `-- instructions` | No | Focus on specific security aspects |
+| `path` | **Да** | Путь к проекту или папке для аудита |
+| `-- instructions` | Нет | Фокусировка на конкретных аспектах безопасности |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-audit-security ./src
 /acc-audit-security ./src/Api -- focus on OWASP A01-A03
@@ -509,31 +509,31 @@ Security audit covering OWASP Top 10 and PHP-specific vulnerabilities.
 /acc-audit-security ./src -- skip A06 (vulnerable components)
 ```
 
-**Checks:**
-- OWASP Top 10 (2021): Access Control, Crypto, Injection, etc.
-- PHP-specific: `unserialize()`, `eval()`, `shell_exec()`, type juggling
-- CWE identifiers and attack vectors
-- Remediation code examples
+**Проверяет:**
+- OWASP Top 10 (2021): Access Control, Crypto, Injection и др.
+- PHP-специфичные: `unserialize()`, `eval()`, `shell_exec()`, type juggling
+- Идентификаторы CWE и векторы атак
+- Примеры кода для исправлений
 
 ---
 
 ## `/acc-audit-performance`
 
-**Path:** `commands/acc-audit-performance.md`
+**Путь:** `commands/acc-audit-performance.md`
 
-Performance audit focusing on database, memory, and algorithm efficiency.
+Аудит производительности с фокусом на базу данных, память и эффективность алгоритмов.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-audit-performance <path> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `path` | **Yes** | Path to project or folder to audit |
-| `-- instructions` | No | Focus on specific performance aspects |
+| `path` | **Да** | Путь к проекту или папке для аудита |
+| `-- instructions` | Нет | Фокусировка на конкретных аспектах производительности |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-audit-performance ./src
 /acc-audit-performance ./src/Repository -- check N+1 queries
@@ -541,35 +541,35 @@ Performance audit focusing on database, memory, and algorithm efficiency.
 /acc-audit-performance ./src/Domain -- analyze algorithm complexity
 ```
 
-**Checks:**
-- N+1 query problems
-- Query efficiency (SELECT *, missing indexes)
-- Memory issues (large arrays, missing generators)
-- Caching opportunities
-- Algorithm complexity (O(n²) patterns)
-- Batch processing gaps
-- Connection pool issues
-- Serialization overhead
+**Проверяет:**
+- Проблемы N+1 запросов
+- Эффективность запросов (SELECT *, отсутствующие индексы)
+- Проблемы памяти (большие массивы, отсутствие генераторов)
+- Возможности кэширования
+- Сложность алгоритмов (паттерны O(n^2))
+- Пробелы в пакетной обработке
+- Проблемы пула соединений
+- Накладные расходы сериализации
 
 ---
 
 ## `/acc-audit-patterns`
 
-**Path:** `commands/acc-audit-patterns.md`
+**Путь:** `commands/acc-audit-patterns.md`
 
-Design patterns audit with SOLID/GRASP compliance analysis.
+Аудит паттернов проектирования с анализом соответствия SOLID/GRASP.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-audit-patterns <path> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `path` | **Yes** | Path to project or folder to audit |
-| `-- instructions` | No | Focus on specific pattern categories |
+| `path` | **Да** | Путь к проекту или папке для аудита |
+| `-- instructions` | Нет | Фокусировка на конкретных категориях паттернов |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-audit-patterns ./src
 /acc-audit-patterns ./src/Infrastructure -- focus on stability patterns
@@ -577,35 +577,35 @@ Design patterns audit with SOLID/GRASP compliance analysis.
 /acc-audit-patterns ./src -- skip SOLID analysis
 ```
 
-**Checks:**
-- **Stability Patterns**: Circuit Breaker, Retry, Rate Limiter, Bulkhead
-- **Behavioral Patterns**: Strategy, State, Chain of Responsibility, Decorator, Null Object, Template Method, Visitor, Iterator, Memento
-- **GoF Structural Patterns**: Adapter, Facade, Proxy, Composite, Bridge, Flyweight
-- **Creational Patterns**: Builder, Object Pool, Factory
-- **Integration Patterns**: Outbox, Saga, ADR
-- **SOLID Principles**: SRP, OCP, LSP, ISP, DIP
-- **GRASP Principles**: Information Expert, Creator, Controller, etc.
+**Проверяет:**
+- **Паттерны стабильности**: Circuit Breaker, Retry, Rate Limiter, Bulkhead
+- **Поведенческие паттерны**: Strategy, State, Chain of Responsibility, Decorator, Null Object, Template Method, Visitor, Iterator, Memento
+- **Структурные паттерны GoF**: Adapter, Facade, Proxy, Composite, Bridge, Flyweight
+- **Порождающие паттерны**: Builder, Object Pool, Factory
+- **Интеграционные паттерны**: Outbox, Saga, ADR
+- **Принципы SOLID**: SRP, OCP, LSP, ISP, DIP
+- **Принципы GRASP**: Information Expert, Creator, Controller и др.
 
 ---
 
 ## `/acc-generate-ddd`
 
-**Path:** `commands/acc-generate-ddd.md`
+**Путь:** `commands/acc-generate-ddd.md`
 
-Generate DDD components for PHP 8.2 with tests and proper layer placement.
+Генерация DDD-компонентов для PHP 8.2 с тестами и правильным размещением по слоям.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-generate-ddd <component-type> <ComponentName> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `component-type` | **Yes** | Component to generate (see list below) |
-| `ComponentName` | **Yes** | Name for the component |
-| `-- instructions` | No | Customize generation |
+| `component-type` | **Да** | Компонент для генерации (см. список ниже) |
+| `ComponentName` | **Да** | Имя компонента |
+| `-- instructions` | Нет | Настройка генерации |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-generate-ddd entity Order
 /acc-generate-ddd vo Email -- with DNS validation
@@ -618,9 +618,9 @@ Generate DDD components for PHP 8.2 with tests and proper layer placement.
 /acc-generate-ddd acl StripePayment
 ```
 
-**Supported Components:**
+**Поддерживаемые компоненты:**
 
-| Component | Aliases | Layer |
+| Компонент | Псевдонимы | Слой |
 |-----------|---------|-------|
 | `entity` | `ent` | Domain |
 | `value-object` | `vo`, `valueobject` | Domain |
@@ -640,22 +640,22 @@ Generate DDD components for PHP 8.2 with tests and proper layer placement.
 
 ## `/acc-generate-psr`
 
-**Path:** `commands/acc-generate-psr.md`
+**Путь:** `commands/acc-generate-psr.md`
 
-Generate PSR-compliant PHP components with tests.
+Генерация PSR-совместимых PHP-компонентов с тестами.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-generate-psr <psr-number> <ComponentName> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `psr-number` | **Yes** | PSR standard: `psr-3`, `psr-6`, `psr-7`, etc. |
-| `ComponentName` | No | Name for the implementation |
-| `-- instructions` | No | Customize generation |
+| `psr-number` | **Да** | Стандарт PSR: `psr-3`, `psr-6`, `psr-7` и др. |
+| `ComponentName` | Нет | Имя для реализации |
+| `-- instructions` | Нет | Настройка генерации |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-generate-psr psr-3 FileLogger
 /acc-generate-psr psr-15 AuthMiddleware
@@ -664,7 +664,7 @@ Generate PSR-compliant PHP components with tests.
 /acc-generate-psr psr-20 FrozenClock -- for testing
 ```
 
-**Supported PSRs:**
+**Поддерживаемые PSR:**
 - PSR-3 (Logger), PSR-6 (Cache), PSR-7 (HTTP Message)
 - PSR-11 (Container), PSR-13 (Links), PSR-14 (Events)
 - PSR-15 (Middleware), PSR-16 (Simple Cache)
@@ -674,22 +674,22 @@ Generate PSR-compliant PHP components with tests.
 
 ## `/acc-generate-patterns`
 
-**Path:** `commands/acc-generate-patterns.md`
+**Путь:** `commands/acc-generate-patterns.md`
 
-Generate design pattern implementations with DI configuration.
+Генерация реализаций паттернов проектирования с конфигурацией DI.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-generate-patterns <pattern-name> <ComponentName> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `pattern-name` | **Yes** | Pattern to generate (see list below) |
-| `ComponentName` | **Yes** | Context/component name |
-| `-- instructions` | No | Customize generation |
+| `pattern-name` | **Да** | Паттерн для генерации (см. список ниже) |
+| `ComponentName` | **Да** | Имя контекста/компонента |
+| `-- instructions` | Нет | Настройка генерации |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-generate-patterns circuit-breaker PaymentGateway
 /acc-generate-patterns strategy PaymentProcessor
@@ -698,32 +698,32 @@ Generate design pattern implementations with DI configuration.
 /acc-generate-patterns outbox Order -- with Doctrine integration
 ```
 
-**Supported Patterns:**
-- **Stability**: `circuit-breaker`, `retry`, `rate-limiter`, `bulkhead`
-- **Behavioral**: `strategy`, `state`, `chain-of-responsibility`, `decorator`, `null-object`, `template-method`, `visitor`, `iterator`, `memento`
-- **GoF Structural**: `adapter`, `facade`, `proxy`, `composite`, `bridge`, `flyweight`
-- **Creational**: `builder`, `object-pool`, `factory`
-- **Integration**: `outbox`, `saga`, `action`, `responder`
+**Поддерживаемые паттерны:**
+- **Стабильность**: `circuit-breaker`, `retry`, `rate-limiter`, `bulkhead`
+- **Поведенческие**: `strategy`, `state`, `chain-of-responsibility`, `decorator`, `null-object`, `template-method`, `visitor`, `iterator`, `memento`
+- **Структурные GoF**: `adapter`, `facade`, `proxy`, `composite`, `bridge`, `flyweight`
+- **Порождающие**: `builder`, `object-pool`, `factory`
+- **Интеграционные**: `outbox`, `saga`, `action`, `responder`
 
 ---
 
 ## `/acc-refactor`
 
-**Path:** `commands/acc-refactor.md`
+**Путь:** `commands/acc-refactor.md`
 
-Guided refactoring with analysis and pattern application.
+Управляемый рефакторинг с анализом и применением паттернов.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-refactor <path> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `path` | **Yes** | Path to file or folder to refactor |
-| `-- instructions` | No | Focus or customize refactoring |
+| `path` | **Да** | Путь к файлу или папке для рефакторинга |
+| `-- instructions` | Нет | Фокусировка или настройка рефакторинга |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-refactor ./src/Domain/OrderService.php
 /acc-refactor ./src/Application -- focus on SOLID violations
@@ -732,39 +732,39 @@ Guided refactoring with analysis and pattern application.
 /acc-refactor ./src -- quick wins only
 ```
 
-**Analyzes:**
-- Code smells (God Class, Long Method, Primitive Obsession, etc.)
-- SOLID violations
-- Testability issues (DI, side effects, coverage)
-- Readability (naming, complexity, magic values)
+**Анализирует:**
+- Code smells (God Class, Long Method, Primitive Obsession и др.)
+- Нарушения SOLID
+- Проблемы тестируемости (DI, побочные эффекты, покрытие)
+- Читаемость (именование, сложность, магические значения)
 
-**Provides:**
-- Prioritized refactoring roadmap
-- Generator commands for automated fixes
-- Quick wins for immediate application
-- Test coverage warnings
-- Safety guidelines
+**Предоставляет:**
+- Приоритизированную дорожную карту рефакторинга
+- Команды генерации для автоматических исправлений
+- Быстрые улучшения для немедленного применения
+- Предупреждения о покрытии тестами
+- Рекомендации по безопасности
 
 ---
 
 ## `/acc-ci-setup`
 
-**Path:** `commands/acc-ci-setup.md`
+**Путь:** `commands/acc-ci-setup.md`
 
-Setup CI pipeline from scratch for PHP projects.
+Настройка CI-пайплайна с нуля для PHP-проектов.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-ci-setup <platform> [path] [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `platform` | **Yes** | CI platform: `github` or `gitlab` |
-| `path` | No | Project path (default: `./`) |
-| `-- instructions` | No | Customize pipeline generation |
+| `platform` | **Да** | CI-платформа: `github` или `gitlab` |
+| `path` | Нет | Путь к проекту (по умолчанию: `./`) |
+| `-- instructions` | Нет | Настройка генерации пайплайна |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-ci-setup github
 /acc-ci-setup gitlab ./my-project
@@ -773,108 +773,108 @@ Setup CI pipeline from scratch for PHP projects.
 /acc-ci-setup github -- minimal, only lint and tests
 ```
 
-**Generates:**
-- CI workflow (`.github/workflows/ci.yml` or `.gitlab-ci.yml`)
-- Static analysis configs (PHPStan, Psalm, PHP-CS-Fixer, DEPTRAC)
-- Test configuration (PHPUnit)
-- Docker files (if requested)
-- Deployment configuration (if requested)
+**Генерирует:**
+- CI-workflow (`.github/workflows/ci.yml` или `.gitlab-ci.yml`)
+- Конфигурации статического анализа (PHPStan, Psalm, PHP-CS-Fixer, DEPTRAC)
+- Конфигурацию тестирования (PHPUnit)
+- Docker-файлы (по запросу)
+- Конфигурацию деплоя (по запросу)
 
 ---
 
 ## `/acc-ci-fix`
 
-**Path:** `commands/acc-ci-fix.md`
+**Путь:** `commands/acc-ci-fix.md`
 
-Diagnose and fix CI pipeline issues with interactive approval.
+Диагностика и исправление проблем CI-пайплайна с интерактивным подтверждением.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-ci-fix <pipeline-url|log-file|description> [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `pipeline-url` | No | GitHub/GitLab pipeline URL |
-| `log-file` | No | Path to log file |
-| `description` | No | Text description of the issue |
-| `-- instructions` | No | Meta-instructions for fix process |
+| `pipeline-url` | Нет | URL пайплайна GitHub/GitLab |
+| `log-file` | Нет | Путь к лог-файлу |
+| `description` | Нет | Текстовое описание проблемы |
+| `-- instructions` | Нет | Мета-инструкции для процесса исправления |
 
-**Input Formats:**
-- Pipeline URL: `https://github.com/org/repo/actions/runs/123`
-- Log file: `./ci-error.log` or `@storage/logs/ci.log`
-- Description: `"PHPStan fails with memory error"`
+**Форматы ввода:**
+- URL пайплайна: `https://github.com/org/repo/actions/runs/123`
+- Лог-файл: `./ci-error.log` или `@storage/logs/ci.log`
+- Описание: `"PHPStan fails with memory error"`
 
-**Examples:**
+**Примеры:**
 ```bash
-# Interactive mode (default) - diagnoses, shows fix, asks approval
+# Интерактивный режим (по умолчанию) - диагностика, показ исправления, запрос подтверждения
 /acc-ci-fix "PHPStan memory exhausted"
 /acc-ci-fix https://github.com/org/repo/actions/runs/12345
 /acc-ci-fix ./ci-error.log
 
-# Dry run - show diagnosis and fix without applying or asking
+# Пробный запуск - показ диагностики и исправления без применения
 /acc-ci-fix ./ci.log -- dry-run
 
-# Auto-apply - apply fix without asking (for scripts/CI)
+# Автоприменение - применение исправления без запроса (для скриптов/CI)
 /acc-ci-fix ./ci.log -- auto-apply
 
-# With additional options
+# С дополнительными опциями
 /acc-ci-fix ./logs/ci.txt -- verbose, skip-validation
 /acc-ci-fix "Tests timeout" -- focus on Docker
 ```
 
-**Meta-Instructions:**
-| Instruction | Effect |
+**Мета-инструкции:**
+| Инструкция | Эффект |
 |-------------|--------|
-| `-- dry-run` | Show diagnosis and fix without applying or asking |
-| `-- auto-apply` | Apply fix without asking (for CI/scripts) |
-| `-- skip-validation` | Don't run local syntax checks |
-| `-- verbose` | Include detailed diagnosis output |
-| `-- focus on <area>` | Prioritize specific area (tests, lint, docker) |
+| `-- dry-run` | Показать диагностику и исправление без применения |
+| `-- auto-apply` | Применить исправление без запроса (для CI/скриптов) |
+| `-- skip-validation` | Не запускать локальные проверки синтаксиса |
+| `-- verbose` | Включить детальный вывод диагностики |
+| `-- focus on <area>` | Приоритизировать конкретную область (tests, lint, docker) |
 
-**Supported Issue Types:**
+**Поддерживаемые типы проблем:**
 
-| Issue Type | Auto-Fix Support |
+| Тип проблемы | Поддержка автоисправления |
 |------------|------------------|
-| Memory exhausted | ✅ Full |
-| Composer conflict | ✅ Full |
-| PHPStan baseline | ✅ Full |
-| Service not ready | ✅ Full |
-| Docker build fail | ⚠️ Partial |
-| Timeout | ✅ Full |
-| Permission denied | ✅ Full |
-| Cache miss | ✅ Full |
-| PHP extension | ✅ Full |
-| Env variable | ✅ Full |
+| Memory exhausted | ✅ Полная |
+| Composer conflict | ✅ Полная |
+| PHPStan baseline | ✅ Полная |
+| Service not ready | ✅ Полная |
+| Docker build fail | ⚠️ Частичная |
+| Timeout | ✅ Полная |
+| Permission denied | ✅ Полная |
+| Cache miss | ✅ Полная |
+| PHP extension | ✅ Полная |
+| Env variable | ✅ Полная |
 
-**Workflow:**
-1. **Parse Input** — URL, log file, or description
-2. **Diagnose** — `acc-ci-debugger` identifies failure type and root cause
-3. **Generate Fix** — `acc-ci-fixer` creates fix preview
-4. **Ask Approval** — Unless `-- dry-run` or `-- auto-apply`
-5. **Apply or Skip** — Based on user response
-6. **Validate** — Run local syntax checks (unless `-- skip-validation`)
-7. **Report** — Summary with diff and rollback instructions
+**Рабочий процесс:**
+1. **Разбор ввода** -- URL, лог-файл или описание
+2. **Диагностика** -- `acc-ci-debugger` определяет тип сбоя и первопричину
+3. **Генерация исправления** -- `acc-ci-fixer` создает предварительный просмотр исправления
+4. **Запрос подтверждения** -- Если не указано `-- dry-run` или `-- auto-apply`
+5. **Применение или пропуск** -- В зависимости от ответа пользователя
+6. **Валидация** -- Запуск локальных проверок синтаксиса (если не указано `-- skip-validation`)
+7. **Отчет** -- Сводка с diff и инструкциями отката
 
 ---
 
 ## `/acc-ci-optimize`
 
-**Path:** `commands/acc-ci-optimize.md`
+**Путь:** `commands/acc-ci-optimize.md`
 
-Optimize CI/CD pipeline performance.
+Оптимизация производительности CI/CD-пайплайна.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-ci-optimize [path] [-- focus areas]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `path` | No | Project path (default: `./`) |
-| `-- focus areas` | No | Specific optimization targets |
+| `path` | Нет | Путь к проекту (по умолчанию: `./`) |
+| `-- focus areas` | Нет | Конкретные цели оптимизации |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-ci-optimize
 /acc-ci-optimize -- focus on caching, reduce cache misses
@@ -883,36 +883,36 @@ Optimize CI/CD pipeline performance.
 /acc-ci-optimize ./my-project -- target 10 min total
 ```
 
-**Optimizes:**
-- Caching (Composer, Docker layers, artifacts)
-- Parallelization (independent jobs, test splitting)
-- Docker builds (multi-stage, layer ordering)
-- Job dependencies (fail fast, timeouts)
+**Оптимизирует:**
+- Кэширование (Composer, Docker-слои, артефакты)
+- Параллелизацию (независимые задачи, разделение тестов)
+- Docker-сборки (multi-stage, порядок слоев)
+- Зависимости задач (быстрый отказ, тайм-ауты)
 
-**Output:**
-- Before/after metrics comparison
-- Specific changes to apply
-- Estimated time savings
+**Результат:**
+- Сравнение метрик до/после
+- Конкретные изменения для применения
+- Оценка экономии времени
 
 ---
 
 ## `/acc-audit-ci`
 
-**Path:** `commands/acc-audit-ci.md`
+**Путь:** `commands/acc-audit-ci.md`
 
-Comprehensive CI/CD audit for PHP projects.
+Комплексный аудит CI/CD для PHP-проектов.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-audit-ci [path] [-- focus areas]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `path` | No | Project path (default: `./`) |
-| `-- focus areas` | No | Focus on specific audit areas |
+| `path` | Нет | Путь к проекту (по умолчанию: `./`) |
+| `-- focus areas` | Нет | Фокусировка на конкретных областях аудита |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-audit-ci
 /acc-audit-ci -- focus on security
@@ -921,40 +921,40 @@ Comprehensive CI/CD audit for PHP projects.
 /acc-audit-ci -- quick audit
 ```
 
-**Audit Categories:**
-- **Pipeline**: Stage organization, dependencies, triggers
-- **Static Analysis**: PHPStan level, Psalm, DEPTRAC rules
-- **Testing**: Coverage thresholds, test organization
-- **Security**: Secrets handling, permissions, dependencies
-- **Performance**: Caching efficiency, parallelization
-- **Docker**: Image size, layer optimization, security
-- **Deployment**: Zero-downtime, health checks, rollback
+**Категории аудита:**
+- **Пайплайн**: Организация стадий, зависимости, триггеры
+- **Статический анализ**: Уровень PHPStan, Psalm, правила DEPTRAC
+- **Тестирование**: Пороги покрытия, организация тестов
+- **Безопасность**: Обработка секретов, разрешения, зависимости
+- **Производительность**: Эффективность кэширования, параллелизация
+- **Docker**: Размер образов, оптимизация слоев, безопасность
+- **Деплой**: Zero-downtime, health checks, откат
 
-**Output:**
-- Executive summary with scores
-- Issues by severity (Critical/High/Medium/Low)
-- Prioritized recommendations
-- Action items
+**Результат:**
+- Сводка с оценками
+- Проблемы по серьезности (Critical/High/Medium/Low)
+- Приоритизированные рекомендации
+- Список действий
 
 ---
 
 ## `/acc-audit-docker`
 
-**Path:** `commands/acc-audit-docker.md`
+**Путь:** `commands/acc-audit-docker.md`
 
-Comprehensive Docker configuration audit for PHP projects.
+Комплексный аудит Docker-конфигурации для PHP-проектов.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-audit-docker [path] [-- focus areas]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `path` | No | Project path (default: `./`) |
-| `-- focus areas` | No | Focus on specific audit areas |
+| `path` | Нет | Путь к проекту (по умолчанию: `./`) |
+| `-- focus areas` | Нет | Фокусировка на конкретных областях аудита |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-audit-docker
 /acc-audit-docker -- focus on security
@@ -962,34 +962,34 @@ Comprehensive Docker configuration audit for PHP projects.
 /acc-audit-docker ./ -- security and production readiness
 ```
 
-**Audit Categories:**
-- **Dockerfile Architecture**: Multi-stage, layers, BuildKit
-- **Base Images & Extensions**: Selection, pinning, compatibility
-- **Docker Compose**: Services, health checks, networking
-- **Performance**: Build time, image size, caching, PHP-FPM
-- **Security**: Permissions, secrets, vulnerabilities
-- **Production Readiness**: Health checks, shutdown, logging
+**Категории аудита:**
+- **Архитектура Dockerfile**: Multi-stage, слои, BuildKit
+- **Базовые образы и расширения**: Выбор, закрепление версий, совместимость
+- **Docker Compose**: Сервисы, health checks, сети
+- **Производительность**: Время сборки, размер образа, кэширование, PHP-FPM
+- **Безопасность**: Права доступа, секреты, уязвимости
+- **Готовность к production**: Health checks, graceful shutdown, логирование
 
 ---
 
 ## `/acc-generate-docker`
 
-**Path:** `commands/acc-generate-docker.md`
+**Путь:** `commands/acc-generate-docker.md`
 
-Generate Docker configuration components for PHP projects.
+Генерация Docker-компонентов для PHP-проектов.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-generate-docker <component-type> [name] [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `component-type` | **Yes** | Component to generate (see list below) |
-| `name` | No | Project/service name |
-| `-- instructions` | No | Customize generation |
+| `component-type` | **Да** | Компонент для генерации (см. список ниже) |
+| `name` | Нет | Имя проекта/сервиса |
+| `-- instructions` | Нет | Настройка генерации |
 
-**Examples:**
+**Примеры:**
 ```bash
 /acc-generate-docker full
 /acc-generate-docker dockerfile -- with Symfony
@@ -998,94 +998,94 @@ Generate Docker configuration components for PHP projects.
 /acc-generate-docker entrypoint -- with migrations
 ```
 
-**Supported Components:**
+**Поддерживаемые компоненты:**
 
-| Component | Aliases | Description |
+| Компонент | Псевдонимы | Описание |
 |-----------|---------|-------------|
 | `dockerfile` | `df` | Production multi-stage Dockerfile |
-| `compose` | `dc` | Docker Compose configuration |
-| `nginx` | `web` | Nginx reverse proxy config |
-| `entrypoint` | `ep` | Container entrypoint script |
-| `makefile` | `mk` | Docker Makefile commands |
-| `env` | `environment` | Environment template |
-| `healthcheck` | `hc` | Health check script |
-| `full` | `all` | Complete Docker setup |
+| `compose` | `dc` | Конфигурация Docker Compose |
+| `nginx` | `web` | Конфигурация Nginx reverse proxy |
+| `entrypoint` | `ep` | Скрипт entrypoint контейнера |
+| `makefile` | `mk` | Команды Docker Makefile |
+| `env` | `environment` | Шаблон переменных окружения |
+| `healthcheck` | `hc` | Скрипт health check |
+| `full` | `all` | Полная Docker-конфигурация |
 
 ---
 
 ## `/acc-explain`
 
-**Path:** `commands/acc-explain.md`
+**Путь:** `commands/acc-explain.md`
 
-Explain code structure, business logic, data flows, and architecture patterns. Accepts file paths, directories, HTTP routes, or console commands.
+Объяснение структуры кода, бизнес-логики, потоков данных и архитектурных паттернов. Принимает пути к файлам, директории, HTTP-маршруты или консольные команды.
 
-**Arguments:**
+**Аргументы:**
 ```
 /acc-explain <path|route|command> [mode] [-- instructions]
 ```
 
-| Argument | Required | Description |
+| Аргумент | Обязательный | Описание |
 |----------|----------|-------------|
-| `input` | **Yes** | File, directory, `.`, HTTP route (`GET /api/orders`), or console command (`app:process-payments`) |
-| `mode` | No | `quick`, `deep`, `onboarding`, `business`, `qa` (auto-detected) |
-| `-- instructions` | No | Focus area or specific question |
+| `input` | **Да** | Файл, директория, `.`, HTTP-маршрут (`GET /api/orders`) или консольная команда (`app:process-payments`) |
+| `mode` | Нет | `quick`, `deep`, `onboarding`, `business`, `qa` (автоопределение) |
+| `-- instructions` | Нет | Область фокуса или конкретный вопрос |
 
-**Input Types (auto-detected):**
+**Типы ввода (автоопределение):**
 
-| Input | Pattern | Example |
+| Ввод | Паттерн | Пример |
 |-------|---------|---------|
-| HTTP route | `METHOD /path` | `GET /api/orders`, `POST /api/orders/{id}/status` |
-| Console command | `namespace:name` | `app:process-payments`, `import:products` |
-| File path | Existing file | `src/Domain/Order/Order.php` |
-| Directory | Existing directory | `src/Domain/Order/` |
-| Project root | `.` | `.` |
+| HTTP-маршрут | `METHOD /path` | `GET /api/orders`, `POST /api/orders/{id}/status` |
+| Консольная команда | `namespace:name` | `app:process-payments`, `import:products` |
+| Путь к файлу | Существующий файл | `src/Domain/Order/Order.php` |
+| Директория | Существующая директория | `src/Domain/Order/` |
+| Корень проекта | `.` | `.` |
 
-**Examples:**
+**Примеры:**
 ```bash
-# HTTP routes
-/acc-explain GET /api/orders                               # Resolve route → explain handler
-/acc-explain POST /api/orders/{id}/status deep             # Deep mode for route
+# HTTP-маршруты
+/acc-explain GET /api/orders                               # Резолв маршрута → объяснение обработчика
+/acc-explain POST /api/orders/{id}/status deep             # Режим deep для маршрута
 /acc-explain DELETE /api/users/{id} -- explain cascade deletion
 
-# Console commands
-/acc-explain app:process-payments                          # Resolve command → explain handler
+# Консольные команды
+/acc-explain app:process-payments                          # Резолв команды → объяснение обработчика
 /acc-explain import:products -- explain data transformation pipeline
 
-# File/directory (existing behavior)
-/acc-explain src/Domain/Order/Order.php                    # Quick mode (auto)
-/acc-explain src/Domain/Order/                             # Deep mode (auto)
-/acc-explain .                                             # Onboarding mode (auto)
-/acc-explain src/Payment business                          # Business mode
-/acc-explain src/Domain qa -- how are discounts calculated? # QA mode
+# Файл/директория (стандартное поведение)
+/acc-explain src/Domain/Order/Order.php                    # Режим quick (авто)
+/acc-explain src/Domain/Order/                             # Режим deep (авто)
+/acc-explain .                                             # Режим onboarding (авто)
+/acc-explain src/Payment business                          # Режим business
+/acc-explain src/Domain qa -- how are discounts calculated? # Режим qa
 /acc-explain src/Domain/Order/ deep -- focus on state transitions
 ```
 
-**Modes:**
+**Режимы:**
 
-| Mode | Auto-detect | Depth | Audience |
+| Режим | Автоопределение | Глубина | Аудитория |
 |------|-------------|-------|----------|
-| `quick` | Single file, HTTP route, console command | 1-2 screens | Developer |
-| `deep` | Directory | Full analysis + diagrams | Senior dev / Architect |
-| `onboarding` | `.` (root) | Comprehensive guide | New team member |
-| `business` | Explicit only | Non-technical | PM / Stakeholder |
-| `qa` | Explicit only | Answer-focused | Any |
+| `quick` | Отдельный файл, HTTP-маршрут, консольная команда | 1-2 экрана | Разработчик |
+| `deep` | Директория | Полный анализ + диаграммы | Senior / Архитектор |
+| `onboarding` | `.` (корень) | Исчерпывающее руководство | Новый член команды |
+| `business` | Только явно | Нетехнический обзор | PM / Стейкхолдер |
+| `qa` | Только явно | Фокус на ответе | Любой |
 
-**Workflow:**
-0. **Resolve** — If route/command input, resolve to handler file (Phase 0)
-1. **Navigate** — Scan structure, find entry points, detect patterns
-2. **Analyze** — Extract business logic, trace data flows, audit patterns
-3. **Visualize** — Generate Mermaid diagrams (deep/onboarding/business)
-4. **Present** — Aggregate results, suggest documentation
+**Рабочий процесс:**
+0. **Резолв** -- Если ввод route/command, резолв в файл обработчика (Фаза 0)
+1. **Навигация** -- Сканирование структуры, поиск точек входа, определение паттернов
+2. **Анализ** -- Извлечение бизнес-логики, трассировка потоков данных, аудит паттернов
+3. **Визуализация** -- Генерация Mermaid-диаграмм (deep/onboarding/business)
+4. **Представление** -- Агрегация результатов, предложение документации
 
-**Output:**
-- Quick: Purpose, responsibilities, business rules, data flow, dependencies
-- Deep: Full analysis with Mermaid diagrams, domain model, state machines
-- Onboarding: Project guide with C4 diagrams, glossary, "How to navigate"
-- Business: Non-technical overview with simple flow diagrams
-- QA: Direct answer with code references
+**Результат:**
+- Quick: Назначение, ответственности, бизнес-правила, поток данных, зависимости
+- Deep: Полный анализ с Mermaid-диаграммами, доменная модель, машины состояний
+- Onboarding: Руководство по проекту с C4-диаграммами, глоссарий, "Как ориентироваться"
+- Business: Нетехнический обзор с простыми диаграммами потоков
+- QA: Прямой ответ со ссылками на код
 
 ---
 
-## Navigation
+## Навигация
 
-[← Back to README](../README.md) | [Agents →](agents.md) | [Skills](skills.md) | [Component Flow](component-flow.md) | [Quick Reference](quick-reference.md)
+[← Назад к README](../README.md) | [Агенты →](agents.md) | [Навыки](skills.md) | [Поток компонентов](component-flow.md) | [Краткий справочник](quick-reference.md)

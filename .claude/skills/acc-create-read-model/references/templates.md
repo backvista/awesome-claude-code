@@ -1,8 +1,8 @@
-# Read Model / Projection Templates
+# Шаблоны Read Model / Projection
 
-## Read Model (Domain Layer)
+## Read Model (слой Domain)
 
-**File:** `src/Domain/{BoundedContext}/ReadModel/{Name}ReadModel.php`
+**Файл:** `src/Domain/{BoundedContext}/ReadModel/{Name}ReadModel.php`
 
 ```php
 <?php
@@ -44,9 +44,9 @@ final readonly class {Name}ReadModel
 
 ---
 
-## Read Model Repository Interface
+## Интерфейс репозитория Read Model
 
-**File:** `src/Domain/{BoundedContext}/ReadModel/{Name}ReadModelRepositoryInterface.php`
+**Файл:** `src/Domain/{BoundedContext}/ReadModel/{Name}ReadModelRepositoryInterface.php`
 
 ```php
 <?php
@@ -71,9 +71,9 @@ interface {Name}ReadModelRepositoryInterface
 
 ---
 
-## Projection Interface
+## Интерфейс Projection
 
-**File:** `src/Application/{BoundedContext}/Projection/{Name}ProjectionInterface.php`
+**Файл:** `src/Application/{BoundedContext}/Projection/{Name}ProjectionInterface.php`
 
 ```php
 <?php
@@ -97,9 +97,9 @@ interface {Name}ProjectionInterface
 
 ---
 
-## Projection Implementation
+## Реализация Projection
 
-**File:** `src/Application/{BoundedContext}/Projection/{Name}Projection.php`
+**Файл:** `src/Application/{BoundedContext}/Projection/{Name}Projection.php`
 
 ```php
 <?php
@@ -157,9 +157,9 @@ final class {Name}Projection implements {Name}ProjectionInterface
 
 ---
 
-## Read Model Store
+## Хранилище Read Model
 
-**File:** `src/Infrastructure/{BoundedContext}/Projection/{Name}Store.php`
+**Файл:** `src/Infrastructure/{BoundedContext}/Projection/{Name}Store.php`
 
 ```php
 <?php

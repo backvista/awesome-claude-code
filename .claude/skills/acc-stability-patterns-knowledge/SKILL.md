@@ -1,61 +1,61 @@
 ---
 name: acc-stability-patterns-knowledge
-description: Stability Patterns knowledge base. Provides patterns, antipatterns, and PHP-specific guidelines for Circuit Breaker, Retry, Rate Limiter, Bulkhead, and resilience audits.
+description: База знаний паттернов стабильности. Содержит паттерны, антипаттерны и PHP-специфические рекомендации для Circuit Breaker, Retry, Rate Limiter, Bulkhead и аудита отказоустойчивости.
 ---
 
-# Stability Patterns Knowledge Base
+# База знаний паттернов стабильности
 
-Quick reference for resilience and fault tolerance patterns in PHP applications.
+Краткий справочник по паттернам отказоустойчивости и толерантности к сбоям в PHP-приложениях.
 
-## Core Patterns Overview
+## Обзор основных паттернов
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                        STABILITY PATTERNS                                    │
+│                        ПАТТЕРНЫ СТАБИЛЬНОСТИ                                │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
 │   ┌────────────────────────────────────────────────────────────────────┐    │
-│   │                      REQUEST FLOW                                   │    │
+│   │                      ПОТОК ЗАПРОСОВ                                 │    │
 │   │                                                                     │    │
 │   │   Client  ──▶  Rate Limiter  ──▶  Circuit Breaker  ──▶  Service   │    │
 │   │      │              │                   │                  │        │    │
-│   │      │         Throttle            Monitor State       Actual      │    │
-│   │      │         requests            Open/Closed         work        │    │
+│   │      │         Ограничение         Мониторинг         Реальная     │    │
+│   │      │         запросов            состояния           работа      │    │
 │   │      │              │                   │                  │        │    │
 │   │      │              ▼                   ▼                  ▼        │    │
 │   │      │         ┌────────┐          ┌────────┐         ┌────────┐   │    │
 │   │      │         │Bulkhead│          │ Retry  │         │Timeout │   │    │
-│   │      │         │Isolate │          │Pattern │         │Control │   │    │
+│   │      │         │Изоляция│          │Повтор  │         │Контроль│   │    │
 │   │      │         └────────┘          └────────┘         └────────┘   │    │
 │   └────────────────────────────────────────────────────────────────────┘    │
 │                                                                              │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│   Pattern          │ Purpose                    │ Protects Against           │
-│   ─────────────────┼────────────────────────────┼─────────────────────────── │
-│   Rate Limiter     │ Throttle request rate      │ DDoS, overload, abuse     │
-│   Circuit Breaker  │ Fail fast on failures      │ Cascading failures        │
-│   Retry            │ Retry transient failures   │ Temporary outages         │
-│   Bulkhead         │ Isolate resources          │ Resource exhaustion       │
-│   Timeout          │ Limit wait time            │ Slow dependencies         │
+│   Паттерн          │ Назначение                  │ Защищает от              │
+│   ─────────────────┼─────────────────────────────┼────────────────────────  │
+│   Rate Limiter     │ Ограничение частоты запросов │ DDoS, перегрузка, абьюз │
+│   Circuit Breaker  │ Быстрый отказ при сбоях     │ Каскадные сбои          │
+│   Retry            │ Повтор временных сбоев      │ Временные отключения     │
+│   Bulkhead         │ Изоляция ресурсов           │ Исчерпание ресурсов      │
+│   Timeout          │ Ограничение времени ожидания│ Медленные зависимости    │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Pattern Relationships
+## Взаимодействие паттернов
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                    PATTERN INTERACTION                                       │
+│                    ВЗАИМОДЕЙСТВИЕ ПАТТЕРНОВ                                  │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
 │                         ┌────────────────────┐                               │
 │                         │   Rate Limiter     │                               │
-│                         │  (Entry Point)     │                               │
+│                         │  (Точка входа)     │                               │
 │                         └─────────┬──────────┘                               │
 │                                   │                                          │
 │                                   ▼                                          │
 │                         ┌────────────────────┐                               │
 │                         │     Bulkhead       │                               │
-│                         │ (Resource Limits)  │                               │
+│                         │ (Лимиты ресурсов)  │                               │
 │                         └─────────┬──────────┘                               │
 │                                   │                                          │
 │           ┌───────────────────────┼───────────────────────┐                  │
@@ -70,53 +70,53 @@ Quick reference for resilience and fault tolerance patterns in PHP applications.
 │   │      │       │       │      │       │        │      │       │           │
 │   │  ┌───▼────┐  │       │  ┌───▼────┐  │        │  ┌───▼────┐  │           │
 │   │  │ Retry  │  │       │  │ Retry  │  │        │  │ Retry  │  │           │
-│   │  │Pattern │  │       │  │Pattern │  │        │  │Pattern │  │           │
+│   │  │Повтор  │  │       │  │Повтор  │  │        │  │Повтор  │  │           │
 │   │  └────────┘  │       │  └────────┘  │        │  └────────┘  │           │
 │   └──────────────┘       └──────────────┘        └──────────────┘           │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Quick Reference
+## Краткий справочник
 
-### Circuit Breaker States
+### Состояния Circuit Breaker
 
-| State | Behavior | Transitions To |
-|-------|----------|----------------|
-| **Closed** | Requests pass through, failures counted | Open (on threshold) |
-| **Open** | Requests fail fast, no calls to service | Half-Open (after timeout) |
-| **Half-Open** | Limited requests allowed for testing | Closed (on success) / Open (on failure) |
+| Состояние | Поведение | Переход в |
+|-----------|----------|-----------|
+| **Closed** | Запросы проходят, отказы подсчитываются | Open (при достижении порога) |
+| **Open** | Запросы мгновенно отклоняются, вызовов к сервису нет | Half-Open (после таймаута) |
+| **Half-Open** | Ограниченное количество запросов для проверки | Closed (при успехе) / Open (при сбое) |
 
-### Retry Backoff Strategies
+### Стратегии отсрочки повторов
 
-| Strategy | Formula | Use Case |
-|----------|---------|----------|
-| **Fixed** | `delay` | Simple cases, known recovery time |
-| **Linear** | `delay * attempt` | Gradual increase |
-| **Exponential** | `delay * 2^(attempt-1)` | Unknown recovery, default choice |
-| **Exponential + Jitter** | `exponential ± random` | High concurrency, prevents thundering herd |
+| Стратегия | Формула | Применение |
+|-----------|---------|-----------|
+| **Фиксированная** | `delay` | Простые случаи, известное время восстановления |
+| **Линейная** | `delay * attempt` | Постепенное увеличение |
+| **Экспоненциальная** | `delay * 2^(attempt-1)` | Неизвестное восстановление, выбор по умолчанию |
+| **Экспоненциальная + Jitter** | `exponential ± random` | Высокий параллелизм, предотвращение thundering herd |
 
-### Rate Limiter Algorithms
+### Алгоритмы Rate Limiter
 
-| Algorithm | Precision | Memory | Burst Handling |
-|-----------|-----------|--------|----------------|
-| **Token Bucket** | Medium | Low | Allows bursts |
-| **Sliding Window** | High | Medium | Smooth limiting |
-| **Fixed Window** | Low | Low | Edge bursts |
-| **Leaky Bucket** | High | Low | No bursts |
+| Алгоритм | Точность | Память | Обработка всплесков |
+|----------|----------|--------|---------------------|
+| **Token Bucket** | Средняя | Низкая | Допускает всплески |
+| **Sliding Window** | Высокая | Средняя | Плавное ограничение |
+| **Fixed Window** | Низкая | Низкая | Всплески на границе |
+| **Leaky Bucket** | Высокая | Низкая | Без всплесков |
 
-### Bulkhead Types
+### Типы Bulkhead
 
-| Type | Isolation | Use Case |
-|------|-----------|----------|
-| **Semaphore** | Thread/request count | Single-process apps |
-| **Thread Pool** | Dedicated threads | CPU-bound work |
-| **Queue-based** | Request queue | Async processing |
-| **Distributed** | Redis/shared state | Multi-instance apps |
+| Тип | Изоляция | Применение |
+|-----|----------|-----------|
+| **Semaphore** | Счётчик потоков/запросов | Однопроцессные приложения |
+| **Thread Pool** | Выделенные потоки | CPU-bound задачи |
+| **Queue-based** | Очередь запросов | Асинхронная обработка |
+| **Distributed** | Redis/разделяемое состояние | Многоинстансные приложения |
 
-## PHP Implementation Patterns
+## PHP-реализации паттернов
 
-### Circuit Breaker with PSR Clock
+### Circuit Breaker с PSR Clock
 
 ```php
 <?php
@@ -171,7 +171,7 @@ final class CircuitBreaker
 }
 ```
 
-### Retry with Exponential Backoff
+### Retry с экспоненциальной отсрочкой
 
 ```php
 <?php
@@ -259,77 +259,77 @@ final class TokenBucketRateLimiter
 }
 ```
 
-## Common Violations Quick Reference
+## Краткий справочник типичных нарушений
 
-| Violation | Where to Look | Severity |
-|-----------|---------------|----------|
-| No timeout on external calls | HTTP clients, DB queries | Critical |
-| Retry without backoff | Retry implementations | Warning |
-| No circuit breaker on external services | API clients, adapters | Critical |
-| Unbounded connection pools | Database, HTTP pools | Warning |
-| No fallback strategy | Circuit breaker usage | Warning |
-| Retry non-idempotent operations | Command handlers | Critical |
-| Rate limiting only in-memory | Multi-instance apps | Warning |
-| No jitter in retry | High-concurrency systems | Warning |
+| Нарушение | Где искать | Серьёзность |
+|-----------|-----------|------------|
+| Нет таймаута на внешних вызовах | HTTP-клиенты, запросы к БД | Критическая |
+| Retry без отсрочки | Реализации повторов | Предупреждение |
+| Нет circuit breaker на внешних сервисах | API-клиенты, адаптеры | Критическая |
+| Неограниченные пулы соединений | Пулы БД, HTTP-пулы | Предупреждение |
+| Нет fallback-стратегии | Использование circuit breaker | Предупреждение |
+| Retry не-идемпотентных операций | Обработчики команд | Критическая |
+| Rate limiting только в памяти | Многоинстансные приложения | Предупреждение |
+| Нет jitter в retry | Системы с высоким параллелизмом | Предупреждение |
 
-## Detection Patterns
+## Паттерны обнаружения
 
 ```bash
-# Find resilience implementations
+# Поиск реализаций отказоустойчивости
 Glob: **/Resilience/**/*.php
 Glob: **/CircuitBreaker/**/*.php
 Grep: "CircuitBreaker|RateLimiter|Retry" --glob "**/*.php"
 
-# Check for proper timeout usage
+# Проверка правильного использования таймаутов
 Grep: "CURLOPT_TIMEOUT|timeout|setTimeout" --glob "**/Http/**/*.php"
 
-# Detect retry patterns
+# Обнаружение паттернов retry
 Grep: "retry|backoff|exponential" --glob "**/*.php"
 
-# Find rate limiting
+# Поиск rate limiting
 Grep: "RateLimiter|throttle|TokenBucket" --glob "**/*.php"
 
-# Check for bulkhead patterns
+# Проверка паттернов bulkhead
 Grep: "Semaphore|Bulkhead|maxConcurrent" --glob "**/*.php"
 
-# Detect missing patterns
+# Обнаружение отсутствующих паттернов
 Grep: "->request\(|curl_exec|file_get_contents" --glob "**/Infrastructure/**/*.php"
 ```
 
-## Configuration Guidelines
+## Рекомендации по конфигурации
 
-### Circuit Breaker Settings
+### Настройки Circuit Breaker
 
-| Service Type | Failure Threshold | Open Timeout | Success Threshold |
-|--------------|-------------------|--------------|-------------------|
-| Critical API | 3-5 | 30-60s | 3-5 |
-| Background Job | 5-10 | 60-120s | 2-3 |
-| Internal Service | 3-5 | 15-30s | 2-3 |
-| Database | 2-3 | 10-20s | 1-2 |
+| Тип сервиса | Порог сбоев | Таймаут Open | Порог успехов |
+|-------------|------------|--------------|---------------|
+| Критический API | 3-5 | 30-60с | 3-5 |
+| Фоновая задача | 5-10 | 60-120с | 2-3 |
+| Внутренний сервис | 3-5 | 15-30с | 2-3 |
+| База данных | 2-3 | 10-20с | 1-2 |
 
-### Retry Configuration
+### Конфигурация Retry
 
-| Operation Type | Max Attempts | Base Delay | Max Delay |
-|----------------|--------------|------------|-----------|
-| HTTP API Call | 3 | 100ms | 10s |
-| Database Query | 3 | 50ms | 5s |
-| Message Queue | 5 | 1s | 60s |
-| File Operation | 2 | 10ms | 100ms |
+| Тип операции | Макс. попыток | Базовая задержка | Макс. задержка |
+|-------------|--------------|-----------------|---------------|
+| HTTP API-вызов | 3 | 100мс | 10с |
+| Запрос к БД | 3 | 50мс | 5с |
+| Очередь сообщений | 5 | 1с | 60с |
+| Файловая операция | 2 | 10мс | 100мс |
 
-### Rate Limiter Settings
+### Настройки Rate Limiter
 
-| Endpoint Type | Rate | Window | Burst |
-|---------------|------|--------|-------|
-| Public API | 100/min | 1 min | 20 |
-| Authenticated API | 1000/min | 1 min | 100 |
-| Admin API | 10000/min | 1 min | 1000 |
-| Webhook | 60/min | 1 min | 10 |
+| Тип эндпоинта | Лимит | Окно | Всплеск |
+|---------------|-------|------|---------|
+| Публичный API | 100/мин | 1 мин | 20 |
+| Аутентифицированный API | 1000/мин | 1 мин | 100 |
+| Административный API | 10000/мин | 1 мин | 1000 |
+| Webhook | 60/мин | 1 мин | 10 |
 
-## Integration Points
+## Точки интеграции
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                    INFRASTRUCTURE LAYER                                      │
+│                    ИНФРАСТРУКТУРНЫЙ СЛОЙ                                     │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
 │   src/Infrastructure/                                                        │
@@ -353,25 +353,25 @@ Grep: "->request\(|curl_exec|file_get_contents" --glob "**/Infrastructure/**/*.p
 │   │       └── BulkheadRegistry.php                                         │
 │   │                                                                         │
 │   ├── Http/                                                                  │
-│   │   ├── ResilientHttpClient.php    ◀── Uses CircuitBreaker + Retry       │
+│   │   ├── ResilientHttpClient.php    ◀── Использует CircuitBreaker + Retry │
 │   │   └── Middleware/                                                       │
 │   │       └── RateLimitMiddleware.php                                       │
 │   │                                                                         │
 │   └── Payment/                                                               │
-│       └── PaymentGatewayAdapter.php  ◀── Uses CircuitBreaker + Bulkhead    │
+│       └── PaymentGatewayAdapter.php  ◀── Использует CircuitBreaker + Bulkhead│
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## References
+## Ссылки
 
-For detailed information, load these reference files:
+Подробная информация в справочных файлах:
 
-- `references/circuit-breaker.md` — Circuit Breaker implementation details
-- `references/retry-patterns.md` — Retry strategies and backoff algorithms
-- `references/rate-limiting.md` — Rate limiting algorithms and configurations
-- `references/bulkhead.md` — Bulkhead isolation patterns
+- `references/circuit-breaker.md` — Детали реализации Circuit Breaker
+- `references/retry-patterns.md` — Стратегии повторов и алгоритмы отсрочки
+- `references/rate-limiting.md` — Алгоритмы и конфигурации Rate Limiting
+- `references/bulkhead.md` — Паттерны изоляции Bulkhead
 
-## Assets
+## Ресурсы
 
-- `assets/report-template.md` — Structured audit report template
+- `assets/report-template.md` — Шаблон структурированного отчёта аудита

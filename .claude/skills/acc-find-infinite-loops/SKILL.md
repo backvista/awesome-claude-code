@@ -1,102 +1,102 @@
 ---
 name: acc-find-infinite-loops
-description: Detects infinite loop risks in PHP code. Finds missing break conditions, incorrect loop variables, unbounded recursion, circular references.
+description: Обнаруживает риски бесконечных циклов в PHP-коде. Находит отсутствующие условия выхода, неправильные переменные цикла, неограниченную рекурсию, циклические ссылки.
 ---
 
-# Infinite Loop Detection
+# Обнаружение бесконечных циклов
 
-Analyze PHP code for potential infinite loops and unbounded execution.
+Анализ PHP-кода на потенциальные бесконечные циклы и неограниченное выполнение.
 
-## Detection Patterns
+## Паттерны обнаружения
 
-### 1. Missing Break Conditions
+### 1. Отсутствующие условия выхода
 
 ```php
-// BUG: No exit condition
+// БАГ: Нет условия выхода
 while (true) {
     $item = $queue->pop();
     process($item);
-    // No break when queue is empty
+    // Нет break когда очередь пуста
 }
 
-// BUG: Condition never changes
+// БАГ: Условие никогда не меняется
 $running = true;
 while ($running) {
     doWork();
-    // $running never set to false
+    // $running никогда не устанавливается в false
 }
 
-// BUG: Break inside nested condition
+// БАГ: Break внутри вложенного условия
 while ($items) {
     foreach ($items as $item) {
         if ($item->isDone()) {
-            break; // Only breaks inner loop
+            break; // Прерывает только внутренний цикл
         }
     }
 }
 ```
 
-### 2. Incorrect Loop Variable Modification
+### 2. Неправильная модификация переменной цикла
 
 ```php
-// BUG: Wrong variable incremented
-for ($i = 0; $i < count($items); $j++) { // Should be $i++
+// БАГ: Инкрементируется неправильная переменная
+for ($i = 0; $i < count($items); $j++) { // Должно быть $i++
     process($items[$i]);
 }
 
-// BUG: Variable modified in wrong direction
-for ($i = 10; $i > 0; $i++) { // Should be $i--
+// БАГ: Переменная модифицируется в неправильном направлении
+for ($i = 10; $i > 0; $i++) { // Должно быть $i--
     process($i);
 }
 
-// BUG: Loop variable reset
+// БАГ: Переменная цикла сбрасывается
 $i = 0;
 while ($i < 10) {
     if ($condition) {
-        $i = 0; // Resets counter
+        $i = 0; // Сбрасывает счетчик
     }
     $i++;
 }
 ```
 
-### 3. Unbounded Recursion
+### 3. Неограниченная рекурсия
 
 ```php
-// BUG: No base case
+// БАГ: Нет базового случая
 function factorial(int $n): int
 {
-    return $n * factorial($n - 1); // Never stops
+    return $n * factorial($n - 1); // Никогда не останавливается
 }
 
-// BUG: Base case unreachable
+// БАГ: Базовый случай недостижим
 function traverse(Node $node): void
 {
-    $this->traverse($node->getNext()); // What if getNext returns self?
-    // Missing: if ($node === null) return;
+    $this->traverse($node->getNext()); // Что если getNext возвращает self?
+    // Пропущено: if ($node === null) return;
 }
 
-// BUG: Mutual recursion
+// БАГ: Взаимная рекурсия
 function a($n) { return b($n); }
-function b($n) { return a($n); } // Infinite cycle
+function b($n) { return a($n); } // Бесконечный цикл
 ```
 
-### 4. Circular References
+### 4. Циклические ссылки
 
 ```php
-// BUG: Circular linked list traversal
+// БАГ: Обход циклического связного списка
 while ($node !== null) {
-    $node = $node->next; // What if list is circular?
+    $node = $node->next; // Что если список циклический?
 }
 
-// BUG: Object graph cycle
+// БАГ: Цикл в графе объектов
 function serialize($obj, $visited = []): string
 {
     foreach ($obj->getRelations() as $rel) {
-        $result .= serialize($rel); // May revisit objects
+        $result .= serialize($rel); // Может повторно посещать объекты
     }
 }
 
-// FIXED:
+// ИСПРАВЛЕНО:
 function serialize($obj, array &$visited = []): string
 {
     if (in_array($obj, $visited, true)) {
@@ -107,34 +107,34 @@ function serialize($obj, array &$visited = []): string
 }
 ```
 
-### 5. Event/Listener Loops
+### 5. Циклы событий/слушателей
 
 ```php
-// BUG: Event triggers itself
+// БАГ: Событие запускает само себя
 class UserUpdatedListener
 {
     public function handle(UserUpdated $event): void
     {
         $user = $event->getUser();
-        $user->touch(); // Triggers another UserUpdated event
+        $user->touch(); // Запускает еще одно событие UserUpdated
     }
 }
 
-// BUG: Message queue requeue loop
+// БАГ: Цикл повторной постановки сообщений в очередь
 public function handle(Message $message): void
 {
     try {
         $this->process($message);
     } catch (Exception $e) {
-        $this->queue->publish($message); // Requeues failed message infinitely
+        $this->queue->publish($message); // Бесконечно повторяет неудачное сообщение
     }
 }
 ```
 
-### 6. Retry Without Limit
+### 6. Повторы без ограничения
 
 ```php
-// BUG: Infinite retry
+// БАГ: Бесконечные повторы
 function fetch(string $url): string
 {
     while (true) {
@@ -142,12 +142,12 @@ function fetch(string $url): string
             return $this->httpClient->get($url);
         } catch (Exception $e) {
             sleep(1);
-            // No max retries, infinite loop on persistent failure
+            // Нет max retries, бесконечный цикл при постоянной ошибке
         }
     }
 }
 
-// FIXED:
+// ИСПРАВЛЕНО:
 function fetch(string $url, int $maxRetries = 3): string
 {
     $attempts = 0;
@@ -165,29 +165,29 @@ function fetch(string $url, int $maxRetries = 3): string
 }
 ```
 
-### 7. Generator Infinite Yield
+### 7. Бесконечный yield генератора
 
 ```php
-// BUG: Generator never ends
+// БАГ: Генератор никогда не заканчивается
 function allNumbers(): Generator
 {
     $i = 0;
     while (true) {
         yield $i++;
-        // Fine for generators, but consuming code may not limit
+        // Для генераторов нормально, но потребляющий код может не ограничивать
     }
 }
 
-// Usage BUG:
+// Использование БАГ:
 foreach (allNumbers() as $n) {
-    echo $n; // Infinite loop
+    echo $n; // Бесконечный цикл
 }
 ```
 
-### 8. Database Pagination Without Limit
+### 8. Пагинация БД без ограничения
 
 ```php
-// BUG: Potentially infinite
+// БАГ: Потенциально бесконечно
 $offset = 0;
 while (true) {
     $batch = $repository->findBy([], null, 100, $offset);
@@ -195,40 +195,40 @@ while (true) {
         break;
     }
     process($batch);
-    // Missing: $offset += 100;
+    // Пропущено: $offset += 100;
 }
 ```
 
-## Grep Patterns
+## Паттерны Grep
 
 ```bash
-# while(true) without break
+# while(true) без break
 Grep: "while\s*\(\s*true\s*\)" --glob "**/*.php"
 
-# Recursion
+# Рекурсия
 Grep: "function\s+(\w+)\([^)]*\)[^{]*\{[^}]*\1\s*\(" --glob "**/*.php"
 
-# for loop with wrong increment
+# for цикл с неправильным инкрементом
 Grep: "for\s*\([^;]+;\s*\$\w+\s*[<>]\s*[^;]+;\s*\$(?!\1)" --glob "**/*.php"
 
-# while without modification
+# while без модификации
 Grep: "while\s*\(\s*\$\w+\s*\)" --glob "**/*.php"
 ```
 
-## Severity Classification
+## Классификация серьезности
 
-| Pattern | Severity |
+| Паттерн | Серьезность |
 |---------|----------|
-| Infinite retry without limit | 🔴 Critical |
-| Missing recursion base case | 🔴 Critical |
-| Wrong loop variable | 🔴 Critical |
-| Circular reference traversal | 🟠 Major |
-| Event self-triggering | 🟠 Major |
-| while(true) without clear exit | 🟠 Major |
+| Бесконечные повторы без ограничения | 🔴 Критично |
+| Отсутствует базовый случай рекурсии | 🔴 Критично |
+| Неправильная переменная цикла | 🔴 Критично |
+| Обход циклических ссылок | 🟠 Важно |
+| Событие запускает само себя | 🟠 Важно |
+| while(true) без явного выхода | 🟠 Важно |
 
-## Prevention Patterns
+## Паттерны предотвращения
 
-### Always Use Limits
+### Всегда используйте ограничения
 
 ```php
 const MAX_ITERATIONS = 1000;
@@ -244,7 +244,7 @@ if ($iterations >= self::MAX_ITERATIONS) {
 }
 ```
 
-### Track Visited Nodes
+### Отслеживание посещенных узлов
 
 ```php
 function traverse($node, array &$visited = []): void
@@ -258,7 +258,7 @@ function traverse($node, array &$visited = []): void
 }
 ```
 
-### Recursion Depth Limit
+### Ограничение глубины рекурсии
 
 ```php
 function process($data, int $depth = 0): mixed
@@ -270,28 +270,28 @@ function process($data, int $depth = 0): mixed
 }
 ```
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### Infinite Loop Risk: [Description]
+### Риск бесконечного цикла: [Описание]
 
-**Severity:** 🔴/🟠/🟡
-**Location:** `file.php:line`
-**Type:** [Missing Break|Wrong Variable|Unbounded Recursion|...]
+**Серьезность:** 🔴/🟠/🟡
+**Расположение:** `file.php:line`
+**Тип:** [Missing Break|Wrong Variable|Unbounded Recursion|...]
 
-**Issue:**
-[Description of how infinite loop can occur]
+**Проблема:**
+[Описание как может возникнуть бесконечный цикл]
 
-**Code:**
+**Код:**
 ```php
-// Problematic code
+// Проблемный код
 ```
 
-**Fix:**
+**Исправление:**
 ```php
-// With proper termination
+// С правильным завершением
 ```
 
-**Trigger Condition:**
-[When this infinite loop would occur]
+**Условие триггера:**
+[Когда возникнет этот бесконечный цикл]
 ```

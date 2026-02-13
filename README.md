@@ -1,4 +1,4 @@
-# Awesome Claude Code — PHP Architecture Toolkit
+# Awesome Claude Code — Набор инструментов для архитектуры PHP
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/backvista/awesome-claude-code.svg?style=flat-square)](https://packagist.org/packages/backvista/awesome-claude-code)
 [![Total Downloads](https://img.shields.io/packagist/dt/backvista/awesome-claude-code.svg?style=flat-square)](https://packagist.org/packages/backvista/awesome-claude-code)
@@ -10,112 +10,112 @@
 [![GitHub Stars](https://img.shields.io/github/stars/backvista/awesome-claude-code?style=flat-square)](https://github.com/backvista/awesome-claude-code)
 [![Last Commit](https://img.shields.io/github/last-commit/backvista/awesome-claude-code?style=flat-square)](https://github.com/backvista/awesome-claude-code)
 
-> **The most comprehensive Claude Code extension for PHP developers.**
-> Audit, Generate & Document: DDD, CQRS, Event Sourcing, Clean/Hexagonal Architecture, Design Patterns, PSR, Tests ...
+> **Самое полное расширение Claude Code для PHP-разработчиков.**
+> Аудит, Генерация и Документирование: DDD, CQRS, Event Sourcing, Clean/Hexagonal Architecture, Design Patterns, PSR, Tests ...
 
 ![Awesome Claude Code — PHP Architecture Toolkit](docs/img.png)
 
-## Quick Start
+## Быстрый старт
 
 ```bash
 composer require backvista/awesome-claude-code
 ```
 
-Then in Claude Code:
+Затем в Claude Code:
 
 ```bash
-/acc-code-review                    # Review current branch
-/acc-bug-fix "NullPointerException" # Diagnose and fix bug
-/acc-explain GET /api/orders        # Explain HTTP route
-/acc-audit-architecture ./src       # Full architecture audit
-/acc-generate-documentation         # Write documentation
-/acc-generate-test                  # Write test
+/acc-code-review                    # Ревью текущей ветки
+/acc-bug-fix "NullPointerException" # Диагностика и исправление бага
+/acc-explain GET /api/orders        # Объяснить HTTP-маршрут
+/acc-audit-architecture ./src       # Полный аудит архитектуры
+/acc-generate-documentation         # Написать документацию
+/acc-generate-test                  # Написать тест
 ```
 
-Components are **automatically copied** to your project's `.claude/` directory. Existing files are never overwritten.
+Компоненты **автоматически копируются** в директорию `.claude/` вашего проекта. Существующие файлы никогда не перезаписываются.
 
-### Upgrading Components
+### Обновление компонентов
 
-To force update to the latest version (overwrites existing files):
+Для принудительного обновления до последней версии (перезаписывает существующие файлы):
 
 ```bash
-# Full upgrade with automatic backup
+# Полное обновление с автоматическим резервным копированием
 ./vendor/bin/acc upgrade
 
-# Upgrade without backup
+# Обновление без резервного копирования
 ./vendor/bin/acc upgrade --no-backup
 
-# Upgrade only specific component
+# Обновление только конкретного компонента
 ./vendor/bin/acc upgrade --component=commands
 ```
 
-Backups are stored in `.claude.backup.YYYY-MM-DD-HHMMSS/`.
+Резервные копии сохраняются в `.claude.backup.YYYY-MM-DD-HHMMSS/`.
 
-## Demo
+## Демо
 
 ![Demo](docs/demo.gif)
 
-## Features
+## Возможности
 
-### Code Review (3-Level Analysis)
+### Code Review (3-уровневый анализ)
 
 ```bash
 /acc-code-review feature/payment high -- implement Stripe payment processing
 ```
 
-Multi-level automated code review with **9 specialized reviewers**:
+Многоуровневое автоматизированное ревью кода с **9 специализированными ревьюерами**:
 
-| Level | Reviewers | What's Checked |
+| Уровень | Ревьюеры | Что проверяется |
 |-------|-----------|----------------|
-| **LOW** | PSR Auditor, Test Auditor | Coding standards, test quality |
-| **MEDIUM** | + Bug Hunter, Readability Reviewer | Logic errors, null pointers, naming, complexity |
-| **HIGH** | + Security, Performance, Testability, DDD, Architecture | OWASP Top 10, N+1 queries, memory leaks, DDD compliance |
+| **LOW** | PSR Auditor, Test Auditor | Стандарты кодирования, качество тестов |
+| **MEDIUM** | + Bug Hunter, Readability Reviewer | Логические ошибки, null pointer, именование, сложность |
+| **HIGH** | + Security, Performance, Testability, DDD, Architecture | OWASP Top 10, N+1 запросы, утечки памяти, соответствие DDD |
 
 
 ```
-# Code Review Report
+# Отчёт Code Review
 
-**Mode:** BRANCH
-**Branch:** `feature/payment` → `main`
-**Files Reviewed:** 12 (+456/-23 lines)
-**Review Level:** HIGH
+**Режим:** BRANCH
+**Ветка:** `feature/payment` → `main`
+**Файлов проверено:** 12 (+456/-23 строк)
+**Уровень проверки:** HIGH
 
-## Review Findings
+## Результаты проверки
 
-### 🔴 Critical (1)
-| ID | Category | Location | Issue |
+### 🔴 Критические (1)
+| ID | Категория | Расположение | Проблема |
 |----|----------|----------|-------|
-| CR-001 | Security | PaymentService.php:45 | SQL injection via string concatenation |
+| CR-001 | Security | PaymentService.php:45 | SQL-инъекция через конкатенацию строк |
 
-### 🟠 Major (3)
-| ID | Category | Location | Issue |
+### 🟠 Важные (3)
+| ID | Категория | Расположение | Проблема |
 |----|----------|----------|-------|
-| CR-002 | Bug | Order.php:89 | Null pointer when items empty |
-| CR-003 | Performance | CartRepository.php:34 | N+1 query in loop |
-| CR-004 | DDD | PaymentService.php:12 | Domain logic in Application layer |
+| CR-002 | Bug | Order.php:89 | Null pointer при пустых элементах |
+| CR-003 | Performance | CartRepository.php:34 | N+1 запрос в цикле |
+| CR-004 | DDD | PaymentService.php:12 | Доменная логика в слое Application |
 
-### 🟡 Minor (5)
-| ID | Category | Location | Issue |
+### 🟡 Незначительные (5)
+| ID | Категория | Расположение | Проблема |
 |----|----------|----------|-------|
-| CR-005 | Style | UserService.php:23 | Method exceeds 30 lines |
+| CR-005 | Style | UserService.php:23 | Метод превышает 30 строк |
 | ... | ... | ... | ... |
 
-## Task Match Analysis
-**Expected Task:** implement Stripe payment processing
-**Match Score:** 85%
+## Анализ соответствия задаче
+**Ожидаемая задача:** implement Stripe payment processing
+**Соответствие:** 85%
 
-## Verdict
-❌ **REQUEST CHANGES** — 1 critical, 3 major issues found
+## Вердикт
+❌ **ТРЕБУЮТСЯ ИЗМЕНЕНИЯ** — найдено 1 критических, 3 важных проблемы
 
-**Required Actions:**
-1. Fix SQL injection in PaymentService.php:45
-2. Add null check in Order.php:89
-3. Move domain logic from Application to Domain layer
+**Необходимые действия:**
+1. Исправить SQL-инъекцию в PaymentService.php:45
+2. Добавить проверку на null в Order.php:89
+3. Переместить доменную логику из слоя Application в слой Domain
 ```
 
-### Bug Fix System
+### Система исправления багов
 
-Automated bug diagnosis, fix generation, and regression testing:
+Автоматическая диагностика багов, генерация исправлений и регрессионное тестирование:
 
 ```bash
 /acc-bug-fix "NullPointerException in OrderService::process()"
@@ -123,34 +123,34 @@ Automated bug diagnosis, fix generation, and regression testing:
 /acc-bug-fix @storage/logs/error.log -- focus on validation
 ```
 
-| Phase | Agent | What It Does |
+| Фаза | Агент | Что делает |
 |-------|-------|--------------|
-| **Diagnose** | acc-bug-hunter | Categorizes bug (9 types), finds root cause |
-| **Fix** | acc-bug-fixer | Generates minimal, safe fix with 11 skills |
-| **Test** | acc-test-generator | Creates regression test |
-| **Verify** | coordinator | Applies fix, runs tests, reports results |
+| **Diagnose** | acc-bug-hunter | Классифицирует баг (9 типов), находит первопричину |
+| **Fix** | acc-bug-fixer | Генерирует минимальное, безопасное исправление с 11 навыками |
+| **Test** | acc-test-generator | Создаёт регрессионный тест |
+| **Verify** | coordinator | Применяет исправление, запускает тесты, отчитывается о результатах |
 
-**Bug Categories:** logic errors, null pointers, boundary issues, race conditions, resource leaks, exception handling, type issues, SQL injection, infinite loops
+**Категории багов:** логические ошибки, null pointer, граничные условия, состояния гонки, утечки ресурсов, обработка исключений, проблемы типов, SQL-инъекции, бесконечные циклы
 
-### Architecture Audit Engine
+### Движок аудита архитектуры
 
-Comprehensive analysis across **10+ architecture patterns**:
+Комплексный анализ по **10+ архитектурным паттернам**:
 
-- **Structural**: DDD, Clean Architecture, Hexagonal, Layered, SOLID, GRASP
-- **Behavioral**: CQRS, Event Sourcing, Event-Driven Architecture, Strategy, State
-- **Integration**: Saga, Outbox, Anti-Corruption Layer
-- **Stability**: Circuit Breaker, Retry, Rate Limiter, Bulkhead
+- **Структурные**: DDD, Clean Architecture, Hexagonal, Layered, SOLID, GRASP
+- **Поведенческие**: CQRS, Event Sourcing, Event-Driven Architecture, Strategy, State
+- **Интеграционные**: Saga, Outbox, Anti-Corruption Layer
+- **Стабильности**: Circuit Breaker, Retry, Rate Limiter, Bulkhead
 
-### Code Generation
+### Генерация кода
 
-**50+ generators** for DDD/CQRS components with tests:
+**50+ генераторов** для компонентов DDD/CQRS с тестами:
 
 - DDD: Entity, ValueObject, Aggregate, Repository, DomainEvent, DomainService, Specification, Factory
 - CQRS: Command, Query, Handler, UseCase, ReadModel
 - Patterns: Strategy, State, Decorator, Builder, ObjectPool, CircuitBreaker, Saga, Outbox
 - PSR: Logger (PSR-3), Cache (PSR-6/16), HTTP (PSR-7/15/17/18), Container (PSR-11), Clock (PSR-20)
 
-### Claude Component Generation
+### Генерация компонентов Claude
 
 ```bash
 /acc-generate-claude-component
@@ -160,27 +160,27 @@ Comprehensive analysis across **10+ architecture patterns**:
 > Should it use agents? Yes, acc-ddd-auditor
 ```
 
-Generates:
-- `.claude/commands/validate-order.md` — Custom slash command
+Генерирует:
+- `.claude/commands/validate-order.md` — Пользовательская slash-команда
 
-### Knowledge Bases
+### Базы знаний
 
-**21 deep expertise skills** covering:
+**21 навык глубокой экспертизы** охватывающий:
 
-- Architecture: DDD, CQRS, Clean, Hexagonal, Layered, Event Sourcing, EDA
-- Principles: SOLID, GRASP, PSR-1/4/12
-- Patterns: Saga, Outbox, Stability, ADR
-- Documentation: Mermaid, C4 Model, ADR templates
+- Архитектура: DDD, CQRS, Clean, Hexagonal, Layered, Event Sourcing, EDA
+- Принципы: SOLID, GRASP, PSR-1/4/12
+- Паттерны: Saga, Outbox, Stability, ADR
+- Документация: Mermaid, C4 Model, ADR templates
 
-### Developer Safeguards
+### Защита для разработчиков
 
-**21 hooks** protecting code quality in real-time:
+**21 хук** защищающий качество кода в реальном времени:
 
-- DDD guards: readonly classes, immutable Value Objects, aggregate protection
-- Security: no debug output, no hardcoded paths, no global state
-- Quality: strict_types required, PSR-12 formatting, syntax validation
+- DDD-защита: readonly классы, неизменяемые Value Object, защита агрегатов
+- Безопасность: без отладочного вывода, без жёстко закодированных путей, без глобального состояния
+- Качество: обязательный strict_types, форматирование PSR-12, валидация синтаксиса
 
-## Component Flow
+## Поток компонентов
 
 ```
 COMMAND ───────→ COORDINATOR ───────→ AGENTS ───────→ KNOWLEDGE SKILLS ──────→ GENERATORS SKILLS
@@ -260,204 +260,204 @@ COMMAND ───────→ COORDINATOR ───────→ AGENTS ─
                                     └──→ ci-fixer ──────────────→ generate-ci-fix, ci-tools-knowledge
 ```
 
-See [Component Flow](docs/component-flow.md) for the complete dependency graph.
+См. [Component Flow](docs/component-flow.md) для полного графа зависимостей.
 
-## Why Use This?
+## Почему использовать это?
 
-| Without | With Awesome Claude Code |
+| Без | С Awesome Claude Code |
 |---------|--------------------------|
-| Manual boilerplate code | One command generates complete component with tests |
-| Architecture drift over time | Automated compliance audits catch violations early |
-| Inconsistent patterns across team | Standardized DDD/CQRS templates ensure consistency |
-| Hours reviewing PRs manually | 3-level automated review catches bugs, security issues |
-| Learning DDD/CQRS from scratch | Built-in knowledge bases explain patterns in context |
+| Ручное написание шаблонного кода | Одна команда генерирует полный компонент с тестами |
+| Дрейф архитектуры со временем | Автоматические аудиты соответствия выявляют нарушения рано |
+| Несогласованные паттерны в команде | Стандартизированные шаблоны DDD/CQRS обеспечивают согласованность |
+| Часы на ручное ревью PR | 3-уровневое автоматическое ревью находит баги, проблемы безопасности |
+| Изучение DDD/CQRS с нуля | Встроенные базы знаний объясняют паттерны в контексте |
 
-## Documentation
+## Документация
 
-| Document                                   | Description                                   |
+| Документ                                   | Описание                                   |
 |--------------------------------------------|-----------------------------------------------|
-| [Commands](docs/commands.md)               | 26 slash commands with examples               |
-| [Agents](docs/agents.md)                   | 57 specialized subagents                      |
-| [Skills](docs/skills.md)                   | 242 skills (knowledge, generators, analyzers) |
-| [Hooks](docs/hooks.md)                     | 21 PHP/DDD hooks                              |
-| [Component Flow](docs/component-flow.md)   | Architecture and dependency graph             |
-| [MCP](docs/mcp.md)                         | MCP server configuration                      |
-| [Quick Reference](docs/quick-reference.md) | Paths, formats, best practices                |
+| [Commands](docs/commands.md)               | 26 slash-команд с примерами               |
+| [Agents](docs/agents.md)                   | 57 специализированных субагентов                      |
+| [Skills](docs/skills.md)                   | 242 навыка (знания, генераторы, анализаторы) |
+| [Hooks](docs/hooks.md)                     | 21 PHP/DDD хук                              |
+| [Component Flow](docs/component-flow.md)   | Архитектура и граф зависимостей             |
+| [MCP](docs/mcp.md)                         | Конфигурация MCP-сервера                      |
+| [Quick Reference](docs/quick-reference.md) | Пути, форматы, лучшие практики                |
 
-## Use Cases
+## Сценарии использования
 
-| Scenario               | Command                               | Result                                       |
+| Сценарий               | Команда                               | Результат                                       |
 |------------------------|---------------------------------------|----------------------------------------------|
-| Fix a bug              | `/acc-bug-fix "NullPointerException"` | Diagnosis + fix + regression test            |
-| Review PR before merge | `/acc-code-review feature/auth high`  | Security, performance, DDD compliance report |
-| Audit legacy codebase  | `/acc-audit-architecture ./src`       | Pattern detection + compliance score         |
-| Security audit         | `/acc-audit-security ./src`           | OWASP Top 10 + PHP-specific vulnerabilities  |
-| Performance audit      | `/acc-audit-performance ./src`        | N+1 queries, memory issues, caching gaps     |
-| Design patterns audit  | `/acc-audit-patterns ./src`           | Stability, behavioral, creational patterns   |
-| Generate PSR component | `/acc-generate-psr psr-15 Auth`       | PSR-compliant implementation with tests      |
-| Generate design pattern| `/acc-generate-patterns strategy Pay` | Pattern implementation with DI configuration |
-| Explain code           | `/acc-explain src/Domain/Order/`      | Structure, business logic, data flows        |
-| Onboard to project     | `/acc-explain .`                      | Project guide with glossary and diagrams     |
-| Audit Docker config    | `/acc-audit-docker ./`                | Dockerfile, Compose, security, performance   |
-| Generate Docker stack  | `/acc-generate-docker full`           | Dockerfile + Compose + Nginx + entrypoint    |
-| Refactor code          | `/acc-refactor ./src/OrderService`    | Analysis + prioritized roadmap + generators  |
-| Create Claude command  | `/acc-generate-claude-component`         | Create command, agent, skills                |
-| Audit test quality     | `/acc-audit-test ./tests`             | Coverage gaps, test smells, recommendations  |
-| Generate documentation | `/acc-generate-documentation ./src`      | README + ARCHITECTURE.md + diagrams          |
+| Исправить баг              | `/acc-bug-fix "NullPointerException"` | Диагностика + исправление + регрессионный тест            |
+| Ревью PR перед слиянием | `/acc-code-review feature/auth high`  | Отчёт по безопасности, производительности, соответствию DDD |
+| Аудит legacy кодовой базы  | `/acc-audit-architecture ./src`       | Определение паттернов + оценка соответствия         |
+| Аудит безопасности         | `/acc-audit-security ./src`           | OWASP Top 10 + уязвимости специфичные для PHP  |
+| Аудит производительности      | `/acc-audit-performance ./src`        | N+1 запросы, проблемы с памятью, пробелы в кешировании     |
+| Аудит паттернов проектирования  | `/acc-audit-patterns ./src`           | Паттерны стабильности, поведенческие, порождающие   |
+| Генерация PSR-компонента | `/acc-generate-psr psr-15 Auth`       | PSR-совместимая реализация с тестами      |
+| Генерация паттерна проектирования| `/acc-generate-patterns strategy Pay` | Реализация паттерна с DI-конфигурацией |
+| Объяснить код           | `/acc-explain src/Domain/Order/`      | Структура, бизнес-логика, потоки данных        |
+| Онбординг в проект     | `/acc-explain .`                      | Руководство по проекту с глоссарием и диаграммами     |
+| Аудит Docker-конфигурации    | `/acc-audit-docker ./`                | Dockerfile, Compose, безопасность, производительность   |
+| Генерация Docker-стека  | `/acc-generate-docker full`           | Dockerfile + Compose + Nginx + entrypoint    |
+| Рефакторинг кода          | `/acc-refactor ./src/OrderService`    | Анализ + приоритетная дорожная карта + генераторы  |
+| Создание Claude-команды  | `/acc-generate-claude-component`         | Создать команду, агента, навыки                |
+| Аудит качества тестов     | `/acc-audit-test ./tests`             | Пробелы в покрытии, запахи тестов, рекомендации  |
+| Генерация документации | `/acc-generate-documentation ./src`      | README + ARCHITECTURE.md + диаграммы          |
 
-## Supported Patterns
+## Поддерживаемые паттерны
 
-**Architecture:**
-- Domain-Driven Design (DDD) — Aggregates, Entities, Value Objects, Domain Events, Repositories
-- CQRS — Command/Query separation, Handlers, Buses
+**Архитектура:**
+- Domain-Driven Design (DDD) — Агрегаты, Сущности, Value Objects, Domain Events, Репозитории
+- CQRS — Разделение Command/Query, Handlers, Buses
 - Clean Architecture — Use Cases, Boundaries, Dependency Inversion
-- Hexagonal Architecture — Ports & Adapters, Primary/Secondary adapters
-- Event Sourcing — Event stores, Projections, Snapshots
-- Event-Driven Architecture — Messaging, Pub/Sub, Event handlers
+- Hexagonal Architecture — Ports & Adapters, Первичные/Вторичные адаптеры
+- Event Sourcing — Хранилища событий, Проекции, Снимки
+- Event-Driven Architecture — Сообщения, Pub/Sub, Обработчики событий
 
-**Integration:**
-- Saga Pattern — Orchestration, Choreography, Compensation
-- Outbox Pattern — Transactional messaging, Reliable delivery
-- Anti-Corruption Layer — External system isolation, Translation
+**Интеграционные:**
+- Saga Pattern — Оркестрация, Хореография, Компенсация
+- Outbox Pattern — Транзакционные сообщения, Надёжная доставка
+- Anti-Corruption Layer — Изоляция внешних систем, Трансляция
 
-**Stability:**
+**Стабильности:**
 - Circuit Breaker, Retry, Rate Limiter, Bulkhead
 
-**Standards:**
-- PSR-3, 6, 7, 11, 13, 14, 15, 16, 17, 18, 20 implementations
+**Стандарты:**
+- Реализации PSR-3, 6, 7, 11, 13, 14, 15, 16, 17, 18, 20
 
-## Requirements
+## Требования
 
-- **PHP 8.2+** — for generated code (strict typing, readonly classes)
-- **Composer 2.0+** — for package installation
-- **Claude Code CLI** — [Installation guide](https://docs.anthropic.com/en/docs/claude-code)
+- **PHP 8.2+** — для генерируемого кода (строгая типизация, readonly классы)
+- **Composer 2.0+** — для установки пакета
+- **Claude Code CLI** — [Руководство по установке](https://docs.anthropic.com/en/docs/claude-code)
 
 ## FAQ
 
 <details>
-<summary><strong>How does auto-installation work?</strong></summary>
+<summary><strong>Как работает автоматическая установка?</strong></summary>
 
-The Composer plugin subscribes to `POST_PACKAGE_INSTALL` and `POST_PACKAGE_UPDATE` events. When you run `composer require`, it automatically copies `.claude/` components (commands, agents, skills) to your project directory. Existing files are never overwritten to preserve your customizations.
+Composer-плагин подписывается на события `POST_PACKAGE_INSTALL` и `POST_PACKAGE_UPDATE`. Когда вы запускаете `composer require`, он автоматически копирует компоненты `.claude/` (команды, агенты, навыки) в директорию вашего проекта. Существующие файлы никогда не перезаписываются для сохранения ваших настроек.
 </details>
 
 <details>
-<summary><strong>Can I customize generated code?</strong></summary>
+<summary><strong>Могу ли я настроить генерируемый код?</strong></summary>
 
-Yes! Skills use templates stored in the `references/` folder within each skill directory. You can modify these templates to match your project's coding style, naming conventions, or add custom functionality.
+Да! Навыки используют шаблоны, хранящиеся в папке `references/` внутри каждой директории навыка. Вы можете модифицировать эти шаблоны под стиль кодирования вашего проекта, соглашения именования или добавить пользовательскую функциональность.
 </details>
 
 <details>
-<summary><strong>Which PHP versions are supported?</strong></summary>
+<summary><strong>Какие версии PHP поддерживаются?</strong></summary>
 
-Generated code targets PHP 8.2+ and uses modern features like readonly classes, constructor property promotion, and strict typing. The skills themselves work with Claude Code on any platform.
+Генерируемый код нацелен на PHP 8.2+ и использует современные возможности, такие как readonly классы, property promotion в конструкторе и строгая типизация. Сами навыки работают с Claude Code на любой платформе.
 </details>
 
 <details>
-<summary><strong>How do I add my own commands/skills?</strong></summary>
+<summary><strong>Как добавить собственные команды/навыки?</strong></summary>
 
-Use the `/acc-generate-claude-component` wizard to create new components interactively. It guides you through creating commands, agents, or skills with proper formatting and structure.
+Используйте мастер `/acc-generate-claude-component` для интерактивного создания новых компонентов. Он проведёт вас через создание команд, агентов или навыков с правильным форматированием и структурой.
 </details>
 
 <details>
-<summary><strong>What if I want to update to a newer version?</strong></summary>
+<summary><strong>Что делать, если хочу обновиться до новой версии?</strong></summary>
 
-Run `composer update backvista/awesome-claude-code`. New components are added, but existing files are not overwritten.
+Запустите `composer update backvista/awesome-claude-code`. Новые компоненты добавляются, но существующие файлы не перезаписываются.
 
-To force update existing files with the latest versions:
+Для принудительного обновления существующих файлов до последних версий:
 
 ```bash
-# Full upgrade with automatic backup
+# Полное обновление с автоматическим резервным копированием
 ./vendor/bin/acc upgrade
 
-# Upgrade specific component only
+# Обновление только конкретного компонента
 ./vendor/bin/acc upgrade --component=skills
 ```
 
-Backups are stored in `.claude.backup.YYYY-MM-DD-HHMMSS/`.
+Резервные копии сохраняются в `.claude.backup.YYYY-MM-DD-HHMMSS/`.
 </details>
 
 <details>
-<summary><strong>Can I use only specific skills?</strong></summary>
+<summary><strong>Могу ли я использовать только определённые навыки?</strong></summary>
 
-Yes. After installation, you can remove unwanted components from `.claude/` directory. Each component (command, agent, skill) works independently.
+Да. После установки вы можете удалить ненужные компоненты из директории `.claude/`. Каждый компонент (команда, агент, навык) работает независимо.
 </details>
 
-## Troubleshooting
+## Устранение неполадок
 
 <details>
-<summary><strong>Skill not loading</strong></summary>
+<summary><strong>Навык не загружается</strong></summary>
 
-**Symptom:** Agent doesn't use expected skill.
+**Симптом:** Агент не использует ожидаемый навык.
 
-**Solutions:**
-1. Check `skills:` list in agent frontmatter (`.claude/agents/agent-name.md`)
-2. Verify skill exists in `.claude/skills/skill-name/SKILL.md`
-3. Check skill name matches exactly (case-sensitive, with hyphens)
+**Решения:**
+1. Проверьте список `skills:` в frontmatter агента (`.claude/agents/agent-name.md`)
+2. Убедитесь, что навык существует в `.claude/skills/skill-name/SKILL.md`
+3. Проверьте точное соответствие имени навыка (с учётом регистра, с дефисами)
 
 ```yaml
-# In agent file:
+# В файле агента:
 ---
 skills:
-  - acc-ddd-knowledge  # Must match skill folder name
+  - acc-ddd-knowledge  # Должно совпадать с именем папки навыка
 ---
 ```
 </details>
 
 <details>
-<summary><strong>Agent not invoked by command</strong></summary>
+<summary><strong>Агент не вызывается командой</strong></summary>
 
-**Symptom:** Command runs but doesn't use the expected agent.
+**Симптом:** Команда выполняется, но не использует ожидаемого агента.
 
-**Solutions:**
-1. Verify command uses `Task` tool with correct `subagent_type`
-2. Check agent file exists in `.claude/agents/`
-3. Ensure agent name in command matches agent filename (without `.md`)
+**Решения:**
+1. Убедитесь, что команда использует инструмент `Task` с правильным `subagent_type`
+2. Проверьте, что файл агента существует в `.claude/agents/`
+3. Убедитесь, что имя агента в команде совпадает с именем файла агента (без `.md`)
 
 ```markdown
-# In command file:
-Use the Task tool with subagent_type="acc-ddd-auditor"
+# В файле команды:
+Используйте инструмент Task с subagent_type="acc-ddd-auditor"
 ```
 </details>
 
 <details>
-<summary><strong>Components not copied after install</strong></summary>
+<summary><strong>Компоненты не скопированы после установки</strong></summary>
 
-**Symptom:** `.claude/` folder is empty or missing after `composer require`.
+**Симптом:** Папка `.claude/` пуста или отсутствует после `composer require`.
 
-**Solutions:**
-1. Run `composer install` again (not just `require`)
-2. Check Composer allows plugins: `composer config allow-plugins.backvista/awesome-claude-code true`
-3. Verify you're in the project root directory
-4. Check file permissions on `.claude/` directory
+**Решения:**
+1. Запустите `composer install` снова (не просто `require`)
+2. Проверьте, что Composer разрешает плагины: `composer config allow-plugins.backvista/awesome-claude-code true`
+3. Убедитесь, что вы находитесь в корневой директории проекта
+4. Проверьте права доступа к файлам директории `.claude/`
 </details>
 
 <details>
-<summary><strong>Hooks not triggering</strong></summary>
+<summary><strong>Хуки не срабатывают</strong></summary>
 
-**Symptom:** Code changes don't trigger validation hooks.
+**Симптом:** Изменения кода не запускают хуки валидации.
 
-**Solutions:**
-1. Verify `.claude/settings.json` exists and is valid JSON
-2. Check hook patterns match your file paths
-3. Ensure Claude Code has permission to execute hooks
-4. Run `make validate-claude` to check configuration
+**Решения:**
+1. Убедитесь, что `.claude/settings.json` существует и является валидным JSON
+2. Проверьте, что паттерны хуков соответствуют вашим путям к файлам
+3. Убедитесь, что Claude Code имеет разрешение на выполнение хуков
+4. Запустите `make validate-claude` для проверки конфигурации
 </details>
 
 <details>
-<summary><strong>Generated code has wrong namespace</strong></summary>
+<summary><strong>Сгенерированный код имеет неправильное пространство имён</strong></summary>
 
-**Symptom:** Generated classes have incorrect PSR-4 namespace.
+**Симптом:** Сгенерированные классы имеют неправильное пространство имён PSR-4.
 
-**Solutions:**
-1. Check your `composer.json` autoload configuration
-2. Specify target path when generating: `/acc-generate-claude-component` prompts for location
-3. Edit generated files to match your project structure
+**Решения:**
+1. Проверьте конфигурацию autoload в вашем `composer.json`
+2. Укажите целевой путь при генерации: `/acc-generate-claude-component` запрашивает местоположение
+3. Отредактируйте сгенерированные файлы под структуру вашего проекта
 </details>
 
-## Contributing
+## Вклад в проект
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Вклад приветствуется! Пожалуйста, см. [CONTRIBUTING.md](CONTRIBUTING.md) для руководящих принципов.
 
-## License
+## Лицензия
 
-The MIT License (MIT). Please see [License File](LICENSE) for more information.
+Лицензия MIT (MIT). Пожалуйста, см. [License File](LICENSE) для дополнительной информации.

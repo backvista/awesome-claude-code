@@ -1,238 +1,238 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+Все notable изменения этого проекта будут задокументированы в этом файле.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Формат основан на [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+и этот проект придерживается [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
 ## [2.10.1] - 2026-02-11
 
 ### Changed
-- PHP version requirement lowered from 8.5 to 8.2 in composer.json, Dockerfile, and all component descriptions
-- Replaced `array_all()` (PHP 8.4) with foreach loop in acc-grasp-knowledge information-expert reference
+- Требование к версии PHP снижено с 8.5 до 8.2 в composer.json, Dockerfile и всех описаниях компонентов
+- Заменена функция `array_all()` (PHP 8.4) на цикл foreach в референсе information-expert навыка acc-grasp-knowledge
 
 ---
 
 ## [2.10.0] - 2026-02-09
 
 ### Added
-- `.claude/rules/` directory with 3 conditional rules: `component-creation.md`, `versioning.md`, `troubleshooting.md` — loaded only when matching files are involved, saving context
-- `acc-cqrs-auditor` agent — dedicated CQRS/ES/EDA patterns auditor (split from `acc-behavioral-auditor`)
-- Creational auditor skills (+3): `acc-check-singleton-antipattern` (Singleton anti-pattern detection), `acc-check-abstract-factory` (Abstract Factory audit), `acc-create-prototype` (Prototype pattern generator)
-- Stability auditor skills (+3): `acc-check-timeout-strategy` (timeout configuration audit), `acc-check-cascading-failures` (cascading failure detection), `acc-check-fallback-strategy` (fallback/graceful degradation audit)
-- DDD auditor skills (+3): `acc-check-aggregate-consistency` (aggregate rules audit), `acc-check-cqrs-alignment` (CQRS/ES alignment), `acc-check-context-communication` (Context Map patterns)
-- Documentation auditor skills (+3): `acc-check-doc-links` (link validation), `acc-check-doc-examples` (code example verification), `acc-check-version-consistency` (version sync audit)
-- Security reviewer skills (+6): `acc-check-insecure-design` (A04:2021), `acc-check-logging-failures` (A09:2021), `acc-check-secure-headers` (CSP/HSTS/X-Frame), `acc-check-cors-security` (CORS misconfiguration), `acc-check-mass-assignment` (mass assignment), `acc-check-type-juggling` (PHP type juggling)
-- Performance reviewer skills (+3): `acc-check-index-usage` (missing DB indexes), `acc-check-async-patterns` (sync ops that should be async), `acc-check-file-io` (file I/O patterns)
+- Директория `.claude/rules/` с 3 условными правилами: `component-creation.md`, `versioning.md`, `troubleshooting.md` — загружаются только при работе с соответствующими файлами, экономя контекст
+- Агент `acc-cqrs-auditor` — выделенный аудитор паттернов CQRS/ES/EDA (выделен из `acc-behavioral-auditor`)
+- Навыки аудита порождающих паттернов (+3): `acc-check-singleton-antipattern` (обнаружение антипаттерна Singleton), `acc-check-abstract-factory` (аудит Abstract Factory), `acc-create-prototype` (генератор паттерна Prototype)
+- Навыки аудита паттернов стабильности (+3): `acc-check-timeout-strategy` (аудит конфигурации таймаутов), `acc-check-cascading-failures` (обнаружение каскадных сбоев), `acc-check-fallback-strategy` (аудит fallback/graceful degradation)
+- Навыки аудита DDD (+3): `acc-check-aggregate-consistency` (аудит правил агрегата), `acc-check-cqrs-alignment` (соответствие CQRS/ES), `acc-check-context-communication` (паттерны Context Map)
+- Навыки аудита документации (+3): `acc-check-doc-links` (валидация ссылок), `acc-check-doc-examples` (проверка примеров кода), `acc-check-version-consistency` (аудит синхронизации версий)
+- Навыки security-ревьюера (+6): `acc-check-insecure-design` (A04:2021), `acc-check-logging-failures` (A09:2021), `acc-check-secure-headers` (CSP/HSTS/X-Frame), `acc-check-cors-security` (неправильная конфигурация CORS), `acc-check-mass-assignment` (mass assignment), `acc-check-type-juggling` (PHP type juggling)
+- Навыки performance-ревьюера (+3): `acc-check-index-usage` (отсутствующие индексы БД), `acc-check-async-patterns` (синхронные операции, которые должны быть асинхронными), `acc-check-file-io` (паттерны file I/O)
 
 ### Changed
 
-#### Audit System
-- All 11 audit commands upgraded to `model: opus` (was sonnet for psr, test, security, performance)
-- Unified severity system 🔴🟠🟡🟢 across all 11 audit commands (was 5 different icon sets)
-- All 11 audit commands now support `level:quick`, `level:standard`, `level:deep` via meta-instructions
-- All 11 audit commands now have Meta-Instructions Guide tables (was 2/11)
-- All 11 audit commands now have Pre-flight checks (was 8/11)
-- `acc-audit-psr` rewritten: 89 → 220 lines with Pre-flight Check, Audit Levels, Severity, Meta-Instructions Guide, full Expected Output template
-- `acc-audit-test` rewritten: 137 → 230 lines with Pre-flight Check, Audit Levels, Severity, Meta-Instructions Guide, full Expected Output template
-- `acc-audit-psr` and `acc-audit-test` commands expanded `allowed-tools` from `Task` to `Read, Grep, Glob, Bash, Task`
+#### Система аудита
+- Все 11 команд аудита обновлены до `model: opus` (было sonnet для psr, test, security, performance)
+- Унифицированная система серьезности 🔴🟠🟡🟢 во всех 11 командах аудита (было 5 разных наборов иконок)
+- Все 11 команд аудита теперь поддерживают `level:quick`, `level:standard`, `level:deep` через мета-инструкции
+- Все 11 команд аудита теперь имеют таблицы Meta-Instructions Guide (было 2/11)
+- Все 11 команд аудита теперь имеют Pre-flight проверки (было 8/11)
+- `acc-audit-psr` переписана: 89 → 220 строк с Pre-flight Check, Audit Levels, Severity, Meta-Instructions Guide, полным шаблоном Expected Output
+- `acc-audit-test` переписана: 137 → 230 строк с Pre-flight Check, Audit Levels, Severity, Meta-Instructions Guide, полным шаблоном Expected Output
+- Команды `acc-audit-psr` и `acc-audit-test` расширили `allowed-tools` с `Task` до `Read, Grep, Glob, Bash, Task`
 
-#### Agents
-- `acc-behavioral-auditor` split: CQRS/ES/EDA → new `acc-cqrs-auditor` (8 skills), GoF behavioral remains (11 skills, was 17+458 lines)
-- `acc-docker-production-agent` slimmed: 410 → ~200 lines, extracted inline templates to skill references
-- `acc-find-sql-injection` merged into `acc-check-sql-injection` (>70% content overlap), `acc-bug-hunter` updated
-- `acc-pattern-auditor` and `acc-architecture-auditor` coordinators updated delegation tables for CQRS split
-- `acc-creational-auditor` expanded: 3 → 6 skills, added Abstract Factory, Singleton anti-pattern, Prototype phases
-- `acc-stability-auditor` expanded: 5 → 8 skills, added Timeout, Cascading Failures, Fallback phases
-- `acc-ddd-auditor` expanded: 5 → 8 skills, added Aggregate Consistency, CQRS Alignment, Context Communication phases
-- `acc-documentation-auditor` expanded: 3 → 6 skills, added link validation, example verification, version consistency
-- `acc-security-reviewer` expanded: 14 → 20 skills, added OWASP A04 Insecure Design, A09 Logging Failures, Secure Headers, CORS, Mass Assignment, Type Juggling
-- `acc-performance-reviewer` expanded: 10 → 13 skills, added Index Usage, Async Patterns, File I/O
-- `acc-pattern-auditor` coordinator updated delegation table (stability 5→8, creational 3→6)
+#### Агенты
+- `acc-behavioral-auditor` разделён: CQRS/ES/EDA → новый `acc-cqrs-auditor` (8 навыков), GoF behavioral остаётся (11 навыков, было 17+458 строк)
+- `acc-docker-production-agent` уменьшен: 410 → ~200 строк, встроенные шаблоны извлечены в референсы навыков
+- `acc-find-sql-injection` объединён с `acc-check-sql-injection` (>70% совпадения содержимого), `acc-bug-hunter` обновлён
+- Координаторы `acc-pattern-auditor` и `acc-architecture-auditor` обновили таблицы делегирования для разделения CQRS
+- `acc-creational-auditor` расширен: 3 → 6 навыков, добавлены фазы Abstract Factory, антипаттерна Singleton, Prototype
+- `acc-stability-auditor` расширен: 5 → 8 навыков, добавлены фазы Timeout, Cascading Failures, Fallback
+- `acc-ddd-auditor` расширен: 5 → 8 навыков, добавлены фазы Aggregate Consistency, CQRS Alignment, Context Communication
+- `acc-documentation-auditor` расширен: 3 → 6 навыков, добавлены валидация ссылок, проверка примеров, согласованность версий
+- `acc-security-reviewer` расширен: 14 → 20 навыков, добавлены OWASP A04 Insecure Design, A09 Logging Failures, Secure Headers, CORS, Mass Assignment, Type Juggling
+- `acc-performance-reviewer` расширен: 10 → 13 навыков, добавлены Index Usage, Async Patterns, File I/O
+- Координатор `acc-pattern-auditor` обновил таблицу делегирования (stability 5→8, creational 3→6)
 
-#### Progress Tracking
-- 5 specialist agents (`acc-security-reviewer`, `acc-performance-reviewer`, `acc-psr-auditor`, `acc-test-auditor`, `acc-documentation-auditor`) upgraded with TaskCreate/TaskUpdate progress tracking (3 phases: Scan → Analyze → Report)
-- 6 sub-auditors (`acc-behavioral-auditor`, `acc-cqrs-auditor`, `acc-creational-auditor`, `acc-gof-structural-auditor`, `acc-structural-auditor`, `acc-integration-auditor`, `acc-stability-auditor`) upgraded with TaskCreate/TaskUpdate progress tracking
+#### Отслеживание прогресса
+- 5 агентов-специалистов (`acc-security-reviewer`, `acc-performance-reviewer`, `acc-psr-auditor`, `acc-test-auditor`, `acc-documentation-auditor`) обновлены с отслеживанием прогресса TaskCreate/TaskUpdate (3 фазы: Scan → Analyze → Report)
+- 6 суб-аудиторов (`acc-behavioral-auditor`, `acc-cqrs-auditor`, `acc-creational-auditor`, `acc-gof-structural-auditor`, `acc-structural-auditor`, `acc-integration-auditor`, `acc-stability-auditor`) обновлены с отслеживанием прогресса TaskCreate/TaskUpdate
 
-#### Skills & CLAUDE.md
-- 10 analyzer skills expanded with "When This Is Acceptable" false-positive guidance: `acc-check-method-length`, `acc-check-class-length`, `acc-detect-n-plus-one`, `acc-analyze-solid-violations`, `acc-detect-code-smells`, `acc-check-input-validation`, `acc-check-sql-injection`, `acc-detect-memory-issues`, `acc-check-caching-strategy`, `acc-check-output-encoding`
-- `CLAUDE.md` slimmed from 147 to ~80 lines — extracted component creation, versioning, and troubleshooting sections into conditional rules
-- Updated component counts: 26 commands, 57 agents, 242 skills
+#### Навыки и CLAUDE.md
+- 10 навыков-анализаторов расширены руководством "When This Is Acceptable" по ложным срабатываниям: `acc-check-method-length`, `acc-check-class-length`, `acc-detect-n-plus-one`, `acc-analyze-solid-violations`, `acc-detect-code-smells`, `acc-check-input-validation`, `acc-check-sql-injection`, `acc-detect-memory-issues`, `acc-check-caching-strategy`, `acc-check-output-encoding`
+- `CLAUDE.md` сокращён с 147 до ~80 строк — секции о создании компонентов, версионировании и устранении неполадок извлечены в условные правила
+- Обновлено количество компонентов: 26 команд, 57 агентов, 242 навыка
 ---
 
 ## [2.9.0] - 2026-02-08
 
 ### Added
-- `/acc-explain` command — code explanation with 5 modes (quick, deep, onboarding, business, qa), accepts files, directories, HTTP routes, console commands
-- Explain agents (4): explain-coordinator, codebase-navigator, business-logic-analyst, data-flow-analyst
-- Explain skills (12): codebase scanning, entry-point resolution, architecture detection, business rules/processes/domain extraction, state machines, request lifecycle tracing, data transformation, async flows, output templates
-- GoF Structural patterns (6): Adapter, Facade, Proxy, Composite, Bridge, Flyweight — auditor + generator agents, 6 skills with templates/examples
-- GoF Behavioral patterns (4): Template Method, Visitor, Iterator, Memento — 4 skills with templates/examples
+- Команда `/acc-explain` — объяснение кода с 5 режимами (quick, deep, onboarding, business, qa), принимает файлы, директории, HTTP-маршруты, консольные команды
+- Агенты Explain (4): explain-coordinator, codebase-navigator, business-logic-analyst, data-flow-analyst
+- Навыки Explain (12): сканирование кодовой базы, разрешение точек входа, обнаружение архитектуры, извлечение бизнес-правил/процессов/домена, конечные автоматы, трассировка жизненного цикла запроса, преобразование данных, асинхронные потоки, шаблоны вывода
+- Структурные паттерны GoF (6): Adapter, Facade, Proxy, Composite, Bridge, Flyweight — аудитор + генератор, 6 навыков с шаблонами/примерами
+- Поведенческие паттерны GoF (4): Template Method, Visitor, Iterator, Memento — 4 навыка с шаблонами/примерами
 
 ### Changed
-- `acc-behavioral-generator/auditor` expanded with 4 new GoF behavioral patterns
-- `acc-pattern-generator/auditor` coordinators now delegate to 5 sub-agents (added `acc-gof-structural-*`)
-- `/acc-generate-patterns` supports 26 patterns (was 16), `/acc-audit-patterns` audits GoF structural category
-- `docs/mcp.md` expanded with 6 MCP server configurations: Redis, RabbitMQ, Elasticsearch, Kafka, GitHub, Docker Hub
-- Updated component counts: 26 commands, 56 agents, 222 skills
+- `acc-behavioral-generator/auditor` расширены 4 новыми поведенческими паттернами GoF
+- Координаторы `acc-pattern-generator/auditor` теперь делегируют 5 суб-агентам (добавлен `acc-gof-structural-*`)
+- `/acc-generate-patterns` поддерживает 26 паттернов (было 16), `/acc-audit-patterns` аудирует категорию структурных GoF
+- `docs/mcp.md` расширен 6 конфигурациями MCP-серверов: Redis, RabbitMQ, Elasticsearch, Kafka, GitHub, Docker Hub
+- Обновлено количество компонентов: 26 команд, 56 агентов, 222 навыка
 
 ---
 
 ## [2.8.0] - 2026-02-07
 
 ### Added
-- Docker Expert System for PHP (2 commands + 1 coordinator + 7 agents + 42 skills)
-- Enhanced `acc-claude-code-knowledge` from ~45% to ~95% coverage with 6 reference files:
-  - `hooks-reference.md` — all 12 hook events, 3 types, matchers, I/O, exit codes
-  - `skills-advanced.md` — context:fork, agent, hooks, model, invocation control
+- Docker Expert System для PHP (2 команды + 1 координатор + 7 агентов + 42 навыка)
+- Расширен `acc-claude-code-knowledge` с ~45% до ~95% покрытия с 6 референсными файлами:
+  - `hooks-reference.md` — все 12 событий хуков, 3 типа, матчеры, I/O, коды выхода
+  - `skills-advanced.md` — context:fork, agent, hooks, model, управление вызовами
   - `subagents-advanced.md` — memory, hooks, disallowedTools, background, resume
-  - `memory-and-rules.md` — CLAUDE.md hierarchy, rules/, @imports, paths frontmatter
-  - `plugins-reference.md` — plugin structure, manifest, marketplace, migration
-  - `settings-and-permissions.md` — full settings schema, sandbox, permissions, env vars
-- New SKILL.md sections: Memory, Plugins, Permissions, MCP, Settings, Decision Framework, Context Costs
-- New agent fields documented: `disallowedTools`, `hooks`, `memory`, `permissionMode` (6 modes)
-- New skill fields documented: `context`, `agent`, `hooks`, `model`, `!`command`` injection
-- Plugin and rules creation in `/acc-generate-claude-component`
-- Memory/rules, plugin, and hooks comprehensive audit in `/acc-audit-claude-components`
+  - `memory-and-rules.md` — иерархия CLAUDE.md, rules/, @imports, paths frontmatter
+  - `plugins-reference.md` — структура плагина, манифест, marketplace, миграция
+  - `settings-and-permissions.md` — полная схема settings, sandbox, разрешения, переменные окружения
+- Новые секции SKILL.md: Memory, Plugins, Permissions, MCP, Settings, Decision Framework, Context Costs
+- Задокументированы новые поля агентов: `disallowedTools`, `hooks`, `memory`, `permissionMode` (6 режимов)
+- Задокументированы новые поля навыков: `context`, `agent`, `hooks`, `model`, инъекция `!`command``
+- Создание плагинов и правил в `/acc-generate-claude-component`
+- Комплексный аудит memory/rules, плагинов и хуков в `/acc-audit-claude-components`
 
 ### Changed
-- `acc-claude-code-expert` agent updated with Memory, Plugins, Permissions, Rules knowledge
-- `/acc-generate-claude-component` expanded from 4 to 6 component types (+ rule, plugin)
-- `/acc-audit-claude-components` enhanced with memory/rules, plugin, hooks, permissions quality criteria
-- `/acc-audit-docker` command - Docker configuration audit (Dockerfile, Compose, security, performance)
-- `/acc-generate-docker` command - Docker component generation (dockerfile, compose, nginx, entrypoint, makefile, env, healthcheck, full)
-- `acc-docker-coordinator` agent - orchestrates Docker audit and generation operations
-- Docker specialist agents (7): architect, image-builder, compose, performance, security, debugger, production
-- Docker knowledge skills (12): core, multistage, base-images, php-extensions, compose, networking, security, buildkit, production, troubleshooting, orchestration, scanning
-- Docker analyzer skills (12): build-errors, runtime-errors, image-size, security, secrets, user-permissions, compose-config, production-readiness, antipatterns, layer-efficiency, php-config, healthcheck
-- Docker creator skills (12): dockerfile-production, dockerfile-dev, dockerignore, compose-dev, compose-production, php-config, healthcheck, entrypoint, nginx-config, makefile, env-template, supervisor-config
-- Docker optimizer skills (6): build-time, image-size, php-fpm, compose-resources, opcache, startup
-- Updated component counts: 25 commands, 50 agents, 200 skills
+- Агент `acc-claude-code-expert` обновлён знаниями Memory, Plugins, Permissions, Rules
+- `/acc-generate-claude-component` расширена с 4 до 6 типов компонентов (+ rule, plugin)
+- `/acc-audit-claude-components` улучшена критериями качества memory/rules, плагинов, хуков, разрешений
+- Команда `/acc-audit-docker` - аудит конфигурации Docker (Dockerfile, Compose, безопасность, производительность)
+- Команда `/acc-generate-docker` - генерация Docker-компонентов (dockerfile, compose, nginx, entrypoint, makefile, env, healthcheck, full)
+- Агент `acc-docker-coordinator` - оркестрирует операции аудита и генерации Docker
+- Docker-специалисты (7): architect, image-builder, compose, performance, security, debugger, production
+- Навыки знаний Docker (12): core, multistage, base-images, php-extensions, compose, networking, security, buildkit, production, troubleshooting, orchestration, scanning
+- Навыки анализа Docker (12): build-errors, runtime-errors, image-size, security, secrets, user-permissions, compose-config, production-readiness, antipatterns, layer-efficiency, php-config, healthcheck
+- Навыки создания Docker (12): dockerfile-production, dockerfile-dev, dockerignore, compose-dev, compose-production, php-config, healthcheck, entrypoint, nginx-config, makefile, env-template, supervisor-config
+- Навыки оптимизации Docker (6): build-time, image-size, php-fpm, compose-resources, opcache, startup
+- Обновлено количество компонентов: 25 команд, 50 агентов, 200 навыков
 
 ### Changed
-- Renamed `/acc-write-test` → `/acc-generate-test` for consistent `generate-` verb across all generation commands
-- Renamed `/acc-write-documentation` → `/acc-generate-documentation`
-- Renamed `/acc-write-claude-component` → `/acc-generate-claude-component`
+- Переименовано `/acc-write-test` → `/acc-generate-test` для согласованного глагола `generate-` во всех командах генерации
+- Переименовано `/acc-write-documentation` → `/acc-generate-documentation`
+- Переименовано `/acc-write-claude-component` → `/acc-generate-claude-component`
 
 ---
 
 ## [2.7.0] - 2026-02-06
 
 ### Added
-- `/acc-generate-ddd` command - direct DDD component generation (13 components)
-- `/acc-generate-psr` command - direct PSR component generation (11 PSR implementations)
-- `/acc-generate-patterns` command - direct design pattern generation (16 patterns)
-- `/acc-audit-security` command - standalone security audit (OWASP Top 10)
-- `/acc-audit-performance` command - standalone performance audit
-- `/acc-audit-patterns` command - design patterns audit
-- `/acc-refactor` command - guided refactoring workflow
-- CI/CD commands (4): `/acc-ci-setup`, `/acc-ci-fix`, `/acc-ci-optimize`, `/acc-audit-ci`
-- CI/CD agents (10): ci-coordinator, pipeline-architect, ci-debugger, ci-fixer, pipeline-optimizer, ci-security-agent, docker-agent, deployment-agent, static-analysis-agent, test-pipeline-agent
-- CI/CD skills (18): knowledge (3), config generators (6), docker (2), deployment (2), analyzers (4), fix generator (1)
-- `acc-task-progress-knowledge` skill - TaskCreate pattern guidelines for coordinator progress tracking
-- Progress tracking (TaskCreate/TaskUpdate) in 7 coordinator agents for user visibility
-- TaskCreate guidelines in project CLAUDE.md and global ~/.claude/CLAUDE.md
-- Coordinator progress tracking check in `/acc-audit-claude-components`
-- Coordinator creation guidelines in `/acc-generate-claude-component`
-- Updated component counts: 23 commands, 42 agents, 158 skills
+- Команда `/acc-generate-ddd` - прямая генерация DDD-компонентов (13 компонентов)
+- Команда `/acc-generate-psr` - прямая генерация PSR-компонентов (11 PSR-реализаций)
+- Команда `/acc-generate-patterns` - прямая генерация паттернов проектирования (16 паттернов)
+- Команда `/acc-audit-security` - отдельный аудит безопасности (OWASP Top 10)
+- Команда `/acc-audit-performance` - отдельный аудит производительности
+- Команда `/acc-audit-patterns` - аудит паттернов проектирования
+- Команда `/acc-refactor` - управляемый рабочий процесс рефакторинга
+- Команды CI/CD (4): `/acc-ci-setup`, `/acc-ci-fix`, `/acc-ci-optimize`, `/acc-audit-ci`
+- Агенты CI/CD (10): ci-coordinator, pipeline-architect, ci-debugger, ci-fixer, pipeline-optimizer, ci-security-agent, docker-agent, deployment-agent, static-analysis-agent, test-pipeline-agent
+- Навыки CI/CD (18): знания (3), генераторы конфигураций (6), docker (2), deployment (2), анализаторы (4), генератор исправлений (1)
+- Навык `acc-task-progress-knowledge` - руководство по паттерну TaskCreate для отслеживания прогресса координатора
+- Отслеживание прогресса (TaskCreate/TaskUpdate) в 7 агентах-координаторах для видимости пользователя
+- Руководство TaskCreate в проектном CLAUDE.md и глобальном ~/.claude/CLAUDE.md
+- Проверка отслеживания прогресса координатора в `/acc-audit-claude-components`
+- Руководство по созданию координаторов в `/acc-generate-claude-component`
+- Обновлено количество компонентов: 23 команды, 42 агента, 158 навыков
 
 ---
 
 ## [2.6.0] - 2026-02-05
 
 ### Added
-- `bin/acc` CLI tool for managing Claude components (`acc upgrade`)
-- `/acc-bug-fix` command - automated bug diagnosis, fix generation, and testing
-- `acc-bug-fix-coordinator` agent - orchestrates bug diagnosis → fix → test workflow
-- `acc-bug-fixer` agent - generates safe, minimal bug fixes (11 skills)
-- Bug fix skills (5): knowledge, root-cause-finder, impact-analyzer, fix-generator, regression-preventer
-- Security skills (5): SSRF, command injection, deserialization, XXE, path traversal (OWASP 10/10)
-- Performance skills (2): connection-pool, serialization
+- CLI-инструмент `bin/acc` для управления Claude-компонентами (`acc upgrade`)
+- Команда `/acc-bug-fix` - автоматическая диагностика багов, генерация исправлений и тестирование
+- Агент `acc-bug-fix-coordinator` - оркестрирует процесс диагностика → исправление → тест
+- Агент `acc-bug-fixer` - генерирует безопасные, минимальные исправления багов (11 навыков)
+- Навыки исправления багов (5): знания, поиск первопричины, анализатор воздействия, генератор исправлений, предотвращение регрессий
+- Навыки безопасности (5): SSRF, command injection, deserialization, XXE, path traversal (OWASP 10/10)
+- Навыки производительности (2): connection-pool, serialization
 
 ### Changed
-- `acc-security-reviewer`: 9 → 14 skills (full OWASP Top 10)
-- `acc-performance-reviewer`: 8 → 10 skills
+- `acc-security-reviewer`: 9 → 14 навыков (полный OWASP Top 10)
+- `acc-performance-reviewer`: 8 → 10 навыков
 
 ## [2.5.0] - 2026-02-04
 
 ### Added
-- `/acc-code-review` command - multi-level code review with git diff analysis
-- Review agents (6): code-review-coordinator, bug-hunter, security-reviewer, performance-reviewer, readability-reviewer, testability-reviewer
-- Bug detection skills (9): logic-errors, null-pointer, boundary, race-conditions, resource-leaks, exception, type, sql-injection, infinite-loops
-- Security review skills (9): input-validation, output-encoding, authentication, authorization, sensitive-data, csrf, crypto, dependencies, sql-injection
-- Performance skills (8): n-plus-one, query-efficiency, memory, caching, loops, lazy-loading, batch-processing, complexity
-- Readability skills (9): naming, code-style, method-length, class-length, nesting, comments, magic-values, consistency, simplification
-- Testability skills (5): dependency-injection, pure-functions, side-effects, test-quality, testability-improvements
+- Команда `/acc-code-review` - многоуровневое ревью кода с анализом git diff
+- Агенты ревью (6): code-review-coordinator, bug-hunter, security-reviewer, performance-reviewer, readability-reviewer, testability-reviewer
+- Навыки обнаружения багов (9): logic-errors, null-pointer, boundary, race-conditions, resource-leaks, exception, type, sql-injection, infinite-loops
+- Навыки ревью безопасности (9): input-validation, output-encoding, authentication, authorization, sensitive-data, csrf, crypto, dependencies, sql-injection
+- Навыки производительности (8): n-plus-one, query-efficiency, memory, caching, loops, lazy-loading, batch-processing, complexity
+- Навыки читаемости (9): naming, code-style, method-length, class-length, nesting, comments, magic-values, consistency, simplification
+- Навыки тестируемости (5): dependency-injection, pure-functions, side-effects, test-quality, testability-improvements
 
 ## [2.4.0] - 2026-02-03
 
 ### Added
-- `/acc-generate-test` - generate tests for PHP file/folder
-- `/acc-audit-test` - audit test quality
-- `/acc-generate-documentation` - generate documentation
-- `/acc-audit-documentation` - audit documentation quality
-- Auditor agents (6): structural, behavioral, integration, stability, creational, psr
-- Generator agents (4): stability, behavioral, creational, integration
-- Test agents (2): test-auditor, test-generator
-- Documentation agents (3): documentation-writer, documentation-auditor, diagram-designer
-- Knowledge skills (4): testing, documentation, diagram, documentation-qa
-- Analyzer skills (8): test-coverage, test-smells, code-smells, bounded-contexts, immutability, leaky-abstractions, encapsulation, coupling-cohesion
-- Generator skills (5): unit-test, integration-test, test-builder, mock-repository, test-double
-- Template skills (9): readme, architecture-doc, adr, api-doc, getting-started, troubleshooting, code-examples, mermaid, changelog
-- Hooks (10): auto-format, strict-types, protect-vendor, syntax-check, auto-tests, final-domain, file-size, no-direct-commits, protect-migrations, test-without-source
-- Meta-instructions support via `--` separator for all commands
+- `/acc-generate-test` - генерация тестов для PHP-файла/папки
+- `/acc-audit-test` - аудит качества тестов
+- `/acc-generate-documentation` - генерация документации
+- `/acc-audit-documentation` - аудит качества документации
+- Агенты-аудиторы (6): structural, behavioral, integration, stability, creational, psr
+- Агенты-генераторы (4): stability, behavioral, creational, integration
+- Агенты тестирования (2): test-auditor, test-generator
+- Агенты документирования (3): documentation-writer, documentation-auditor, diagram-designer
+- Навыки знаний (4): testing, documentation, diagram, documentation-qa
+- Навыки-анализаторы (8): test-coverage, test-smells, code-smells, bounded-contexts, immutability, leaky-abstractions, encapsulation, coupling-cohesion
+- Навыки-генераторы (5): unit-test, integration-test, test-builder, mock-repository, test-double
+- Навыки-шаблоны (9): readme, architecture-doc, adr, api-doc, getting-started, troubleshooting, code-examples, mermaid, changelog
+- Хуки (10): auto-format, strict-types, protect-vendor, syntax-check, auto-tests, final-domain, file-size, no-direct-commits, protect-migrations, test-without-source
+- Поддержка мета-инструкций через разделитель `--` для всех команд
 
 ### Changed
-- Decomposed `acc-architecture-auditor` to coordinator pattern (delegates to 3 auditors)
-- Refactored `acc-pattern-auditor` and `acc-pattern-generator` to coordinator patterns
-- Renamed `/acc-claude-code` to `/acc-generate-claude-component`
+- Декомпозиция `acc-architecture-auditor` в паттерн координатора (делегирует 3 аудиторам)
+- Рефакторинг `acc-pattern-auditor` и `acc-pattern-generator` в паттерны координаторов
+- Переименовано `/acc-claude-code` → `/acc-generate-claude-component`
 
 ## [2.3.0] - 2026-02-02
 
 ### Added
-- `/acc-audit-psr` command - PSR compliance audit
-- `acc-psr-generator` agent (11 skills)
-- Knowledge skills (6): SOLID, GRASP, PSR coding style, PSR autoloading, PSR overview, ADR
-- Analyzer skill: SOLID violations
-- PSR generator skills (13): PSR-3, 6, 7, 11, 13, 14, 15, 16, 17, 18, 20, action, responder
-- Utility skills (2): DI container, mediator
+- Команда `/acc-audit-psr` - аудит соответствия PSR
+- Агент `acc-psr-generator` (11 навыков)
+- Навыки знаний (6): SOLID, GRASP, PSR coding style, PSR autoloading, PSR overview, ADR
+- Навык-анализатор: SOLID violations
+- Навыки-генераторы PSR (13): PSR-3, 6, 7, 11, 13, 14, 15, 16, 17, 18, 20, action, responder
+- Утилитарные навыки (2): DI container, mediator
 
 ## [2.2.0] - 2026-01-31
 
 ### Added
-- `/acc-audit-claude-code` command
-- Agents (3): architecture-generator, pattern-auditor, pattern-generator
-- Knowledge skills (3): outbox-pattern, saga-pattern, stability-patterns
-- Generator skills (20): dto, specification, factory, domain-service, outbox, saga, circuit-breaker, retry, rate-limiter, bulkhead, strategy, state, decorator, chain-of-responsibility, builder, null-object, object-pool, anti-corruption-layer, read-model, policy
+- Команда `/acc-audit-claude-code`
+- Агенты (3): architecture-generator, pattern-auditor, pattern-generator
+- Навыки знаний (3): outbox-pattern, saga-pattern, stability-patterns
+- Навыки-генераторы (20): dto, specification, factory, domain-service, outbox, saga, circuit-breaker, retry, rate-limiter, bulkhead, strategy, state, decorator, chain-of-responsibility, builder, null-object, object-pool, anti-corruption-layer, read-model, policy
 
 ### Changed
-- Refactored 22 skills to use `references/` folder structure
+- Рефакторинг 22 навыков для использования структуры папок `references/`
 
 ## [2.1.0] - 2026-01-30
 
 ### Added
-- `/acc-audit-architecture` command - multi-pattern architecture audit
-- `/acc-audit-ddd` command - DDD compliance analysis
-- Agents (3): architecture-auditor, ddd-auditor, ddd-generator
-- Knowledge skills (7): DDD, CQRS, Clean Architecture, Hexagonal, Layered, Event Sourcing, EDA
-- Generator skills (8): value-object, entity, aggregate, domain-event, repository, command, query, use-case
+- Команда `/acc-audit-architecture` - многопаттерновый аудит архитектуры
+- Команда `/acc-audit-ddd` - анализ соответствия DDD
+- Агенты (3): architecture-auditor, ddd-auditor, ddd-generator
+- Навыки знаний (7): DDD, CQRS, Clean Architecture, Hexagonal, Layered, Event Sourcing, EDA
+- Навыки-генераторы (8): value-object, entity, aggregate, domain-event, repository, command, query, use-case
 
 ## [2.0.0] - 2026-01-29
 
 ### Added
-- Composer plugin for auto-copying Claude Code components
-- `/acc-generate-claude-component` command - interactive wizard
-- `/acc-commit` command - auto-generate commit message
-- `acc-claude-code-expert` agent
-- `acc-claude-code-knowledge` skill
+- Composer-плагин для автоматического копирования Claude Code-компонентов
+- Команда `/acc-generate-claude-component` - интерактивный мастер
+- Команда `/acc-commit` - автогенерация commit-сообщения
+- Агент `acc-claude-code-expert`
+- Навык `acc-claude-code-knowledge`
 
 ## [1.0.0] - 2026-01-28
 
 ### Added
-- Initial release
-- Project structure and Composer package setup
+- Первоначальный релиз
+- Структура проекта и настройка Composer-пакета
 
 [Unreleased]: https://github.com/backvista/awesome-claude-code/compare/v2.10.0...HEAD
 [2.10.0]: https://github.com/backvista/awesome-claude-code/compare/v2.9.0...v2.10.0

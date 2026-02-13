@@ -1,87 +1,87 @@
 ---
 name: acc-adr-knowledge
-description: Action-Domain-Responder pattern knowledge base. Provides patterns, antipatterns, and PHP-specific guidelines for ADR (web-specific MVC alternative) audits.
+description: База знаний о паттерне Action-Domain-Responder. Предоставляет паттерны, антипаттерны и рекомендации для PHP по аудиту ADR (веб-специфичная альтернатива MVC).
 ---
 
-# ADR Knowledge Base
+# База знаний ADR
 
-Quick reference for Action-Domain-Responder pattern and PHP implementation guidelines.
+Краткий справочник по паттерну Action-Domain-Responder и рекомендациям для PHP-реализации.
 
-## Core Principles
+## Основные принципы
 
-### ADR Components
+### Компоненты ADR
 
 ```
-HTTP Request → Action (collects input)
+HTTP Request → Action (собирает входные данные)
                  ↓
-              Domain (executes business logic)
+              Domain (выполняет бизнес-логику)
                  ↓
-             Responder (builds HTTP Response)
+             Responder (строит HTTP Response)
                  ↓
            HTTP Response
 ```
 
-**Rule:** One action = one HTTP endpoint. Responder builds the COMPLETE response.
+**Правило:** Один action = один HTTP endpoint. Responder строит ПОЛНЫЙ response.
 
-### Component Responsibilities
+### Ответственность компонентов
 
-| Component | Responsibility | Contains |
+| Компонент | Ответственность | Содержит |
 |-----------|----------------|----------|
-| **Action** | Collects input, invokes Domain, passes to Responder | Request parsing, DTO creation, UseCase invocation |
-| **Domain** | Business logic (same as DDD Domain/Application) | Entities, Value Objects, UseCases, Services |
-| **Responder** | Builds HTTP Response (status, headers, body) | Response building, template rendering, content negotiation |
+| **Action** | Собирает входные данные, вызывает Domain, передаёт в Responder | Парсинг запроса, создание DTO, вызов UseCase |
+| **Domain** | Бизнес-логика (то же, что DDD Domain/Application) | Entities, Value Objects, UseCases, Services |
+| **Responder** | Строит HTTP Response (статус, заголовки, тело) | Построение ответа, рендеринг шаблонов, content negotiation |
 
-## ADR vs MVC Comparison
+## Сравнение ADR vs MVC
 
-| Aspect | MVC Controller | ADR Action |
+| Аспект | MVC Controller | ADR Action |
 |--------|----------------|------------|
-| Granularity | Multiple actions | Single action per class |
-| Response building | Mixed in controller | Separate Responder class |
-| HTTP concerns | Scattered | Isolated in Responder |
-| Testability | Lower (many concerns) | Higher (single responsibility) |
-| File structure | Few large files | Many focused files |
+| Детализация | Несколько действий | Одно действие на класс |
+| Построение ответа | Смешано в контроллере | Отдельный класс Responder |
+| HTTP-аспекты | Разбросаны | Изолированы в Responder |
+| Тестируемость | Ниже (много обязанностей) | Выше (единая ответственность) |
+| Структура файлов | Мало больших файлов | Много сфокусированных файлов |
 
-## Quick Checklists
+## Чек-листы
 
-### Action Checklist
+### Чек-лист Action
 
-- [ ] Single `__invoke()` method
-- [ ] No `new Response()` or response building
-- [ ] No business logic (if/switch on domain state)
-- [ ] Only input parsing and domain invocation
-- [ ] Returns Responder result
+- [ ] Единственный метод `__invoke()`
+- [ ] Нет `new Response()` или построения ответа
+- [ ] Нет бизнес-логики (if/switch по состоянию домена)
+- [ ] Только парсинг входных данных и вызов домена
+- [ ] Возвращает результат Responder
 
-### Responder Checklist
+### Чек-лист Responder
 
-- [ ] Receives domain result only
-- [ ] Builds complete HTTP Response
-- [ ] Handles content negotiation
-- [ ] Sets status codes based on result
-- [ ] No domain/business logic
-- [ ] No database/repository access
+- [ ] Получает только результат из домена
+- [ ] Строит полный HTTP Response
+- [ ] Обрабатывает content negotiation
+- [ ] Устанавливает коды статуса на основе результата
+- [ ] Нет domain/бизнес-логики
+- [ ] Нет доступа к БД/repository
 
-### Domain Checklist
+### Чек-лист Domain
 
-- [ ] Same as DDD Domain/Application layers
-- [ ] No HTTP/Response concerns
-- [ ] Returns domain objects (not HTTP responses)
-- [ ] Pure business logic
+- [ ] То же, что DDD Domain/Application слои
+- [ ] Нет HTTP/Response-аспектов
+- [ ] Возвращает доменные объекты (не HTTP-ответы)
+- [ ] Чистая бизнес-логика
 
-## Common Violations Quick Reference
+## Краткий справочник по нарушениям
 
-| Violation | Where to Look | Severity |
+| Нарушение | Где искать | Критичность |
 |-----------|---------------|----------|
-| `new Response()` in Action | *Action.php | Critical |
-| `->withStatus()` in Action | *Action.php | Critical |
-| `if ($result->isError())` in Action | *Action.php | Warning |
-| `$repository->` in Responder | *Responder.php | Critical |
-| `$service->` in Responder | *Responder.php | Critical |
-| Multiple public methods in Action | *Action.php | Warning |
-| Template logic in Action | *Action.php | Warning |
+| `new Response()` в Action | *Action.php | Critical |
+| `->withStatus()` в Action | *Action.php | Critical |
+| `if ($result->isError())` в Action | *Action.php | Warning |
+| `$repository->` в Responder | *Responder.php | Critical |
+| `$service->` в Responder | *Responder.php | Critical |
+| Несколько публичных методов в Action | *Action.php | Warning |
+| Логика шаблонов в Action | *Action.php | Warning |
 
-## PHP 8.2 ADR Patterns
+## Паттерны PHP 8.2 для ADR
 
-### Action Pattern
+### Паттерн Action
 
 ```php
 <?php
@@ -123,7 +123,7 @@ final readonly class CreateUserAction
 }
 ```
 
-### Responder Pattern
+### Паттерн Responder
 
 ```php
 <?php
@@ -177,51 +177,51 @@ final readonly class CreateUserResponder
 }
 ```
 
-## Detection Patterns
+## Паттерны обнаружения
 
-### Action Detection
+### Обнаружение Action
 
 ```bash
-# Find Action classes
+# Поиск классов Action
 Glob: **/*Action.php
 Glob: **/Action/**/*.php
 Grep: "implements.*ActionInterface|extends.*Action" --glob "**/*.php"
 
-# Detect Action pattern usage
+# Обнаружение использования паттерна Action
 Grep: "public function __invoke.*Request" --glob "**/*Action.php"
 ```
 
-### Responder Detection
+### Обнаружение Responder
 
 ```bash
-# Find Responder classes
+# Поиск классов Responder
 Glob: **/*Responder.php
 Glob: **/Responder/**/*.php
 Grep: "implements.*ResponderInterface" --glob "**/*.php"
 
-# Detect Responder pattern usage
+# Обнаружение использования паттерна Responder
 Grep: "public function respond" --glob "**/*Responder.php"
 ```
 
-### Violation Detection
+### Обнаружение нарушений
 
 ```bash
-# Response building in Action (Critical)
+# Построение ответа в Action (Critical)
 Grep: "new Response|->withStatus|->withHeader|->withBody" --glob "**/*Action.php"
 
-# Business logic in Action (Warning)
+# Бизнес-логика в Action (Warning)
 Grep: "if \(.*->status|switch \(|->isValid\(\)" --glob "**/*Action.php"
 
-# Domain calls in Responder (Critical)
+# Вызовы домена в Responder (Critical)
 Grep: "Repository|Service|UseCase" --glob "**/*Responder.php"
 
-# Multiple public methods in Action (Warning)
+# Несколько публичных методов в Action (Warning)
 Grep: "public function [^_]" --glob "**/*Action.php" | wc -l
 ```
 
-## File Structure
+## Структура файлов
 
-### Recommended Structure
+### Рекомендуемая структура
 
 ```
 src/
@@ -231,13 +231,13 @@ src/
 │   │       └── {Action}/
 │   │           ├── {Action}Action.php
 │   │           ├── {Action}Responder.php
-│   │           └── {Action}Request.php (optional DTO)
+│   │           └── {Action}Request.php (опциональный DTO)
 │   ├── Web/
 │   │   └── {Context}/
 │   │       └── {Action}/
 │   │           ├── {Action}Action.php
 │   │           ├── {Action}Responder.php
-│   │           └── templates/ (for HTML)
+│   │           └── templates/ (для HTML)
 │   └── Shared/
 │       ├── Action/
 │       │   └── ActionInterface.php
@@ -254,7 +254,7 @@ src/
     └── ...
 ```
 
-### Alternative Structure (Feature-Based)
+### Альтернативная структура (Feature-Based)
 
 ```
 src/
@@ -272,57 +272,57 @@ src/
 │       └── ...
 ```
 
-## Integration with DDD
+## Интеграция с DDD
 
-ADR fits naturally with DDD layering:
+ADR естественно сочетается с DDD-слоями:
 
-| ADR | DDD Layer | Notes |
+| ADR | DDD-слой | Примечания |
 |-----|-----------|-------|
-| Action | Presentation | Entry point for HTTP |
-| Responder | Presentation | Exit point for HTTP |
-| Domain | Domain + Application | Business logic via UseCases |
+| Action | Presentation | Точка входа для HTTP |
+| Responder | Presentation | Точка выхода для HTTP |
+| Domain | Domain + Application | Бизнес-логика через UseCases |
 
-## PSR Integration
+## Интеграция с PSR
 
-ADR works with PSR-7/PSR-15:
+ADR работает с PSR-7/PSR-15:
 
-| PSR | Usage |
+| PSR | Использование |
 |-----|-------|
-| PSR-7 | Request/Response interfaces |
-| PSR-15 | Middleware for cross-cutting concerns |
-| PSR-17 | Response/Stream factories in Responder |
+| PSR-7 | Интерфейсы Request/Response |
+| PSR-15 | Middleware для сквозных задач |
+| PSR-17 | Фабрики Response/Stream в Responder |
 
-## Antipatterns
+## Антипаттерны
 
-### 1. Fat Action (Critical)
+### 1. Толстый Action (Critical)
 
 ```php
-// BAD: Action doing too much
+// ПЛОХО: Action делает слишком много
 class CreateUserAction
 {
     public function __invoke(Request $request): Response
     {
         $data = $request->getParsedBody();
 
-        // Validation in Action
+        // Валидация в Action
         if (empty($data['email'])) {
             return new Response(400, [], 'Email required');
         }
 
-        // Business logic in Action
+        // Бизнес-логика в Action
         $user = new User($data['email']);
         $this->repository->save($user);
 
-        // Response building in Action
+        // Построение ответа в Action
         return new Response(201, [], json_encode(['id' => $user->id()]));
     }
 }
 ```
 
-### 2. Anemic Responder (Warning)
+### 2. Анемичный Responder (Warning)
 
 ```php
-// BAD: Responder not doing its job
+// ПЛОХО: Responder не выполняет свою работу
 class CreateUserResponder
 {
     public function respond($data): Response
@@ -332,15 +332,15 @@ class CreateUserResponder
 }
 ```
 
-### 3. Smart Responder (Critical)
+### 3. Умный Responder (Critical)
 
 ```php
-// BAD: Responder with business logic
+// ПЛОХО: Responder с бизнес-логикой
 class CreateUserResponder
 {
     public function respond(User $user): Response
     {
-        // Domain logic in Responder!
+        // Доменная логика в Responder!
         if ($user->isAdmin()) {
             $this->notificationService->notifyAdmins();
         }
@@ -350,16 +350,16 @@ class CreateUserResponder
 }
 ```
 
-## References
+## Справочные материалы
 
-For detailed information, load these reference files:
+Для детальной информации загрузите эти справочные файлы:
 
-- `references/action-patterns.md` — Action class patterns and best practices
-- `references/responder-patterns.md` — Responder class patterns
-- `references/domain-integration.md` — Integration with DDD Domain layer
-- `references/mvc-comparison.md` — Detailed MVC vs ADR comparison
-- `references/antipatterns.md` — Common ADR violations with examples
+- `references/action-patterns.md` — паттерны и лучшие практики классов Action
+- `references/responder-patterns.md` — паттерны классов Responder
+- `references/domain-integration.md` — интеграция с DDD Domain слоем
+- `references/mvc-comparison.md` — детальное сравнение MVC vs ADR
+- `references/antipatterns.md` — распространённые нарушения ADR с примерами
 
-## Assets
+## Ресурсы
 
-- `assets/report-template.md` — ADR audit report template
+- `assets/report-template.md` — шаблон отчёта ADR-аудита

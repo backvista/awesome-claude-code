@@ -1,27 +1,27 @@
 ---
 name: acc-claude-code-knowledge
-description: Comprehensive knowledge base for Claude Code formats, patterns, and configuration. Use when creating, improving, or auditing commands, agents, skills, hooks, memory, plugins, or settings.
+description: Исчерпывающая база знаний по форматам, паттернам и конфигурации Claude Code. Используется при создании, улучшении или аудите команд, агентов, навыков, хуков, памяти, плагинов и настроек.
 ---
 
-# Claude Code Knowledge Base
+# База знаний Claude Code
 
-## Component Types Overview
+## Обзор типов компонентов
 
-| Type | Path | Invocation | Context Cost |
+| Тип | Путь | Вызов | Стоимость контекста |
 |------|------|------------|--------------|
-| Command | `.claude/commands/name.md` | `/name args` | Loaded on invocation |
-| Agent | `.claude/agents/name.md` | `Task(subagent_type)` | Loaded into subagent context |
-| Skill | `.claude/skills/name/SKILL.md` | Auto or `/name` | Loaded by description match |
-| Hook | `.claude/settings.json` | Automatic on event | Zero (shell script) |
-| Rules | `.claude/rules/*.md` | Auto-loaded always | Always in system prompt |
-| Memory | `CLAUDE.md` (various levels) | Auto-loaded always | Always in system prompt |
+| Command | `.claude/commands/name.md` | `/name args` | Загружается при вызове |
+| Agent | `.claude/agents/name.md` | `Task(subagent_type)` | Загружается в контекст субагента |
+| Skill | `.claude/skills/name/SKILL.md` | Авто или `/name` | Загружается по совпадению description |
+| Hook | `.claude/settings.json` | Автоматически по событию | Нулевая (shell-скрипт) |
+| Rules | `.claude/rules/*.md` | Загружается всегда | Всегда в system prompt |
+| Memory | `CLAUDE.md` (различные уровни) | Загружается всегда | Всегда в system prompt |
 
 ---
 
-## Commands
+## Команды (Commands)
 
-**Path:** `.claude/commands/name.md`
-**Invocation:** `/name` or `/name arguments`
+**Путь:** `.claude/commands/name.md`
+**Вызов:** `/name` или `/name arguments`
 
 ```yaml
 ---
@@ -39,17 +39,17 @@ Use $1, $2 as shorthand for $ARGUMENTS[N].
 Use ${CLAUDE_SESSION_ID} for session identifier.
 ```
 
-**Key rules:**
-- Equivalent to `.claude/skills/name/SKILL.md` with `user-invocable: true`
-- Commands in subdirectories: `.claude/commands/sub/name.md` → `/sub/name`
-- Budget: `SLASH_COMMAND_TOOL_CHAR_BUDGET` (default 15000 chars)
+**Ключевые правила:**
+- Эквивалент `.claude/skills/name/SKILL.md` с `user-invocable: true`
+- Команды в подкаталогах: `.claude/commands/sub/name.md` → `/sub/name`
+- Бюджет: `SLASH_COMMAND_TOOL_CHAR_BUDGET` (по умолчанию 15000 символов)
 
 ---
 
-## Agents (Subagents)
+## Агенты (Subagents)
 
-**Path:** `.claude/agents/name.md`
-**Invocation:** `Task` tool with `subagent_type="name"`
+**Путь:** `.claude/agents/name.md`
+**Вызов:** инструмент `Task` с `subagent_type="name"`
 
 ```yaml
 ---
@@ -67,26 +67,26 @@ memory: Optional. user | project | local — CLAUDE.md scope to load.
 Agent system prompt here.
 ```
 
-**Permission modes:**
-- `default` — ask user for each tool use
-- `acceptEdits` — auto-allow file edits, ask for others
-- `plan` — read-only exploration, no writes
-- `dontAsk` — run without asking, within sandbox
-- `delegate` — inherit parent permissions
-- `bypassPermissions` — skip all permission checks (dangerous)
+**Режимы разрешений:**
+- `default` — спрашивать пользователя для каждого использования инструмента
+- `acceptEdits` — автоматически разрешать редактирование файлов, спрашивать для остального
+- `plan` — только чтение и исследование, без записи
+- `dontAsk` — выполнять без вопросов, в пределах sandbox
+- `delegate` — наследовать разрешения родителя
+- `bypassPermissions` — пропускать все проверки разрешений (опасно)
 
-**Built-in subagent types:** Explore, Plan, general-purpose, Bash, statusline-setup, claude-code-guide
+**Встроенные типы субагентов:** Explore, Plan, general-purpose, Bash, statusline-setup, claude-code-guide
 
-**Execution:** foreground (blocks) or background (`run_in_background: true`). Resume via agent ID.
+**Выполнение:** foreground (блокирует) или background (`run_in_background: true`). Возобновление по ID агента.
 
-**Scope priority:** CLI `--agents` flag > project `.claude/agents/` > user `~/.claude/agents/` > plugin agents
+**Приоритет:** CLI-флаг `--agents` > проектные `.claude/agents/` > пользовательские `~/.claude/agents/` > плагинные агенты
 
 ---
 
-## Skills
+## Навыки (Skills)
 
-**Path:** `.claude/skills/name/SKILL.md`
-**Invocation:** `/name` (if user-invocable) or auto-loaded by agent/description match
+**Путь:** `.claude/skills/name/SKILL.md`
+**Вызов:** `/name` (если user-invocable) или автозагрузка агентом/по совпадению description
 
 ```yaml
 ---
@@ -107,7 +107,7 @@ Use $ARGUMENTS, $ARGUMENTS[N], $N for user input.
 Use !`command` for dynamic context injection (shell output inserted).
 ```
 
-**Folder structure:**
+**Структура каталога:**
 ```
 skill-name/
 ├── SKILL.md        # required, max 500 lines
@@ -116,39 +116,39 @@ skill-name/
 └── assets/         # templates, resources
 ```
 
-**Invocation control matrix:**
+**Матрица управления вызовом:**
 
-| `disable-model-invocation` | `user-invocable` | Who can invoke |
+| `disable-model-invocation` | `user-invocable` | Кто может вызвать |
 |---------------------------|------------------|----------------|
-| false (default) | true (default) | Both user and Claude |
-| true | true | User only (via `/name`) |
-| false | false | Claude only (auto-load) |
-| true | false | Nobody (disabled) |
+| false (default) | true (default) | И пользователь, и Claude |
+| true | true | Только пользователь (через `/name`) |
+| false | false | Только Claude (автозагрузка) |
+| true | false | Никто (отключено) |
 
 ---
 
-## Hooks
+## Хуки (Hooks)
 
-**Path:** `.claude/settings.json` (or agent/skill frontmatter `hooks:` field)
+**Путь:** `.claude/settings.json` (или поле `hooks:` в frontmatter агента/навыка)
 
-### Hook Events (12)
+### События хуков (12)
 
-| Event | When | Matcher | Can Block |
+| Событие | Когда | Matcher | Может блокировать |
 |-------|------|---------|-----------|
-| `PreToolUse` | Before tool execution | Tool name | Yes |
-| `PostToolUse` | After tool execution | Tool name | No |
-| `Notification` | On notification | — | No |
-| `Stop` | Agent stops | — | No |
-| `SubagentStop` | Subagent completes | Agent name | No |
-| `PreCompact` | Before context compaction | — | No |
-| `PostCompact` | After context compaction | — | No |
-| `ToolError` | Tool execution error | Tool name | No |
-| `PreUserInput` | Before user message processed | — | No |
-| `PostUserInput` | After user message processed | — | No |
-| `SessionStart` | Session begins | — | No |
-| `SessionEnd` | Session ends | — | No |
+| `PreToolUse` | Перед выполнением инструмента | Имя инструмента | Да |
+| `PostToolUse` | После выполнения инструмента | Имя инструмента | Нет |
+| `Notification` | При уведомлении | — | Нет |
+| `Stop` | Агент останавливается | — | Нет |
+| `SubagentStop` | Субагент завершил работу | Имя агента | Нет |
+| `PreCompact` | Перед сжатием контекста | — | Нет |
+| `PostCompact` | После сжатия контекста | — | Нет |
+| `ToolError` | Ошибка выполнения инструмента | Имя инструмента | Нет |
+| `PreUserInput` | Перед обработкой сообщения пользователя | — | Нет |
+| `PostUserInput` | После обработки сообщения пользователя | — | Нет |
+| `SessionStart` | Начало сессии | — | Нет |
+| `SessionEnd` | Конец сессии | — | Нет |
 
-### Hook Types (3)
+### Типы хуков (3)
 
 ```json
 {"type": "command", "command": "./script.sh"}
@@ -156,15 +156,15 @@ skill-name/
 {"type": "agent", "agent": "validator-agent"}
 ```
 
-### Exit Codes
+### Коды выхода
 
-| Code | Behavior |
+| Код | Поведение |
 |------|----------|
-| 0 | Allow (continue) |
-| 2 | Block (deny tool use, PreToolUse only) |
-| Other | Log warning, continue |
+| 0 | Разрешить (продолжить) |
+| 2 | Заблокировать (запретить использование инструмента, только PreToolUse) |
+| Другой | Записать предупреждение, продолжить |
 
-### Hook Configuration
+### Конфигурация хуков
 
 ```json
 {
@@ -181,31 +181,31 @@ skill-name/
 }
 ```
 
-**Matcher patterns:** exact name, `|` OR, regex. MCP tools: `mcp__server__tool`.
+**Паттерны matcher:** точное имя, `|` ИЛИ, regex. MCP-инструменты: `mcp__server__tool`.
 
-For comprehensive hooks reference see [references/hooks-reference.md](references/hooks-reference.md).
+Подробный справочник по хукам см. [references/hooks-reference.md](references/hooks-reference.md).
 
 ---
 
-## Memory & CLAUDE.md
+## Память и CLAUDE.md
 
-### Hierarchy (top to bottom, higher = higher priority)
+### Иерархия (сверху вниз, выше = выше приоритет)
 
-| Level | Location | Scope |
+| Уровень | Расположение | Область действия |
 |-------|----------|-------|
-| Managed | System dirs (enterprise) | Organization-wide |
-| User | `~/.claude/CLAUDE.md` | All user projects |
-| User rules | `~/.claude/rules/*.md` | All user projects |
-| Project | `CLAUDE.md` (project root) | This project |
-| Project rules | `.claude/rules/*.md` | This project |
-| Local | `CLAUDE.local.md` (project root, auto-gitignored) | This machine only |
-| Nested | `src/CLAUDE.md`, `tests/CLAUDE.md` | Subdirectory context |
+| Managed | Системные каталоги (enterprise) | Вся организация |
+| User | `~/.claude/CLAUDE.md` | Все проекты пользователя |
+| User rules | `~/.claude/rules/*.md` | Все проекты пользователя |
+| Project | `CLAUDE.md` (корень проекта) | Текущий проект |
+| Project rules | `.claude/rules/*.md` | Текущий проект |
+| Local | `CLAUDE.local.md` (корень проекта, auto-gitignored) | Только эта машина |
+| Nested | `src/CLAUDE.md`, `tests/CLAUDE.md` | Контекст подкаталога |
 
-### Rules Files
+### Файлы правил
 
-`.claude/rules/*.md` — modular rules, always loaded into system prompt.
+`.claude/rules/*.md` — модульные правила, всегда загружаются в system prompt.
 
-**Path-specific rules** via `paths` frontmatter:
+**Правила по путям** через frontmatter `paths`:
 ```yaml
 ---
 paths:
@@ -215,7 +215,7 @@ paths:
 These rules apply only when working with files matching the glob patterns above.
 ```
 
-### Import Syntax
+### Синтаксис импорта
 
 ```markdown
 @path/to/file.md      # relative to current file
@@ -223,20 +223,20 @@ These rules apply only when working with files matching the glob patterns above.
 @~/user/path.md       # home directory
 ```
 
-Import recursion limit: 5 hops max.
+Лимит рекурсии импорта: максимум 5 переходов.
 
-### Commands
+### Команды
 
-- `/memory` — view and edit memory files
-- `/init` — generate initial CLAUDE.md from project analysis
+- `/memory` — просмотр и редактирование файлов памяти
+- `/init` — генерация начального CLAUDE.md на основе анализа проекта
 
-For full reference see [references/memory-and-rules.md](references/memory-and-rules.md).
+Полный справочник см. [references/memory-and-rules.md](references/memory-and-rules.md).
 
 ---
 
-## Plugins
+## Плагины
 
-**Path:** `.claude-plugin/plugin.json` (plugin root)
+**Путь:** `.claude-plugin/plugin.json` (корень плагина)
 
 ```json
 {
@@ -248,7 +248,7 @@ For full reference see [references/memory-and-rules.md](references/memory-and-ru
 }
 ```
 
-**Plugin structure:**
+**Структура плагина:**
 ```
 .claude-plugin/
 ├── plugin.json         # manifest (required)
@@ -260,17 +260,17 @@ For full reference see [references/memory-and-rules.md](references/memory-and-ru
 └── .lsp.json           # LSP server config
 ```
 
-**Namespaced invocation:** `/plugin-name:skill-name`
+**Вызов с пространством имён:** `/plugin-name:skill-name`
 
-**Installation sources:** GitHub, Git URL, NPM, File path, Directory.
+**Источники установки:** GitHub, Git URL, NPM, локальный путь, каталог.
 
-For full reference see [references/plugins-reference.md](references/plugins-reference.md).
+Полный справочник см. [references/plugins-reference.md](references/plugins-reference.md).
 
 ---
 
-## Permissions
+## Разрешения
 
-### Rule Syntax
+### Синтаксис правил
 
 ```json
 {
@@ -282,26 +282,26 @@ For full reference see [references/plugins-reference.md](references/plugins-refe
 }
 ```
 
-**Specifier patterns:**
+**Паттерны спецификаторов:**
 
-| Pattern | Example | Matches |
+| Паттерн | Пример | Совпадает с |
 |---------|---------|---------|
-| `Tool` | `Read` | All Read calls |
-| `Tool(literal)` | `Bash(npm test)` | Exact command |
+| `Tool` | `Read` | Все вызовы Read |
+| `Tool(literal)` | `Bash(npm test)` | Точная команда |
 | `Tool(glob)` | `Read(src/**)` | Gitignore-style glob |
-| `Tool(domain:)` | `WebFetch(domain:api.example.com)` | Domain filter |
-| `mcp__server__tool` | `mcp__github__create_issue` | MCP tool |
-| `Task(agent)` | `Task(acc-ddd-auditor)` | Specific subagent |
+| `Tool(domain:)` | `WebFetch(domain:api.example.com)` | Фильтр по домену |
+| `mcp__server__tool` | `mcp__github__create_issue` | MCP-инструмент |
+| `Task(agent)` | `Task(acc-ddd-auditor)` | Конкретный субагент |
 
-**Evaluation order:** deny → ask → allow (deny wins over allow)
+**Порядок вычисления:** deny → ask → allow (deny побеждает allow)
 
-For full reference see [references/settings-and-permissions.md](references/settings-and-permissions.md).
+Полный справочник см. [references/settings-and-permissions.md](references/settings-and-permissions.md).
 
 ---
 
 ## MCP (Model Context Protocol)
 
-**Config:** `.mcp.json` (project root) or in `settings.json`
+**Конфигурация:** `.mcp.json` (корень проекта) или в `settings.json`
 
 ```json
 {
@@ -315,64 +315,64 @@ For full reference see [references/settings-and-permissions.md](references/setti
 }
 ```
 
-**Tool naming:** `mcp__servername__toolname`
+**Именование инструментов:** `mcp__servername__toolname`
 
-**Scope hierarchy:** project `.mcp.json` > user settings > plugin `.mcp.json`
+**Иерархия области действия:** проектный `.mcp.json` > пользовательские настройки > плагинный `.mcp.json`
 
-**Permission:** `enableAllProjectMcpServers`, `allowedMcpServers`, `deniedMcpServers` in settings.
+**Разрешения:** `enableAllProjectMcpServers`, `allowedMcpServers`, `deniedMcpServers` в настройках.
 
 ---
 
-## Settings
+## Настройки
 
-**Hierarchy:** managed > CLI args > local > project > user
+**Иерархия:** managed > CLI-аргументы > local > project > user
 
-| Level | Location |
+| Уровень | Расположение |
 |-------|----------|
 | User | `~/.claude/settings.json` |
 | Project | `.claude/settings.json` |
 | Local | `.claude/settings.local.json` (gitignored) |
-| Managed | Enterprise system dirs |
+| Managed | Системные каталоги enterprise |
 
-**Key settings areas:** permissions, hooks, sandbox, MCP, model config, context management, attribution.
+**Ключевые области настроек:** разрешения, хуки, sandbox, MCP, конфигурация модели, управление контекстом, атрибуция.
 
-For full schema reference see [references/settings-and-permissions.md](references/settings-and-permissions.md).
+Полная схема настроек см. [references/settings-and-permissions.md](references/settings-and-permissions.md).
 
 ---
 
-## Decision Framework
+## Фреймворк принятия решений
 
-When to use which component type:
+Какой тип компонента использовать:
 
-| Goal | Best Component | Reason |
+| Цель | Лучший компонент | Причина |
 |------|---------------|--------|
-| Reusable saved prompt | **Command** | User invokes, low context cost |
-| Complex analysis in isolation | **Agent** | Separate context window |
-| Knowledge base / templates | **Skill** | Auto-loaded, shared across agents |
-| Auto-trigger on events | **Hook** | Zero context cost, shell execution |
-| Project-wide instructions | **CLAUDE.md** | Always in context |
-| Path-specific rules | **Rules** (`.claude/rules/`) | Conditional loading |
-| Distributable extension | **Plugin** | Namespaced, installable |
-| External tool integration | **MCP** | Standardized protocol |
+| Переиспользуемый промпт | **Command** | Пользователь вызывает, низкая стоимость контекста |
+| Сложный анализ в изоляции | **Agent** | Отдельное контекстное окно |
+| База знаний / шаблоны | **Skill** | Автозагрузка, общий для агентов |
+| Автотриггер по событиям | **Hook** | Нулевая стоимость контекста, shell-выполнение |
+| Инструкции для всего проекта | **CLAUDE.md** | Всегда в контексте |
+| Правила для конкретных путей | **Rules** (`.claude/rules/`) | Условная загрузка |
+| Распространяемое расширение | **Plugin** | С пространством имён, устанавливаемый |
+| Интеграция внешних инструментов | **MCP** | Стандартизированный протокол |
 
-### Context Cost Awareness
+### Учёт стоимости контекста
 
-| Component | Context Budget Impact |
+| Компонент | Влияние на бюджет контекста |
 |-----------|---------------------|
-| CLAUDE.md + rules | Always loaded (~500 lines recommended max) |
-| Skills (auto-loaded) | Loaded when description matches (~15K chars budget) |
-| Skills (by agent) | Loaded into agent's context window |
-| Agents | Separate context window (no parent cost) |
-| Hooks (command type) | Zero context cost (shell execution) |
-| Hooks (prompt/agent type) | Uses context for LLM evaluation |
-| MCP tools | Tool descriptions always in context |
-| Plugins | Components loaded per their type rules |
+| CLAUDE.md + rules | Загружаются всегда (~500 строк рекомендуемый максимум) |
+| Skills (автозагрузка) | Загружаются при совпадении description (~15K символов бюджет) |
+| Skills (по агенту) | Загружаются в контекстное окно агента |
+| Agents | Отдельное контекстное окно (без стоимости для родителя) |
+| Hooks (тип command) | Нулевая стоимость контекста (shell-выполнение) |
+| Hooks (тип prompt/agent) | Используют контекст для LLM-оценки |
+| MCP tools | Описания инструментов всегда в контексте |
+| Plugins | Компоненты загружаются по правилам их типа |
 
 ---
 
-## Patterns
+## Паттерны
 
-### Parallel Agents
+### Параллельные агенты
 ```
 Run in parallel:
 1. Task: researcher — study architecture
@@ -382,14 +382,14 @@ Run in parallel:
 Wait for all and combine results.
 ```
 
-### Progressive Disclosure
+### Прогрессивное раскрытие
 ```
 SKILL.md — brief instructions (max 500 lines)
 references/ — details loaded when needed
 scripts/ — execute without reading into context
 ```
 
-### Chained Agents
+### Цепочка агентов
 ```
 1. researcher → studies the task
 2. planner → creates plan based on research
@@ -397,7 +397,7 @@ scripts/ — execute without reading into context
 4. reviewer → reviews implementation
 ```
 
-### Agent Teams (Coordinator Pattern)
+### Команды агентов (паттерн координатора)
 ```
 coordinator (opus) → delegates via Task tool
 ├── auditor-1 (sonnet, parallel)
@@ -407,7 +407,7 @@ coordinator (opus) → delegates via Task tool
 Coordinator uses TaskCreate/TaskUpdate for progress tracking.
 ```
 
-### Plugin Distribution
+### Распространение плагинов
 ```
 Package as .claude-plugin/ → publish to GitHub/NPM
 Users install: enabledPlugins in settings
@@ -416,65 +416,65 @@ Skills namespaced: /plugin-name:skill-name
 
 ---
 
-## Validation Checklists
+## Чек-листы валидации
 
-### Commands
-- [ ] `description` is filled and specific
-- [ ] Path: `.claude/commands/*.md`
-- [ ] `$ARGUMENTS` used if `argument-hint` defined
-- [ ] `model` specified consciously (opus for complex, haiku for fast)
-- [ ] Instructions are clear and step-by-step
+### Команды
+- [ ] `description` заполнено и конкретно
+- [ ] Путь: `.claude/commands/*.md`
+- [ ] `$ARGUMENTS` используется, если определён `argument-hint`
+- [ ] `model` выбрана осознанно (opus для сложных, haiku для быстрых)
+- [ ] Инструкции ясные и пошаговые
 
-### Agents
-- [ ] `name` and `description` are filled
-- [ ] `name` matches filename (without `.md`)
-- [ ] `tools` are minimally necessary
-- [ ] `disallowedTools` used if most tools needed except few
-- [ ] `model` chosen consciously
-- [ ] `permissionMode` appropriate for task
-- [ ] `skills:` is comma-separated inline list (not YAML array)
-- [ ] Coordinators have `TaskCreate, TaskUpdate` in tools
-- [ ] Coordinators have `acc-task-progress-knowledge` in skills
+### Агенты
+- [ ] `name` и `description` заполнены
+- [ ] `name` совпадает с именем файла (без `.md`)
+- [ ] `tools` минимально необходимые
+- [ ] `disallowedTools` используется, если нужны почти все инструменты кроме нескольких
+- [ ] `model` выбрана осознанно
+- [ ] `permissionMode` соответствует задаче
+- [ ] `skills:` — это inline-список через запятую (не YAML-массив)
+- [ ] Координаторы имеют `TaskCreate, TaskUpdate` в tools
+- [ ] Координаторы имеют `acc-task-progress-knowledge` в skills
 
-### Skills
-- [ ] `name` is lowercase with hyphens, matches folder name
-- [ ] `description` < 1024 characters, explains "when to use"
-- [ ] `SKILL.md` < 500 lines
-- [ ] Large content extracted to `references/`
-- [ ] `context: fork` if needs isolated execution
-- [ ] Path: `.claude/skills/name/SKILL.md`
+### Навыки
+- [ ] `name` в нижнем регистре через дефисы, совпадает с именем каталога
+- [ ] `description` < 1024 символов, объясняет «когда использовать»
+- [ ] `SKILL.md` < 500 строк
+- [ ] Большой контент вынесен в `references/`
+- [ ] `context: fork` если нужно изолированное выполнение
+- [ ] Путь: `.claude/skills/name/SKILL.md`
 
-### Hooks
-- [ ] JSON is valid
-- [ ] Event name is one of 12 valid events
-- [ ] `matcher` is correct tool/agent name or pattern
-- [ ] `command` script exists and is executable
-- [ ] Exit codes handled properly (0=allow, 2=block)
-- [ ] `async: true` only for non-blocking operations
+### Хуки
+- [ ] JSON валидный
+- [ ] Имя события — одно из 12 допустимых
+- [ ] `matcher` — корректное имя инструмента/агента или паттерн
+- [ ] Скрипт `command` существует и исполняемый
+- [ ] Коды выхода обрабатываются правильно (0=разрешить, 2=заблокировать)
+- [ ] `async: true` только для неблокирующих операций
 
-### Memory/Rules
-- [ ] `CLAUDE.md` < 500 lines (recommended)
-- [ ] `.claude/rules/*.md` for modular rules
-- [ ] `CLAUDE.local.md` in `.gitignore`
-- [ ] `@imports` resolve (max 5 hops)
-- [ ] `paths` frontmatter uses valid glob patterns
+### Память/Правила
+- [ ] `CLAUDE.md` < 500 строк (рекомендуется)
+- [ ] `.claude/rules/*.md` для модульных правил
+- [ ] `CLAUDE.local.md` в `.gitignore`
+- [ ] `@imports` резолвятся (максимум 5 переходов)
+- [ ] `paths` во frontmatter используют валидные glob-паттерны
 
-### Settings
-- [ ] Valid JSON in `settings.json`
-- [ ] Permission rules follow deny → ask → allow order
-- [ ] `settings.local.json` is gitignored
-- [ ] Sandbox configured if auto-allowing Bash
-- [ ] MCP servers explicitly allowed/denied
+### Настройки
+- [ ] Валидный JSON в `settings.json`
+- [ ] Правила разрешений следуют порядку deny → ask → allow
+- [ ] `settings.local.json` в gitignore
+- [ ] Sandbox настроен, если автоматически разрешён Bash
+- [ ] MCP-серверы явно разрешены/запрещены
 
 ---
 
-## Reference Files
+## Справочные файлы
 
-Detailed documentation for specific areas:
+Детальная документация по конкретным областям:
 
-- [Hooks Reference](references/hooks-reference.md) — all 12 events, 3 types, matchers, I/O, exit codes
-- [Skills Advanced](references/skills-advanced.md) — context:fork, agent, hooks, model, invocation control
+- [Hooks Reference](references/hooks-reference.md) — все 12 событий, 3 типа, matchers, I/O, коды выхода
+- [Skills Advanced](references/skills-advanced.md) — context:fork, agent, hooks, model, управление вызовом
 - [Subagents Advanced](references/subagents-advanced.md) — memory, hooks, disallowedTools, background, resume
-- [Memory and Rules](references/memory-and-rules.md) — CLAUDE.md hierarchy, rules/, @imports, paths
-- [Plugins Reference](references/plugins-reference.md) — plugin structure, manifest, marketplace, migration
-- [Settings and Permissions](references/settings-and-permissions.md) — full schema, sandbox, permissions, env vars
+- [Memory and Rules](references/memory-and-rules.md) — иерархия CLAUDE.md, rules/, @imports, paths
+- [Plugins Reference](references/plugins-reference.md) — структура плагинов, manifest, marketplace, миграция
+- [Settings and Permissions](references/settings-and-permissions.md) — полная схема, sandbox, разрешения, переменные окружения

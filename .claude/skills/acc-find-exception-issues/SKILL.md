@@ -1,89 +1,89 @@
 ---
 name: acc-find-exception-issues
-description: Detects exception handling issues in PHP code. Finds swallowed exceptions, generic catches, missing exception handling, re-throwing without context, exception in finally.
+description: Обнаруживает проблемы обработки исключений в PHP-коде. Находит проглоченные исключения, общие catches, отсутствующую обработку исключений, повторный throw без контекста, исключения в finally.
 ---
 
-# Exception Issue Detection
+# Обнаружение проблем с исключениями
 
-Analyze PHP code for exception handling problems.
+Анализ PHP-кода на проблемы обработки исключений.
 
-## Detection Patterns
+## Паттерны обнаружения
 
-### 1. Swallowed Exceptions (Empty Catch)
+### 1. Проглоченные исключения (пустой catch)
 
 ```php
-// BUG: Exception completely ignored
+// БАГ: Исключение полностью игнорируется
 try {
     $this->riskyOperation();
 } catch (Exception $e) {
-    // Empty catch block - bug hidden
+    // Пустой блок catch — баг скрыт
 }
 
-// BUG: Only logging, no handling
+// БАГ: Только логирование, без обработки
 try {
     $this->process();
 } catch (Exception $e) {
     $this->logger->error($e->getMessage());
-    // No re-throw, no return, execution continues
+    // Нет re-throw, нет return, выполнение продолжается
 }
 ```
 
-### 2. Generic Exception Catching
+### 2. Общий перехват исключений
 
 ```php
-// BUG: Catches everything
+// БАГ: Перехватывает всё
 try {
     $this->save();
 } catch (Exception $e) {
-    // Catches TypeError, LogicException, etc.
+    // Перехватывает TypeError, LogicException и т.д.
 }
 
-// BUG: Using Throwable carelessly
+// БАГ: Неосторожное использование Throwable
 try {
     $this->process();
 } catch (Throwable $t) {
-    // Catches Error too, hiding fatal issues
+    // Перехватывает Error тоже, скрывая фатальные проблемы
 }
 ```
 
-### 3. Missing Exception Handling
+### 3. Отсутствующая обработка исключений
 
 ```php
-// BUG: Unchecked external call
-$response = $httpClient->request('GET', $url); // May throw
+// БАГ: Непроверенный внешний вызов
+$response = $httpClient->request('GET', $url); // Может выбросить исключение
 
-// BUG: File operations without try
-$content = file_get_contents($path); // Returns false on failure
+// БАГ: Файловые операции без try
+$content = file_get_contents($path); // Возвращает false при ошибке
 
-// BUG: JSON without error check
-$data = json_decode($json); // May return null on error
+// БАГ: JSON без проверки ошибок
+$data = json_decode($json); // Может вернуть null при ошибке
 ```
 
-### 4. Re-throwing Without Context
+### 4. Повторный throw без контекста
 
 ```php
-// BUG: Lost context
+// БАГ: Потерян контекст
 try {
     $this->process();
 } catch (DatabaseException $e) {
-    throw new RuntimeException('Failed'); // Lost original exception
+    throw new RuntimeException('Failed'); // Потеряно исходное исключение
 }
 
-// FIXED: Preserve chain
+// ИСПРАВЛЕНО: Сохранить цепочку
 throw new RuntimeException('Failed to process', 0, $e);
 ```
 
-### 5. Exception in Finally Block
+### 5. Исключение в блоке finally
 
 ```php
-// BUG: Exception in finally hides original
+// БАГ: Исключение в finally скрывает исходное
 try {
     $this->process();
 } finally {
-    $this->cleanup(); // If this throws, original exception is lost
+    $this->cleanup(); // Если это выбросит исключение, исходное будет потеряно
 }
 
-// FIXED:
+// ИСПРАВЛЕНО:
 } finally {
     try {
         $this->cleanup();
@@ -93,34 +93,34 @@ try {
 }
 ```
 
-### 6. Catch Order Issues
+### 6. Проблемы порядка catch
 
 ```php
-// BUG: Parent before child
+// БАГ: Родитель перед потомком
 try {
     $this->process();
 } catch (Exception $e) {
-    // Catches everything
+    // Перехватывает всё
 } catch (InvalidArgumentException $e) {
-    // Never reached
+    // Никогда не достигается
 }
 ```
 
-### 7. Return in Finally
+### 7. Return в finally
 
 ```php
-// BUG: Return in finally overrides exception
+// БАГ: Return в finally подавляет исключение
 try {
     throw new Exception('Error');
 } finally {
-    return true; // Exception is suppressed
+    return true; // Исключение подавлено
 }
 ```
 
-### 8. Using Exception for Control Flow
+### 8. Использование исключений для управления потоком
 
 ```php
-// BUG: Exception as goto
+// БАГ: Исключение как goto
 try {
     foreach ($items as $item) {
         if ($found) {
@@ -132,51 +132,51 @@ try {
 }
 ```
 
-### 9. Missing @throws Documentation
+### 9. Отсутствующая документация @throws
 
 ```php
-// BUG: Undocumented exception
+// БАГ: Недокументированное исключение
 public function process(): void
 {
     if (!$valid) {
-        throw new InvalidArgumentException(); // Not documented
+        throw new InvalidArgumentException(); // Не задокументировано
     }
 }
 ```
 
-## Grep Patterns
+## Паттерны Grep
 
 ```bash
-# Empty catch blocks
+# Пустые блоки catch
 Grep: "catch\s*\([^)]+\)\s*\{\s*\}" --glob "**/*.php"
 
-# Generic Exception catch
+# Общий перехват Exception
 Grep: "catch\s*\(\s*(Exception|\\\\Exception)\s+" --glob "**/*.php"
 
-# Throwable catch
+# Перехват Throwable
 Grep: "catch\s*\(\s*(Throwable|\\\\Throwable)\s+" --glob "**/*.php"
 
-# throw new without previous
+# throw new без previous
 Grep: "throw new \w+Exception\([^,)]+\);" --glob "**/*.php"
 
-# Return in finally
+# Return в finally
 Grep: "finally\s*\{[^}]*return" --glob "**/*.php"
 ```
 
-## Severity Classification
+## Классификация серьезности
 
-| Pattern | Severity |
+| Паттерн | Серьезность |
 |---------|----------|
-| Swallowed exception | 🔴 Critical |
-| Return in finally | 🔴 Critical |
-| Generic Throwable catch | 🟠 Major |
-| Lost exception chain | 🟠 Major |
-| Exception for control flow | 🟡 Minor |
-| Missing @throws | 🟡 Minor |
+| Проглоченное исключение | 🔴 Критично |
+| Return в finally | 🔴 Критично |
+| Общий перехват Throwable | 🟠 Важно |
+| Потерянная цепочка исключений | 🟠 Важно |
+| Исключения для управления потоком | 🟡 Незначительно |
+| Отсутствие @throws | 🟡 Незначительно |
 
-## Best Practices
+## Лучшие практики
 
-### Specific Exception Handling
+### Специфичная обработка исключений
 
 ```php
 try {
@@ -186,10 +186,10 @@ try {
 } catch (ConnectionException $e) {
     throw new DatabaseUnavailableException(0, $e);
 }
-// Let other exceptions bubble up
+// Остальные исключения пробрасываются выше
 ```
 
-### Proper Exception Chain
+### Правильная цепочка исключений
 
 ```php
 throw new DomainException(
@@ -198,7 +198,7 @@ throw new DomainException(
 );
 ```
 
-### Safe Finally
+### Безопасный finally
 
 ```php
 try {
@@ -207,31 +207,31 @@ try {
     try {
         $this->cleanup();
     } catch (Throwable $e) {
-        // Log but don't throw
+        // Логируем, но не выбрасываем
         $this->logger->error('Cleanup failed', ['exception' => $e]);
     }
 }
 ```
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### Exception Issue: [Description]
+### Проблема с исключениями: [Описание]
 
-**Severity:** 🔴/🟠/🟡
-**Location:** `file.php:line`
-**Type:** [Swallowed|Generic Catch|Missing Chain|...]
+**Серьезность:** 🔴/🟠/🟡
+**Расположение:** `file.php:line`
+**Тип:** [Swallowed|Generic Catch|Missing Chain|...]
 
-**Issue:**
-[Description of the exception handling problem]
+**Проблема:**
+[Описание проблемы обработки исключений]
 
-**Code:**
+**Код:**
 ```php
-// Problematic code
+// Проблемный код
 ```
 
-**Fix:**
+**Исправление:**
 ```php
-// Proper exception handling
+// Правильная обработка исключений
 ```
 ```

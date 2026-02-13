@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dykyi\AwesomeClaudeCode;
+namespace BackVista\AwesomeClaudeCode;
 
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;

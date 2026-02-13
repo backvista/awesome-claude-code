@@ -1,17 +1,17 @@
 ---
 name: acc-trace-data-transformation
-description: Maps data transformation chains — Request DTO to Command to Entity to Response DTO. Identifies mappers, serializers, type conversions, and data loss points across layer boundaries.
+description: Отображает цепочки преобразования данных — от Request DTO через Command к Entity и Response DTO. Определяет маппинги, сериализаторы, преобразования типов и точки потери данных на границах слоёв.
 ---
 
-# Data Transformation Tracer
+# Трассировщик преобразований данных
 
-## Overview
+## Обзор
 
-Traces how data transforms as it passes through application layers — from raw HTTP input through DTOs, Commands, Entities, and back to Response objects. Identifies mappers, serializers, converters, and potential data loss points.
+Отслеживает как данные трансформируются при прохождении через слои приложения — от сырого HTTP-ввода через DTO, Command, Entity и обратно к Response-объектам. Определяет маппинги, сериализаторы, конвертеры и потенциальные точки потери данных.
 
-## Transformation Chain Patterns
+## Паттерны цепочек преобразования
 
-### Standard CQRS Chain
+### Стандартная CQRS-цепочка
 
 ```
 HTTP Request Body (JSON/Form)
@@ -23,97 +23,97 @@ HTTP Request Body (JSON/Form)
           → HTTP Response (JSON/XML)
 ```
 
-### Detection Patterns
+### Паттерны обнаружения
 
-#### Input Transformation
+#### Входное преобразование
 
 ```bash
-# Request DTOs / Form Requests
+# Request DTO / Form Requests
 Grep: "class.*Request|class.*Input" --glob "**/Api/**/*.php"
 Grep: "class.*Request" --glob "**/Presentation/**/*.php"
 
-# Request to Command mapping
+# Маппинг Request → Command
 Grep: "new.*Command\\(|Command::from|Command::create" --glob "**/*.php"
 
-# Deserialization
+# Десериализация
 Grep: "deserialize|fromArray|fromRequest|fromJson" --glob "**/*.php"
 Grep: "Serializer::deserialize|denormalize" --glob "**/*.php"
 ```
 
-#### Entity Transformation
+#### Преобразование сущностей
 
 ```bash
-# Entity factories / named constructors
+# Фабрики сущностей / именованные конструкторы
 Grep: "static function (create|from|of|new)" --glob "**/Domain/**/*.php"
 
-# Entity to DTO conversion
+# Конвертация Entity → DTO
 Grep: "function (toArray|toDTO|toResponse|toView)" --glob "**/Domain/**/*.php"
 Grep: "::fromEntity|::fromDomain|::fromModel" --glob "**/*.php"
 ```
 
-#### Output Transformation
+#### Выходное преобразование
 
 ```bash
-# Response DTOs
+# Response DTO
 Grep: "class.*Response|class.*Output|class.*View" --glob "**/Api/**/*.php"
 Grep: "class.*Resource" --glob "**/Http/**/*.php"
 
-# Serialization
+# Сериализация
 Grep: "jsonSerialize|toArray|normalize" --glob "**/*.php"
 Grep: "JsonResponse|json_encode" --glob "**/*.php"
 
-# Collection transformation
+# Преобразование коллекций
 Grep: "->map\\(|array_map|->transform" --glob "**/*.php"
 ```
 
-#### Mappers and Converters
+#### Маппинги и конвертеры
 
 ```bash
-# Explicit mapper classes
+# Явные классы-маппинги
 Grep: "class.*Mapper|class.*Converter|class.*Transformer|class.*Assembler" --glob "**/*.php"
 
-# Mapping methods
+# Методы маппинга
 Grep: "function (map|convert|transform|assemble|adapt)" --glob "**/*.php"
 
 # AutoMapper / Symfony Serializer
 Grep: "AutoMapper|ObjectNormalizer|PropertyNormalizer" --glob "**/*.php"
 ```
 
-## Analysis Process
+## Процесс анализа
 
-### Step 1: Identify Transformation Points
+### Шаг 1: Определение точек преобразования
 
-For a given request flow:
-1. **Read the entry point** — what data format comes in
-2. **Find each class boundary** — where data changes shape
-3. **Read constructor/factory** — what fields are mapped
-4. **Track field names** — which fields are renamed, combined, or dropped
+Для заданного потока запроса:
+1. **Прочитать точку входа** — какой формат данных приходит
+2. **Найти каждую границу классов** — где данные меняют форму
+3. **Прочитать конструктор/фабрику** — какие поля маппятся
+4. **Отследить имена полей** — какие поля переименовываются, объединяются или удаляются
 
-### Step 2: Map Field Transformations
+### Шаг 2: Составить карту преобразования полей
 
-| Source | Target | Transformation |
-|--------|--------|---------------|
+| Источник | Цель | Преобразование |
+|----------|------|---------------|
 | `request.customer_name` | `CreateOrderCommand.customerName` | snake_case → camelCase |
-| `command.customerId` | `Customer entity` | ID → full entity (repo lookup) |
+| `command.customerId` | `Customer entity` | ID → полная сущность (запрос в репозиторий) |
 | `entity.createdAt` | `response.created_at` | DateTime → string ISO 8601 |
 | `entity.money` | `response.amount` | Money VO → float |
 
-### Step 3: Identify Data Loss Points
+### Шаг 3: Определить точки потери данных
 
-Check for:
-- Fields present in source but missing in target
-- Type narrowing (DateTime → string, loses timezone)
-- Precision loss (float → int)
-- Relationship flattening (Entity → ID only)
+Проверить:
+- Поля, присутствующие в источнике, но отсутствующие в цели
+- Сужение типов (DateTime → string, теряется часовой пояс)
+- Потеря точности (float → int)
+- Уплощение связей (Entity → только ID)
 
-## Output Format
+## Формат вывода
 
 ```markdown
-## Data Transformation Map
+## Карта преобразований данных
 
-### Flow: Create Order
+### Поток: Создание заказа
 
-#### Transformation Chain
+#### Цепочка преобразований
 
 ```
 [1] JSON Input
@@ -123,96 +123,96 @@ Check for:
       "shipping_address": {"street": "...", "city": "..."}
     }
          │
-         ▼  (Deserialization + Validation)
+         ▼  (Десериализация + Валидация)
 [2] CreateOrderRequest
-    customerId: string (validated: uuid format)
-    items: CreateOrderItemRequest[] (validated: non-empty)
-    shippingAddress: AddressRequest (validated: all fields required)
+    customerId: string (валидация: формат uuid)
+    items: CreateOrderItemRequest[] (валидация: не пустой)
+    shippingAddress: AddressRequest (валидация: все поля обязательны)
          │
-         ▼  (Mapping: CreateOrderRequest → CreateOrderCommand)
+         ▼  (Маппинг: CreateOrderRequest → CreateOrderCommand)
 [3] CreateOrderCommand
-    customerId: CustomerId (Value Object wrapping)
-    items: OrderItemData[] (DTO with productId + quantity)
+    customerId: CustomerId (оборачивание в Value Object)
+    items: OrderItemData[] (DTO с productId + quantity)
     shippingAddress: AddressData (DTO)
          │
-         ▼  (Domain Factory: Order::create())
+         ▼  (Доменная фабрика: Order::create())
 [4] Order Entity
-    id: OrderId (generated)
+    id: OrderId (генерируется)
     customerId: CustomerId
-    items: OrderItem[] (entities with calculated prices)
-    total: Money (calculated from items)
+    items: OrderItem[] (сущности с рассчитанными ценами)
+    total: Money (рассчитано из items)
     status: OrderStatus::Pending
     shippingAddress: ShippingAddress (Value Object)
     createdAt: DateTimeImmutable
          │
-         ▼  (Response Mapping: OrderResponse::fromEntity())
+         ▼  (Маппинг ответа: OrderResponse::fromEntity())
 [5] OrderResponse
     id: string (OrderId → string)
     customerId: string (CustomerId → string)
     items: OrderItemResponse[] (entity → response)
-    total: float (Money → float, currency separate)
-    currency: string (from Money)
+    total: float (Money → float, валюта отдельно)
+    currency: string (из Money)
     status: string (enum → string)
     shippingAddress: AddressResponse
     createdAt: string (ISO 8601)
          │
-         ▼  (JSON Serialization)
+         ▼  (JSON-сериализация)
 [6] JSON Output
     {"id": "...", "customer_id": "...", "total": 150.00, ...}
 ```
 
-#### Field Mapping Table
+#### Таблица маппинга полей
 
-| Layer | Field | Type | Source | Transformation |
-|-------|-------|------|--------|---------------|
+| Слой | Поле | Тип | Источник | Преобразование |
+|------|------|-----|----------|---------------|
 | Input → Request | customer_id → customerId | string | JSON key | snake → camel |
-| Request → Command | customerId → customerId | string → CustomerId | DTO | Wrap in VO |
-| Command → Entity | items → OrderItem[] | DTO[] → Entity[] | Factory | Enrich with prices |
-| Entity → Response | total → total | Money → float | Mapper | Extract amount |
-| Entity → Response | createdAt → createdAt | DateTimeImmutable → string | Mapper | Format ISO 8601 |
+| Request → Command | customerId → customerId | string → CustomerId | DTO | Обёртка в VO |
+| Command → Entity | items → OrderItem[] | DTO[] → Entity[] | Factory | Обогащение ценами |
+| Entity → Response | total → total | Money → float | Mapper | Извлечение суммы |
+| Entity → Response | createdAt → createdAt | DateTimeImmutable → string | Mapper | Формат ISO 8601 |
 | Response → JSON | customerId → customer_id | string | Serializer | camel → snake |
 
-#### Data Enrichment Points
+#### Точки обогащения данных
 
-| Step | What's Added | Source |
-|------|-------------|--------|
-| Command → Entity | OrderId | Generated (UUID) |
-| Command → Entity | Item prices | ProductRepository lookup |
-| Command → Entity | Total amount | Calculated from items |
-| Command → Entity | Created timestamp | System clock |
-| Command → Entity | Initial status | Domain default (Pending) |
+| Шаг | Что добавляется | Источник |
+|-----|-----------------|----------|
+| Command → Entity | OrderId | Генерируется (UUID) |
+| Command → Entity | Цены товаров | Запрос в ProductRepository |
+| Command → Entity | Итоговая сумма | Рассчитывается из items |
+| Command → Entity | Метка времени создания | Системные часы |
+| Command → Entity | Начальный статус | Доменное значение по умолчанию (Pending) |
 
-#### Potential Data Loss Points
+#### Потенциальные точки потери данных
 
-| Step | Field | Issue |
-|------|-------|-------|
-| Money → float | precision | Floating point precision loss |
-| DateTime → string | timezone | Check if timezone preserved |
-| Entity → Response | internal state | Domain internals not exposed (expected) |
+| Шаг | Поле | Проблема |
+|-----|------|---------|
+| Money → float | точность | Потеря точности с плавающей точкой |
+| DateTime → string | часовой пояс | Проверить сохранение часового пояса |
+| Entity → Response | внутреннее состояние | Внутренние данные домена не раскрываются (ожидаемо) |
 ```
 
-## Transformation Quality Indicators
+## Индикаторы качества преобразований
 
-| Indicator | Good | Warning |
-|-----------|------|---------|
-| Type safety | Typed DTOs at boundaries | Untyped arrays |
-| Validation | At input boundary | Scattered or missing |
-| Mapping | Explicit mapper/factory | Implicit in controller |
-| Value Objects | Domain uses VOs | Primitives throughout |
-| Serialization | Controlled (toArray/normalize) | json_encode on entity |
+| Индикатор | Хорошо | Предупреждение |
+|-----------|--------|----------------|
+| Типобезопасность | Типизированные DTO на границах | Нетипизированные массивы |
+| Валидация | На входной границе | Разбросана или отсутствует |
+| Маппинг | Явный маппер/фабрика | Неявный в контроллере |
+| Value Objects | Домен использует VO | Примитивы повсюду |
+| Сериализация | Контролируемая (toArray/normalize) | json_encode на сущности |
 
-## Common Anti-Patterns
+## Распространённые антипаттерны
 
-| Anti-Pattern | Detection | Issue |
-|-------------|-----------|-------|
-| Entity as Response | `return json_encode($entity)` | Exposes internals |
-| Array transport | `$data = ['key' => $value]` | No type safety |
-| Missing DTO | Controller → Repository direct | Skips validation |
-| Leaky abstraction | Domain types in API response | Tight coupling |
+| Антипаттерн | Обнаружение | Проблема |
+|-------------|-------------|---------|
+| Entity как Response | `return json_encode($entity)` | Раскрывает внутреннюю структуру |
+| Передача массивов | `$data = ['key' => $value]` | Нет типобезопасности |
+| Отсутствие DTO | Controller → Repository напрямую | Пропуск валидации |
+| Утечка абстракции | Доменные типы в API-ответе | Жёсткая связанность |
 
-## Integration
+## Интеграция
 
-This skill is used by:
-- `acc-data-flow-analyst` — documents data transformation chains
-- `acc-trace-request-lifecycle` — enriches lifecycle with data details
-- `acc-explain-business-process` — shows data perspective of processes
+Этот навык используется:
+- `acc-data-flow-analyst` — документирует цепочки преобразования данных
+- `acc-trace-request-lifecycle` — обогащает жизненный цикл деталями данных
+- `acc-explain-business-process` — показывает перспективу данных в процессах

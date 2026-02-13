@@ -1,334 +1,334 @@
 ---
 name: acc-adr-template
-description: Generates Architecture Decision Records (ADR) for PHP projects. Creates structured decision documentation with context, decision, and consequences.
+description: Генерирует Architecture Decision Records (ADR) для PHP-проектов. Создаёт структурированную документацию решений с контекстом, решением и последствиями.
 ---
 
-# ADR Template Generator
+# Генератор шаблонов ADR
 
-Generate Architecture Decision Records following the standard format.
+Генерирует Architecture Decision Records в стандартном формате.
 
-## ADR Format
+## Формат ADR
 
 ```markdown
-# ADR-{number}: {Title}
+# ADR-{номер}: {Заголовок}
 
-**Status:** {Proposed | Accepted | Deprecated | Superseded}
-**Date:** {YYYY-MM-DD}
-**Deciders:** {names or roles}
+**Статус:** {Proposed | Accepted | Deprecated | Superseded}
+**Дата:** {YYYY-MM-DD}
+**Принимавшие решение:** {имена или роли}
 
-## Context
+## Контекст
 
-{What is the issue that we're seeing that motivates this decision?}
+{Какая проблема мотивирует это решение?}
 
-## Decision
+## Решение
 
-{What is the change that we're proposing/doing?}
+{Какое изменение мы предлагаем/делаем?}
 
-## Consequences
+## Последствия
 
-### Positive
+### Положительные
 
-{What becomes easier?}
+{Что становится проще?}
 
-### Negative
+### Отрицательные
 
-{What becomes harder?}
+{Что становится сложнее?}
 
-### Risks
+### Риски
 
-{What could go wrong?}
+{Что может пойти не так?}
 
-## Alternatives Considered
+## Рассмотренные альтернативы
 
-{What other options were evaluated?}
+{Какие другие варианты были оценены?}
 
-## References
+## Ссылки
 
-{Links to relevant resources}
+{Ссылки на соответствующие ресурсы}
 ```
 
-## Section Guidelines
+## Рекомендации по разделам
 
-### Title
+### Заголовок
 
 ```markdown
 # ADR-001: Use Domain-Driven Design Architecture
 
-Format: "ADR-{NNN}: {Verb} {Noun/Concept}"
+Формат: "ADR-{NNN}: {Глагол} {Существительное/Концепция}"
 
-Good:
+Хорошо:
 - Use Domain-Driven Design
 - Implement CQRS Pattern
 - Adopt PostgreSQL for Primary Storage
 - Separate Read and Write Models
 
-Bad:
-- DDD (too short)
-- Architecture Decision (too vague)
-- We should use DDD (conversational)
+Плохо:
+- DDD (слишком коротко)
+- Architecture Decision (слишком расплывчато)
+- We should use DDD (разговорный стиль)
 ```
 
-### Status Values
+### Значения статуса
 
 ```markdown
-**Proposed** — Under discussion, not yet decided
-**Accepted** — Decided and implemented
-**Deprecated** — No longer recommended
-**Superseded by ADR-XXX** — Replaced by newer decision
+**Proposed** — обсуждается, ещё не принято
+**Accepted** — решено и реализовано
+**Deprecated** — больше не рекомендуется
+**Superseded by ADR-XXX** — заменено более новым решением
 ```
 
-### Context Section
+### Раздел «Контекст»
 
 ```markdown
-## Context
+## Контекст
 
-Describe the situation that led to this decision:
+Опишите ситуацию, которая привела к этому решению:
 
-- What problem are we solving?
-- What forces are at play?
-- What constraints exist?
-- What is the current state?
+- Какую проблему мы решаем?
+- Какие силы действуют?
+- Какие существуют ограничения?
+- Каково текущее состояние?
 
-Example:
+Пример:
 ---
-The system has grown to 50+ controllers with business logic scattered
-across controllers, services, and repositories. This leads to:
+Система выросла до 50+ контроллеров с бизнес-логикой, разбросанной
+по контроллерам, сервисам и репозиториям. Это приводит к:
 
-- Code duplication across features
-- Difficulty testing business rules
-- Unclear ownership of business logic
-- Tight coupling to Symfony framework
+- Дублированию кода между функциями
+- Сложности тестирования бизнес-правил
+- Неясному владению бизнес-логикой
+- Сильной связанности с Symfony framework
 
-We need a clear structure to organize business logic.
+Нам нужна чёткая структура для организации бизнес-логики.
 ```
 
-### Decision Section
+### Раздел «Решение»
 
 ```markdown
-## Decision
+## Решение
 
-State the decision clearly:
+Сформулируйте решение чётко:
 
-- Use active voice
-- Be specific about what changes
-- Include key implementation details
+- Используйте активный залог
+- Будьте конкретны о том, что меняется
+- Включите ключевые детали реализации
 
-Example:
+Пример:
 ---
-We will adopt Domain-Driven Design (DDD) with the following structure:
+Мы примем Domain-Driven Design (DDD) со следующей структурой:
 
-1. **Domain Layer** — Contains entities, value objects, domain events,
-   and repository interfaces. No framework dependencies.
+1. **Domain Layer** — содержит entities, value objects, domain events
+   и интерфейсы репозиториев. Без зависимостей от фреймворка.
 
-2. **Application Layer** — Contains use cases that orchestrate domain
-   objects. Defines DTOs for input/output.
+2. **Application Layer** — содержит use cases, которые оркестрируют доменные
+   объекты. Определяет DTO для входа/выхода.
 
-3. **Infrastructure Layer** — Implements repository interfaces,
-   integrates with database, cache, and external services.
+3. **Infrastructure Layer** — реализует интерфейсы репозиториев,
+   интегрируется с БД, кешем и внешними сервисами.
 
-4. **Presentation Layer** — Handles HTTP requests/responses using
-   ADR pattern (Action-Domain-Responder).
+4. **Presentation Layer** — обрабатывает HTTP-запросы/ответы используя
+   ADR паттерн (Action-Domain-Responder).
 ```
 
-### Consequences Section
+### Раздел «Последствия»
 
 ```markdown
-## Consequences
+## Последствия
 
-### Positive
+### Положительные
 
-List benefits gained:
-- Clearer separation of concerns
-- Domain logic independent of framework
-- Easier to test business rules
-- Better code organization
+Перечислите полученные преимущества:
+- Более чёткое разделение обязанностей
+- Доменная логика независима от фреймворка
+- Легче тестировать бизнес-правила
+- Лучшая организация кода
 
-### Negative
+### Отрицательные
 
-List drawbacks accepted:
-- More files and directories
-- Learning curve for team
-- Initial refactoring effort
-- More boilerplate code
+Перечислите принятые недостатки:
+- Больше файлов и директорий
+- Кривая обучения для команды
+- Начальные усилия по рефакторингу
+- Больше шаблонного кода
 
-### Risks
+### Риски
 
-List potential issues:
-- Team may over-engineer simple features
-- Boundaries may be drawn incorrectly initially
-- Refactoring existing code may introduce bugs
+Перечислите потенциальные проблемы:
+- Команда может чрезмерно усложнять простые функции
+- Границы могут быть неверно определены изначально
+- Рефакторинг существующего кода может внести баги
 ```
 
-### Alternatives Section
+### Раздел «Альтернативы»
 
 ```markdown
-## Alternatives Considered
+## Рассмотренные альтернативы
 
-### Alternative 1: {Name}
+### Альтернатива 1: {Название}
 
-**Description:** {What is it?}
+**Описание:** {Что это?}
 
-**Pros:**
-- {benefit 1}
-- {benefit 2}
+**Плюсы:**
+- {преимущество 1}
+- {преимущество 2}
 
-**Cons:**
-- {drawback 1}
-- {drawback 2}
+**Минусы:**
+- {недостаток 1}
+- {недостаток 2}
 
-**Why Rejected:** {reason}
+**Почему отклонена:** {причина}
 
-### Alternative 2: {Name}
+### Альтернатива 2: {Название}
 
 ...
 ```
 
-## Complete Example
+## Полный пример
 
 ```markdown
 # ADR-003: Use PostgreSQL for Primary Database
 
-**Status:** Accepted
-**Date:** 2025-01-15
-**Deciders:** Tech Lead, Backend Team
+**Статус:** Accepted
+**Дата:** 2025-01-15
+**Принимавшие решение:** Tech Lead, Backend Team
 
-## Context
+## Контекст
 
-We need to select a primary database for the new order management system.
-Requirements include:
+Нам нужно выбрать основную БД для новой системы управления заказами.
+Требования включают:
 
-- Support for complex queries on order data
-- JSONB storage for flexible product attributes
-- Strong ACID compliance for financial transactions
-- Good performance at 10K orders/day scale
-- Team familiarity and ecosystem support
+- Поддержка сложных запросов по данным заказов
+- JSONB-хранилище для гибких атрибутов продуктов
+- Строгое соблюдение ACID для финансовых транзакций
+- Хорошая производительность при масштабе 10K заказов/день
+- Знакомство команды и поддержка экосистемы
 
-Current tech stack uses MySQL 5.7 for legacy systems.
+Текущий технологический стек использует MySQL 5.7 для legacy-систем.
 
-## Decision
+## Решение
 
-We will use PostgreSQL 16 as the primary database for the following reasons:
+Мы будем использовать PostgreSQL 16 как основную БД по следующим причинам:
 
-1. **JSONB Support** — Native JSON storage with indexing for product
-   attributes that vary by category
+1. **JSONB Support** — нативное JSON-хранилище с индексацией для атрибутов
+   продуктов, которые варьируются по категориям
 
-2. **Advanced Types** — UUID, arrays, enums as native types reduce
-   application-level validation
+2. **Advanced Types** — UUID, массивы, enum как нативные типы уменьшают
+   валидацию на уровне приложения
 
-3. **Better Query Optimizer** — Handles complex JOINs across order,
-   item, and inventory tables more efficiently
+3. **Better Query Optimizer** — обрабатывает сложные JOIN по таблицам
+   заказов, позиций и inventory более эффективно
 
-4. **Extensibility** — PostGIS for future location features,
-   full-text search without external service
+4. **Extensibility** — PostGIS для будущих location-функций,
+   full-text search без внешнего сервиса
 
-Implementation notes:
-- Use Doctrine ORM with PostgreSQL-specific types
-- Enable UUID generation at database level
-- Configure connection pooling with PgBouncer
+Примечания к реализации:
+- Использовать Doctrine ORM с PostgreSQL-специфичными типами
+- Включить генерацию UUID на уровне БД
+- Настроить connection pooling с PgBouncer
 
-## Consequences
+## Последствия
 
-### Positive
+### Положительные
 
-- Native JSONB eliminates need for EAV pattern
-- Better query performance for complex reports
-- Strong typing catches data issues early
-- Modern features reduce application complexity
+- Нативный JSONB устраняет необходимость в EAV-паттерне
+- Лучшая производительность запросов для сложных отчётов
+- Строгая типизация выявляет проблемы с данными раньше
+- Современные возможности снижают сложность приложения
 
-### Negative
+### Отрицательные
 
-- Team needs PostgreSQL training (2-3 days)
-- Different SQL dialect from MySQL
-- Hosting costs slightly higher
-- No existing internal DBA expertise
+- Команде нужно обучение PostgreSQL (2-3 дня)
+- Другой SQL-диалект от MySQL
+- Стоимость хостинга немного выше
+- Нет внутренней экспертизы DBA
 
-### Risks
+### Риски
 
-- Migration from MySQL may surface data issues
-- Performance tuning requires new expertise
-- Backup/recovery procedures need updating
+- Миграция с MySQL может выявить проблемы с данными
+- Настройка производительности требует новой экспертизы
+- Процедуры резервного копирования/восстановления нуждаются в обновлении
 
-## Alternatives Considered
+## Рассмотренные альтернативы
 
 ### MySQL 8.0
 
-**Description:** Upgrade existing MySQL infrastructure
+**Описание:** Обновление существующей MySQL инфраструктуры
 
-**Pros:**
-- Team familiarity
-- Existing tooling and procedures
-- Lower migration effort
+**Плюсы:**
+- Знакомство команды
+- Существующий инструментарий и процедуры
+- Меньшие усилия по миграции
 
-**Cons:**
-- JSON support less mature than PostgreSQL
-- Missing advanced types
-- Query optimizer less capable
+**Минусы:**
+- Поддержка JSON менее зрелая чем у PostgreSQL
+- Отсутствие продвинутых типов
+- Менее способный query optimizer
 
-**Why Rejected:** Long-term technical debt outweighs short-term convenience
+**Почему отклонена:** Долгосрочный технический долг превышает краткосрочное удобство
 
 ### MongoDB
 
-**Description:** Document database for flexibility
+**Описание:** Документная БД для гибкости
 
-**Pros:**
-- Schema flexibility
-- Native JSON
-- Horizontal scaling
+**Плюсы:**
+- Гибкость схемы
+- Нативный JSON
+- Горизонтальное масштабирование
 
-**Cons:**
-- No ACID for multi-document transactions
-- Team has no experience
-- Complex queries harder
+**Минусы:**
+- Нет ACID для multi-document транзакций
+- У команды нет опыта
+- Сложные запросы труднее
 
-**Why Rejected:** Financial data requires strong ACID guarantees
+**Почему отклонена:** Финансовые данные требуют строгих ACID-гарантий
 
-## References
+## Ссылки
 
 - [PostgreSQL vs MySQL Comparison](https://example.com/comparison)
 - [PostgreSQL 16 Release Notes](https://www.postgresql.org/docs/16/release-16.html)
 - Internal RFC: Database Selection Criteria
 ```
 
-## File Naming Convention
+## Соглашение об именовании файлов
 
 ```
 docs/adr/
-├── 000-adr-template.md      # Template file
-├── 001-use-ddd.md           # First decision
-├── 002-implement-cqrs.md    # Second decision
-├── 003-use-postgresql.md    # Third decision
-└── README.md                # Index of all ADRs
+├── 000-adr-template.md      # Файл-шаблон
+├── 001-use-ddd.md           # Первое решение
+├── 002-implement-cqrs.md    # Второе решение
+├── 003-use-postgresql.md    # Третье решение
+└── README.md                # Индекс всех ADR
 ```
 
-## ADR Index Template
+## Шаблон индекса ADR
 
 ```markdown
 # Architecture Decision Records
 
-## Active Decisions
+## Активные решения
 
-| ADR | Date | Title | Status |
+| ADR | Дата | Заголовок | Статус |
 |-----|------|-------|--------|
 | [001](001-use-ddd.md) | 2025-01-10 | Use Domain-Driven Design | Accepted |
 | [002](002-implement-cqrs.md) | 2025-01-12 | Implement CQRS Pattern | Accepted |
 | [003](003-use-postgresql.md) | 2025-01-15 | Use PostgreSQL | Accepted |
 
-## Deprecated Decisions
+## Устаревшие решения
 
-| ADR | Date | Title | Superseded By |
+| ADR | Дата | Заголовок | Заменено на |
 |-----|------|-------|---------------|
 | [000](000-monolith.md) | 2024-06-01 | Monolith Architecture | ADR-010 |
 ```
 
-## Generation Instructions
+## Инструкции по генерации
 
-When generating an ADR:
+При генерации ADR:
 
-1. **Determine** next ADR number from existing files
-2. **Clarify** the decision being made
-3. **Document** context thoroughly
-4. **State** decision clearly with specifics
-5. **List** consequences (positive, negative, risks)
-6. **Include** alternatives that were considered
-7. **Add** references to relevant resources
-8. **Update** ADR index file
+1. **Определить** следующий номер ADR из существующих файлов
+2. **Уточнить** принимаемое решение
+3. **Документировать** контекст тщательно
+4. **Сформулировать** решение чётко с деталями
+5. **Перечислить** последствия (положительные, отрицательные, риски)
+6. **Включить** рассмотренные альтернативы
+7. **Добавить** ссылки на соответствующие ресурсы
+8. **Обновить** файл индекса ADR

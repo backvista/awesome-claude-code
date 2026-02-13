@@ -1,6 +1,6 @@
-# Rate Limiter Examples
+# Примеры Rate Limiter
 
-## API Rate Limiting Middleware
+## Middleware для ограничения запросов к API
 
 ```php
 <?php
@@ -60,7 +60,7 @@ final readonly class RateLimitMiddleware implements MiddlewareInterface
 
 ---
 
-## Per-User Rate Limiting
+## Ограничение по пользователям
 
 ```php
 <?php
@@ -96,11 +96,11 @@ final readonly class ApiRateLimiter
 
 ---
 
-## Unit Tests
+## Модульные тесты
 
 ### TokenBucketRateLimiterTest
 
-**File:** `tests/Unit/Infrastructure/Resilience/RateLimiter/TokenBucketRateLimiterTest.php`
+**Файл:** `tests/Unit/Infrastructure/Resilience/RateLimiter/TokenBucketRateLimiterTest.php`
 
 ```php
 <?php
@@ -219,7 +219,7 @@ final class TokenBucketRateLimiterTest extends TestCase
 
 ### RateLimitResultTest
 
-**File:** `tests/Unit/Infrastructure/Resilience/RateLimiter/RateLimitResultTest.php`
+**Файл:** `tests/Unit/Infrastructure/Resilience/RateLimiter/RateLimitResultTest.php`
 
 ```php
 <?php

@@ -1,8 +1,8 @@
-# Action Patterns Reference
+# Справочник паттернов Action
 
-Detailed patterns and best practices for ADR Action classes.
+Детальные паттерны и лучшие практики для классов ADR Action.
 
-## Action Interface
+## Интерфейс Action
 
 ```php
 <?php
@@ -20,7 +20,7 @@ interface ActionInterface
 }
 ```
 
-## Base Action (Optional)
+## Базовый Action (опциональный)
 
 ```php
 <?php
@@ -51,9 +51,9 @@ abstract readonly class AbstractAction implements ActionInterface
 }
 ```
 
-## Action Patterns by HTTP Method
+## Паттерны Action по HTTP-методам
 
-### GET Action (Read)
+### GET Action (чтение)
 
 ```php
 <?php
@@ -87,7 +87,7 @@ final readonly class GetUserByIdAction
 }
 ```
 
-### POST Action (Create)
+### POST Action (создание)
 
 ```php
 <?php
@@ -125,7 +125,7 @@ final readonly class CreateUserAction
 }
 ```
 
-### PUT/PATCH Action (Update)
+### PUT/PATCH Action (обновление)
 
 ```php
 <?php
@@ -199,7 +199,7 @@ final readonly class DeleteUserAction
 }
 ```
 
-## Action with Request DTO
+## Action с Request DTO
 
 ```php
 <?php
@@ -269,9 +269,9 @@ final readonly class CreateOrderAction
 }
 ```
 
-## Action with Validation
+## Action с валидацией
 
-Validation should happen in Domain/Application layer, but input parsing can catch obvious issues:
+Валидация должна происходить на уровне Domain/Application, но парсинг входных данных может отловить очевидные проблемы:
 
 ```php
 <?php
@@ -298,7 +298,7 @@ final readonly class CreateUserAction
     {
         $body = (array) $request->getParsedBody();
 
-        // Only structural validation (required fields present)
+        // Только структурная валидация (наличие обязательных полей)
         if (!isset($body['email'], $body['name'])) {
             throw new InvalidRequestException('email and name are required');
         }
@@ -308,7 +308,7 @@ final readonly class CreateUserAction
             name: $body['name'],
         );
 
-        // Domain validation happens in handler
+        // Валидация домена происходит в обработчике
         $result = $this->handler->handle($command);
 
         return $this->responder->respond($result);
@@ -316,7 +316,7 @@ final readonly class CreateUserAction
 }
 ```
 
-## Action with File Upload
+## Action с загрузкой файлов
 
 ```php
 <?php
@@ -363,22 +363,22 @@ final readonly class UploadDocumentAction
 }
 ```
 
-## Naming Conventions
+## Соглашения об именовании
 
-| HTTP Method | Action Name | Example |
+| HTTP-метод | Имя Action | Пример |
 |-------------|-------------|---------|
-| GET (single) | Get{Resource}ByIdAction | GetUserByIdAction |
-| GET (list) | List{Resource}sAction | ListUsersAction |
+| GET (один объект) | Get{Resource}ByIdAction | GetUserByIdAction |
+| GET (список) | List{Resource}sAction | ListUsersAction |
 | POST | Create{Resource}Action | CreateUserAction |
 | PUT | Update{Resource}Action | UpdateUserAction |
 | PATCH | Patch{Resource}Action | PatchUserAction |
 | DELETE | Delete{Resource}Action | DeleteUserAction |
 
-## Best Practices
+## Лучшие практики
 
-1. **Single Responsibility**: One action = one HTTP endpoint
-2. **Thin Actions**: Only input parsing and domain invocation
-3. **No Response Building**: Delegate to Responder
-4. **No Business Logic**: Delegate to Domain/Application
-5. **Use DTOs**: Create Request DTOs for complex inputs
-6. **Type Safety**: Use typed properties and return types
+1. **Единая ответственность**: один Action = одна конечная точка HTTP
+2. **Тонкие Action**: только парсинг входных данных и вызов домена
+3. **Без построения Response**: делегируйте в Responder
+4. **Без бизнес-логики**: делегируйте в Domain/Application
+5. **Используйте DTO**: создавайте Request DTO для сложных входных данных
+6. **Типобезопасность**: используйте типизированные свойства и возвращаемые типы

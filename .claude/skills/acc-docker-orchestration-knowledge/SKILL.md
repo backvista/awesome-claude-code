@@ -1,15 +1,15 @@
 ---
 name: acc-docker-orchestration-knowledge
-description: Docker orchestration knowledge base. Provides patterns for Swarm, Kubernetes basics, service scaling, and load balancing for PHP.
+description: База знаний по оркестрации Docker. Предоставляет паттерны для Swarm, основы Kubernetes, масштабирование сервисов и балансировку нагрузки для PHP.
 ---
 
-# Docker Orchestration Knowledge Base
+# База знаний по оркестрации Docker
 
-Quick reference for container orchestration patterns with PHP applications.
+Краткий справочник по паттернам оркестрации контейнеров для PHP-приложений.
 
 ## Docker Swarm
 
-### Core Concepts
+### Основные концепции
 
 ```
 +---------------------------------------------------------------------------+
@@ -36,7 +36,7 @@ Quick reference for container orchestration patterns with PHP applications.
 +---------------------------------------------------------------------------+
 ```
 
-### Stack Deployment
+### Развёртывание стека
 
 ```yaml
 # docker-stack.yml
@@ -126,9 +126,9 @@ docker service update --image myregistry/php-app:v2 myapp_php
 docker service rollback myapp_php
 ```
 
-## Kubernetes Overview
+## Обзор Kubernetes
 
-### PHP Application Resources
+### Ресурсы Kubernetes для PHP
 
 ```
 +---------------------------------------------------------------------------+
@@ -144,7 +144,7 @@ docker service rollback myapp_php
 +---------------------------------------------------------------------------+
 ```
 
-### Deployment Manifest
+### Манифест Deployment
 
 ```yaml
 apiVersion: apps/v1
@@ -232,19 +232,19 @@ spec:
           averageUtilization: 80
 ```
 
-## Scaling PHP-FPM
+## Масштабирование PHP-FPM
 
-### Horizontal Scaling
+### Горизонтальное масштабирование
 
-| Factor | Consideration |
-|--------|--------------|
-| **Replicas** | Start with 3, scale based on CPU/memory metrics |
-| **Stateless** | No local sessions, use Redis/Memcached |
-| **Shared storage** | Use object storage (S3) for uploads |
-| **Database** | Connection pooling, read replicas |
-| **Cache** | Centralized Redis, not per-container |
+| Фактор | Рекомендация |
+|--------|-------------|
+| **Реплики** | Начинайте с 3, масштабируйте по метрикам CPU/памяти |
+| **Stateless** | Без локальных сессий, используйте Redis/Memcached |
+| **Общее хранилище** | Используйте объектное хранилище (S3) для загрузок |
+| **База данных** | Пул соединений, реплики для чтения |
+| **Кеш** | Централизованный Redis, не per-container |
 
-### FPM Pool Tuning Per Container
+### Настройка FPM-пула для контейнера
 
 ```ini
 ; For containers with 512MB memory limit
@@ -256,18 +256,18 @@ pm.max_spare_servers = 10
 pm.max_requests = 1000
 ```
 
-Formula: `max_children = (container_memory - overhead) / avg_process_memory`
+Формула: `max_children = (container_memory - overhead) / avg_process_memory`
 
-## Load Balancing Patterns
+## Паттерны балансировки нагрузки
 
-| Pattern | Layer | Tool | Use Case |
-|---------|-------|------|----------|
-| **Round Robin** | L4/L7 | Nginx, HAProxy | Default, equal distribution |
-| **Least Connections** | L4 | Nginx, HAProxy | Varying request durations |
-| **IP Hash** | L7 | Nginx | Sticky sessions (avoid if possible) |
-| **Weighted** | L4/L7 | Nginx, HAProxy | Mixed capacity nodes |
+| Паттерн | Уровень | Инструмент | Применение |
+|---------|---------|------------|------------|
+| **Round Robin** | L4/L7 | Nginx, HAProxy | По умолчанию, равномерное распределение |
+| **Least Connections** | L4 | Nginx, HAProxy | Разная длительность запросов |
+| **IP Hash** | L7 | Nginx | Привязка сессий (избегайте по возможности) |
+| **Weighted** | L4/L7 | Nginx, HAProxy | Узлы разной мощности |
 
-### Nginx Load Balancer
+### Балансировщик нагрузки Nginx
 
 ```nginx
 upstream php-app {
@@ -279,27 +279,27 @@ upstream php-app {
 }
 ```
 
-## Service Discovery
+## Обнаружение сервисов
 
-| Platform | Mechanism | DNS |
-|----------|-----------|-----|
-| **Docker Compose** | Built-in DNS | Service name resolves to container IP |
-| **Docker Swarm** | VIP + DNS RR | Service name resolves to virtual IP |
+| Платформа | Механизм | DNS |
+|-----------|----------|-----|
+| **Docker Compose** | Встроенный DNS | Имя сервиса резолвится в IP контейнера |
+| **Docker Swarm** | VIP + DNS RR | Имя сервиса резолвится в виртуальный IP |
 | **Kubernetes** | ClusterIP Service | `service.namespace.svc.cluster.local` |
 
 ## Rolling Updates
 
-### Zero-Downtime Deployment Checklist
+### Чек-лист развёртывания без простоя
 
-- [ ] Health checks configured (liveness + readiness)
-- [ ] Graceful shutdown handling (SIGTERM/SIGQUIT)
-- [ ] `order: start-first` (start new before stopping old)
-- [ ] Connection draining period (stop_grace_period)
-- [ ] Database migrations run before deployment
-- [ ] Backward-compatible API changes
-- [ ] Session persistence via external store
+- [ ] Настроены проверки здоровья (liveness + readiness)
+- [ ] Обработка graceful shutdown (SIGTERM/SIGQUIT)
+- [ ] `order: start-first` (запуск нового до остановки старого)
+- [ ] Период дренажа соединений (stop_grace_period)
+- [ ] Миграции базы данных выполнены до развёртывания
+- [ ] Обратно совместимые изменения API
+- [ ] Персистенция сессий через внешнее хранилище
 
-### Blue-Green with Docker
+### Blue-Green с Docker
 
 ```bash
 # Deploy green alongside blue
@@ -315,15 +315,15 @@ docker exec nginx nginx -s reload
 docker compose -f docker-compose.blue.yml down
 ```
 
-## Config and Secret Management
+## Управление конфигурацией и секретами
 
-| Platform | Config | Secrets |
-|----------|--------|---------|
-| **Compose** | `.env` files, environment | `secrets:` (file-based) |
-| **Swarm** | `docker config` | `docker secret` (encrypted Raft) |
-| **Kubernetes** | `ConfigMap` | `Secret` (base64, use sealed-secrets) |
+| Платформа | Конфигурация | Секреты |
+|-----------|-------------|---------|
+| **Compose** | Файлы `.env`, environment | `secrets:` (на основе файлов) |
+| **Swarm** | `docker config` | `docker secret` (шифрованный Raft) |
+| **Kubernetes** | `ConfigMap` | `Secret` (base64, используйте sealed-secrets) |
 
-## Detection Patterns
+## Паттерны обнаружения
 
 ```bash
 # Find orchestration configurations

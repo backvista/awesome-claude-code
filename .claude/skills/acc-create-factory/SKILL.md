@@ -1,82 +1,82 @@
 ---
 name: acc-create-factory
-description: Generates DDD Factory for PHP 8.2. Creates factories for complex domain object instantiation with validation and encapsulated creation logic. Includes unit tests.
+description: Генерирует DDD Factory для PHP 8.2. Создает фабрики для сложного создания объектов домена с валидацией и инкапсулированной логикой создания. Включает юнит-тесты.
 ---
 
 # Factory Generator
 
-Generate DDD-compliant Factories for complex domain object creation.
+Генерация DDD-совместимых фабрик для создания сложных доменных объектов.
 
-## Factory Characteristics
+## Характеристики фабрики
 
-- **Encapsulates Creation**: Hides complex instantiation logic
-- **Validates Input**: Ensures valid object creation
-- **Named Constructors**: Provides semantic creation methods
-- **Domain Layer**: Lives in Domain, no infrastructure dependencies
-- **Returns Valid Objects**: Never creates invalid domain objects
-- **Static or Instance**: Static for simple, instance for dependencies
+- **Инкапсулирует создание**: Скрывает сложную логику создания экземпляров
+- **Валидирует входные данные**: Обеспечивает создание валидных объектов
+- **Именованные конструкторы**: Предоставляет семантические методы создания
+- **Доменный слой**: Находится в Domain, без зависимостей от инфраструктуры
+- **Возвращает валидные объекты**: Никогда не создает невалидные доменные объекты
+- **Статическая или экземплярная**: Статическая для простых случаев, экземплярная для зависимостей
 
-## When to Use Factory
+## Когда использовать фабрику
 
-| Scenario | Example |
+| Сценарий | Пример |
 |----------|---------|
-| Complex construction logic | `OrderFactory::createFromCart()` |
-| Multiple creation paths | `User::register()`, `User::createAdmin()` |
-| Aggregate creation | `PolicyFactory::createWithCoverage()` |
-| Reconstruction from persistence | `OrderFactory::reconstitute()` |
-| Creation with validation | `InvoiceFactory::create()` |
+| Сложная логика создания | `OrderFactory::createFromCart()` |
+| Множество путей создания | `User::register()`, `User::createAdmin()` |
+| Создание агрегата | `PolicyFactory::createWithCoverage()` |
+| Реконструкция из персистентности | `OrderFactory::reconstitute()` |
+| Создание с валидацией | `InvoiceFactory::create()` |
 
 ---
 
-## Generation Process
+## Процесс генерации
 
-### Step 1: Determine Factory Type
+### Шаг 1: Определить тип фабрики
 
-- **Static Factory**: No dependencies, simple validation
-- **Instance Factory**: Needs domain services or repositories
+- **Статическая фабрика**: Без зависимостей, простая валидация
+- **Экземплярная фабрика**: Требует доменные сервисы или репозитории
 
-### Step 2: Generate Factory
+### Шаг 2: Генерировать фабрику
 
-**Path:** `src/Domain/{BoundedContext}/Factory/`
+**Путь:** `src/Domain/{BoundedContext}/Factory/`
 
-1. `{Entity}Factory.php` — Main factory class
+1. `{Entity}Factory.php` — Основной класс фабрики
 
-### Step 3: Define Creation Methods
+### Шаг 3: Определить методы создания
 
-1. `create()` — Primary creation with validation
-2. `createFrom{Source}()` — Creation from other objects
-3. `reconstitute()` — Reconstruction from persistence (no validation)
+1. `create()` — Основное создание с валидацией
+2. `createFrom{Source}()` — Создание из других объектов
+3. `reconstitute()` — Реконструкция из персистентности (без валидации)
 
-### Step 4: Generate Tests
+### Шаг 4: Генерировать тесты
 
-**Path:** `tests/Unit/Domain/{BoundedContext}/Factory/`
+**Путь:** `tests/Unit/Domain/{BoundedContext}/Factory/`
 
 ---
 
-## File Placement
+## Размещение файлов
 
-| Component | Path |
+| Компонент | Путь |
 |-----------|------|
 | Factory | `src/Domain/{BoundedContext}/Factory/` |
 | Unit Tests | `tests/Unit/Domain/{BoundedContext}/Factory/` |
 
 ---
 
-## Naming Conventions
+## Соглашения об именах
 
-| Pattern | Example |
+| Шаблон | Пример |
 |---------|---------|
-| Factory Class | `{EntityName}Factory` |
-| Create Method | `create()`, `createFrom{Source}()` |
-| Named Constructor | `create{Variant}()` |
-| Reconstitute | `reconstitute()` |
-| Validation | `validate{Aspect}()` |
+| Класс фабрики | `{EntityName}Factory` |
+| Метод создания | `create()`, `createFrom{Source}()` |
+| Именованный конструктор | `create{Variant}()` |
+| Реконструкция | `reconstitute()` |
+| Валидация | `validate{Aspect}()` |
 
 ---
 
-## Quick Template Reference
+## Краткая справка по шаблонам
 
-### Static Factory
+### Статическая фабрика
 
 ```php
 final class {Entity}Factory
@@ -104,7 +104,7 @@ final class {Entity}Factory
 }
 ```
 
-### Instance Factory
+### Экземплярная фабрика
 
 ```php
 final readonly class {Entity}Factory
@@ -123,20 +123,20 @@ final readonly class {Entity}Factory
 
 ---
 
-## Anti-patterns to Avoid
+## Антипаттерны, которых следует избегать
 
-| Anti-pattern | Problem | Solution |
+| Антипаттерн | Проблема | Решение |
 |--------------|---------|----------|
-| Infrastructure in Factory | DB calls in factory | Keep pure domain logic |
-| No Validation | Creates invalid objects | Validate before creation |
-| Too Many Parameters | Hard to use | Use Value Objects, Builder |
-| Mutable Factory | Stateful creation | Make stateless or readonly |
-| Missing Reconstitute | Can't hydrate from DB | Add reconstitute method |
+| Инфраструктура в фабрике | Вызовы БД в фабрике | Держать чистую доменную логику |
+| Нет валидации | Создает невалидные объекты | Валидировать перед созданием |
+| Слишком много параметров | Сложно использовать | Использовать Value Objects, Builder |
+| Изменяемая фабрика | Состояние при создании | Делать без состояния или readonly |
+| Отсутствие reconstitute | Невозможно гидрировать из БД | Добавить метод reconstitute |
 
 ---
 
-## References
+## Ссылки
 
-For complete PHP templates and examples, see:
-- `references/templates.md` — Static Factory, Instance Factory, Test templates
-- `references/examples.md` — Order, User, Policy factory examples and tests
+Полные PHP-шаблоны и примеры см.:
+- `references/templates.md` — Шаблоны Static Factory, Instance Factory, Test
+- `references/examples.md` — Примеры фабрик Order, User, Policy с тестами

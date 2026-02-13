@@ -1,19 +1,19 @@
 ---
 name: acc-analyze-ci-logs
-description: Analyzes CI/CD pipeline logs to identify failure causes. Parses error messages, detects common failure patterns, and provides fix recommendations.
+description: Анализирует логи CI/CD пайплайнов для определения причин сбоев. Парсит сообщения об ошибках, обнаруживает распространённые паттерны сбоев и даёт рекомендации по исправлению.
 ---
 
-# CI Log Analyzer
+# Анализатор логов CI
 
-Analyzes CI/CD pipeline logs to diagnose failures and suggest fixes.
+Анализирует логи CI/CD пайплайнов для диагностики сбоев и предложения исправлений.
 
-## Failure Categories
+## Категории сбоев
 
-### 1. Dependency Failures
+### 1. Сбои зависимостей
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  DEPENDENCY FAILURE PATTERNS                                    │
+│  ПАТТЕРНЫ СБОЕВ ЗАВИСИМОСТЕЙ                                    │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  composer install:                                              │
@@ -29,61 +29,61 @@ Analyzes CI/CD pipeline logs to diagnose failures and suggest fixes.
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 2. Test Failures
+### 2. Сбои тестов
 
 ```
-PHPUnit Test Failures:
+Сбои PHPUnit-тестов:
 • "Failed asserting that..."
 • "Error: Call to undefined method..."
 • "Exception: ..."
 • "PHPUnit\Framework\MockObject\RuntimeException"
 
-Common Causes:
-• Missing test fixtures
-• Database connection issues
-• Timing-dependent tests
-• Mock configuration errors
+Распространённые причины:
+• Отсутствующие тестовые fixtures
+• Проблемы подключения к БД
+• Тесты, зависящие от времени
+• Ошибки конфигурации mock-объектов
 ```
 
-### 3. Static Analysis Failures
+### 3. Сбои статического анализа
 
 ```
-PHPStan Errors:
+Ошибки PHPStan:
 • "Parameter $x has no type specified"
 • "Method .+::.+ has no return type specified"
 • "Call to an undefined method"
 • "Access to an undefined property"
 
-Psalm Errors:
+Ошибки Psalm:
 • "MixedAssignment"
 • "UndefinedClass"
 • "InvalidReturnType"
 ```
 
-### 4. Infrastructure Failures
+### 4. Сбои инфраструктуры
 
 ```
-Docker Errors:
+Ошибки Docker:
 • "Cannot connect to the Docker daemon"
 • "pull access denied"
 • "no space left on device"
 
-Service Errors:
+Ошибки сервисов:
 • "Connection refused" (database/redis)
 • "ECONNRESET"
 • "Timeout exceeded"
 ```
 
-## Log Pattern Matching
+## Сопоставление паттернов логов
 
-### PHPUnit Failure Parser
+### Парсер сбоев PHPUnit
 
 ```
 Pattern: /FAILURES!\nTests: (\d+), Assertions: (\d+), Failures: (\d+)/
 Pattern: /1\) (.+)::(.+)\n(.+)\nFailed asserting that (.+)/
 Pattern: /Error: (.+)\n(.+):(\d+)/
 
-Example:
+Пример:
 FAILURES!
 Tests: 45, Assertions: 120, Failures: 2, Errors: 1
 
@@ -92,7 +92,7 @@ Failed asserting that 100 matches expected 99.
 
 /app/tests/Unit/OrderTest.php:45
 
-Parsed:
+Разобрано:
 {
   "type": "test_failure",
   "test_class": "App\\Tests\\Unit\\OrderTest",
@@ -103,13 +103,13 @@ Parsed:
 }
 ```
 
-### PHPStan Error Parser
+### Парсер ошибок PHPStan
 
 ```
 Pattern: /------ (.+) ------\n\s*Line\s+(.+\.php)\n\s+(\d+)\s+(.+)/
 Pattern: /\[ERROR\] Found (\d+) errors/
 
-Example:
+Пример:
  ------ ----------------------------------------
   Line   src/Domain/Order/Order.php
  ------ ----------------------------------------
@@ -119,7 +119,7 @@ Example:
 
  [ERROR] Found 2 errors
 
-Parsed:
+Разобрано:
 {
   "type": "phpstan_errors",
   "count": 2,
@@ -130,20 +130,20 @@ Parsed:
 }
 ```
 
-### Composer Error Parser
+### Парсер ошибок Composer
 
 ```
 Pattern: /Your requirements could not be resolved to an installable set of packages./
 Pattern: /Problem (\d+)\n\s+- (.+)/
 Pattern: /- (.+) requires (.+) -> (.+)/
 
-Example:
+Пример:
 Your requirements could not be resolved to an installable set of packages.
 
   Problem 1
     - symfony/framework-bundle v6.0.0 requires php >=8.0.2 -> your php version (7.4.33) does not satisfy that requirement.
 
-Parsed:
+Разобрано:
 {
   "type": "dependency_conflict",
   "problems": [
@@ -157,10 +157,10 @@ Parsed:
 }
 ```
 
-## Analysis Output Format
+## Формат вывода анализа
 
 ```markdown
-# CI Pipeline Failure Analysis
+# Анализ сбоя CI пайплайна
 
 **Pipeline:** #12345
 **Branch:** feature/new-checkout
@@ -168,146 +168,146 @@ Parsed:
 **Failed Job:** test-unit
 **Duration:** 5m 32s
 
-## Failure Summary
+## Сводка по сбоям
 
-| Category | Count | Severity |
+| Категория | Количество | Критичность |
 |----------|-------|----------|
-| Test Failures | 3 | 🔴 Critical |
-| PHPStan Errors | 0 | - |
-| Infrastructure | 0 | - |
+| Сбои тестов | 3 | 🔴 Critical |
+| Ошибки PHPStan | 0 | - |
+| Инфраструктура | 0 | - |
 
-## Root Cause Analysis
+## Анализ первопричины
 
-### Primary Failure: Test Assertion Error
+### Основной сбой: Ошибка утверждения теста
 
-**Test:** `OrderTest::test_calculate_total_with_discount`
-**File:** `tests/Unit/Domain/OrderTest.php:45`
+**Тест:** `OrderTest::test_calculate_total_with_discount`
+**Файл:** `tests/Unit/Domain/OrderTest.php:45`
 
-**Error:**
+**Ошибка:**
 ```
 Failed asserting that 90.0 matches expected 90.
 ```
 
-**Analysis:**
-The test expects an integer `90` but receives a float `90.0`. This is likely due to:
-1. Changed calculation in `Order::calculateTotal()` now returns float
-2. Test assertion uses strict comparison
+**Анализ:**
+Тест ожидает целое число `90`, но получает float `90.0`. Вероятно из-за:
+1. Изменённый расчёт в `Order::calculateTotal()` теперь возвращает float
+2. Утверждение теста использует строгое сравнение
 
-**Suggested Fix:**
+**Предлагаемое исправление:**
 ```php
-// Option 1: Update test to expect float
+// Вариант 1: Обновить тест для ожидания float
 self::assertSame(90.0, $order->calculateTotal());
 
-// Option 2: Use assertEquals for loose comparison
+// Вариант 2: Использовать assertEquals для нестрогого сравнения
 self::assertEquals(90, $order->calculateTotal());
 
-// Option 3: Use Money value object (recommended)
+// Вариант 3: Использовать Money value object (рекомендуется)
 self::assertTrue($order->calculateTotal()->equals(Money::EUR(90)));
 ```
 
-### Secondary Failure: Mock Configuration
+### Вторичный сбой: Конфигурация Mock
 
-**Test:** `PaymentServiceTest::test_process_payment`
-**File:** `tests/Unit/Application/PaymentServiceTest.php:78`
+**Тест:** `PaymentServiceTest::test_process_payment`
+**Файл:** `tests/Unit/Application/PaymentServiceTest.php:78`
 
-**Error:**
+**Ошибка:**
 ```
 Expectation failed for method name is "charge" when invoked 1 time(s).
 Method was expected to be called 1 times, actually called 0 times.
 ```
 
-**Analysis:**
-Mock expectation not met. The `charge` method was never called, indicating:
-1. Conditional logic preventing the call
-2. Early return before reaching the charge
-3. Exception thrown before charge
+**Анализ:**
+Ожидание mock не выполнено. Метод `charge` не был вызван, что указывает на:
+1. Условная логика, предотвращающая вызов
+2. Ранний return до достижения charge
+3. Исключение, брошенное до charge
 
-**Suggested Fix:**
-Review the test setup and ensure conditions are met for `charge` to be called.
+**Предлагаемое исправление:**
+Проверить настройку теста и убедиться, что условия для вызова `charge` выполнены.
 
-## Timeline
+## Временная шкала
 
 ```
-00:00 - Job started
-00:15 - Composer install (cached)
-00:45 - PHPStan passed
-01:30 - PHPUnit started
-04:45 - Test failure: OrderTest::test_calculate_total_with_discount
-05:00 - Test failure: PaymentServiceTest::test_process_payment
+00:00 - Job запущен
+00:15 - Composer install (из кеша)
+00:45 - PHPStan пройден
+01:30 - PHPUnit начат
+04:45 - Сбой теста: OrderTest::test_calculate_total_with_discount
+05:00 - Сбой теста: PaymentServiceTest::test_process_payment
 05:32 - Job failed
 ```
 
-## Recommendations
+## Рекомендации
 
-1. **Immediate:** Fix type mismatch in OrderTest
-2. **Short-term:** Add type declarations to prevent float/int confusion
-3. **Long-term:** Use Money value object for financial calculations
+1. **Немедленно:** Исправить несоответствие типов в OrderTest
+2. **Краткосрочно:** Добавить объявления типов для предотвращения путаницы float/int
+3. **Долгосрочно:** Использовать Money value object для финансовых расчётов
 
-## Related Changes
+## Связанные изменения
 
-Recent commits that may have caused this failure:
+Недавние коммиты, которые могли вызвать этот сбой:
 - `abc1234` - Refactor calculateTotal to return float
 - `def5678` - Update discount calculation logic
 ```
 
-## Common Fixes Database
+## База данных распространённых исправлений
 
-### Dependency Issues
+### Проблемы с зависимостями
 
-| Error Pattern | Cause | Fix |
+| Паттерн ошибки | Причина | Исправление |
 |---------------|-------|-----|
-| `memory exhausted during composer` | Low memory limit | Add `COMPOSER_MEMORY_LIMIT=-1` |
-| `package not found` | Private repo or typo | Check package name and auth |
-| `requirements not resolved` | Version conflict | Run `composer why-not package` |
+| `memory exhausted during composer` | Низкий лимит памяти | Добавить `COMPOSER_MEMORY_LIMIT=-1` |
+| `package not found` | Приватный репозиторий или опечатка | Проверить имя пакета и авторизацию |
+| `requirements not resolved` | Конфликт версий | Запустить `composer why-not package` |
 
-### Test Issues
+### Проблемы с тестами
 
-| Error Pattern | Cause | Fix |
+| Паттерн ошибки | Причина | Исправление |
 |---------------|-------|-----|
-| `Connection refused 127.0.0.1:3306` | MySQL not ready | Add service health check |
-| `Mock expectation failed` | Mock not configured | Review mock setup |
-| `Class not found` | Autoloader issue | Run `composer dump-autoload` |
+| `Connection refused 127.0.0.1:3306` | MySQL не готов | Добавить health check сервиса |
+| `Mock expectation failed` | Mock не настроен | Проверить настройку mock |
+| `Class not found` | Проблема autoloader | Запустить `composer dump-autoload` |
 
-### Infrastructure Issues
+### Проблемы инфраструктуры
 
-| Error Pattern | Cause | Fix |
+| Паттерн ошибки | Причина | Исправление |
 |---------------|-------|-----|
-| `no space left on device` | Disk full | Clear Docker cache |
-| `Cannot connect to Docker daemon` | DinD not running | Check Docker service |
-| `pull access denied` | Auth issue | Add registry credentials |
+| `no space left on device` | Диск заполнен | Очистить Docker кеш |
+| `Cannot connect to Docker daemon` | DinD не запущен | Проверить сервис Docker |
+| `pull access denied` | Проблема авторизации | Добавить учётные данные registry |
 
-## Analysis Instructions
+## Инструкции по анализу
 
-1. **Extract log content:**
-   - Identify job that failed
-   - Get full log output
-   - Note timestamps
+1. **Извлечь содержимое лога:**
+   - Определить job, который упал
+   - Получить полный вывод лога
+   - Отметить временные метки
 
-2. **Identify failure type:**
-   - Parse error messages
-   - Categorize (test/lint/infra)
-   - Determine severity
+2. **Определить тип сбоя:**
+   - Распарсить сообщения об ошибках
+   - Категоризировать (test/lint/infra)
+   - Определить критичность
 
-3. **Root cause analysis:**
-   - Trace error to source
-   - Check recent changes
-   - Identify patterns
+3. **Анализ первопричины:**
+   - Проследить ошибку до источника
+   - Проверить недавние изменения
+   - Определить паттерны
 
-4. **Generate recommendations:**
-   - Specific fixes
-   - Prevention strategies
-   - Related improvements
+4. **Сгенерировать рекомендации:**
+   - Конкретные исправления
+   - Стратегии предотвращения
+   - Связанные улучшения
 
-## Usage
+## Использование
 
-Provide:
-- CI log output (full or relevant section)
-- Pipeline context (branch, commit)
-- Recent changes (optional)
+Предоставьте:
+- Вывод CI-логов (полный или релевантную часть)
+- Контекст пайплайна (ветка, коммит)
+- Недавние изменения (опционально)
 
-The analyzer will:
-1. Parse log for errors
-2. Categorize failures
-3. Identify root cause
-4. Suggest specific fixes
-5. Provide prevention tips
+Анализатор будет:
+1. Парсить логи на предмет ошибок
+2. Категоризировать сбои
+3. Определять первопричину
+4. Предлагать конкретные исправления
+5. Предоставлять советы по предотвращению

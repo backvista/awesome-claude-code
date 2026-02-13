@@ -1,82 +1,82 @@
 ---
 name: acc-create-aggregate
-description: Generates DDD Aggregates for PHP 8.2. Creates consistency boundaries with root entity, domain events, and invariant protection. Includes unit tests.
+description: Генерирует DDD Aggregates для PHP 8.2. Создаёт границы согласованности с корневой сущностью, domain events и защитой инвариантов. Включает юнит-тесты.
 ---
 
-# Aggregate Generator
+# Генератор Aggregate
 
-Generate DDD-compliant Aggregates with root, domain events, and tests.
+Генерация DDD-совместимых Aggregates с корнем, domain events и тестами.
 
-## Aggregate Characteristics
+## Характеристики Aggregate
 
-- **Consistency boundary**: All changes atomic
-- **Root entity**: Single entry point
-- **Transactional consistency**: Invariants always valid
-- **Domain events**: Records what happened
-- **Encapsulation**: Children accessed through root
-- **Identity**: Referenced by root ID
+- **Граница согласованности**: Все изменения атомарны
+- **Корневая сущность**: Единственная точка входа
+- **Транзакционная согласованность**: Инварианты всегда валидны
+- **Domain events**: Фиксируют произошедшие изменения
+- **Инкапсуляция**: Дочерние элементы доступны через корень
+- **Идентичность**: Ссылка по ID корня
 
 ---
 
-## Generation Process
+## Процесс генерации
 
-### Step 1: Generate Base AggregateRoot
+### Шаг 1: Генерация базового AggregateRoot
 
-**Path:** `src/Domain/Shared/Aggregate/`
+**Путь:** `src/Domain/Shared/Aggregate/`
 
-1. `AggregateRoot.php` — Base class with event recording
+1. `AggregateRoot.php` — Базовый класс с записью событий
 
-### Step 2: Generate Aggregate Root Entity
+### Шаг 2: Генерация корневой сущности Aggregate
 
-**Path:** `src/Domain/{BoundedContext}/Entity/`
+**Путь:** `src/Domain/{BoundedContext}/Entity/`
 
-1. `{Name}.php` — Main aggregate root
+1. `{Name}.php` — Основной aggregate root
 
-### Step 3: Generate Child Entities (if needed)
+### Шаг 3: Генерация дочерних сущностей (при необходимости)
 
-**Path:** `src/Domain/{BoundedContext}/Entity/`
+**Путь:** `src/Domain/{BoundedContext}/Entity/`
 
-1. `{ChildName}.php` — Child entity inside aggregate
+1. `{ChildName}.php` — Дочерняя сущность внутри aggregate
 
-### Step 4: Generate Domain Events
+### Шаг 4: Генерация Domain Events
 
-**Path:** `src/Domain/{BoundedContext}/Event/`
+**Путь:** `src/Domain/{BoundedContext}/Event/`
 
 1. `{Name}CreatedEvent.php`
-2. `{Name}{Action}Event.php` for each behavior
+2. `{Name}{Action}Event.php` для каждого поведения
 
-### Step 5: Generate Tests
+### Шаг 5: Генерация тестов
 
-**Path:** `tests/Unit/Domain/{BoundedContext}/Entity/`
+**Путь:** `tests/Unit/Domain/{BoundedContext}/Entity/`
 
 ---
 
-## File Placement
+## Размещение файлов
 
-| Component | Path |
+| Компонент | Путь |
 |-----------|------|
-| Base AggregateRoot | `src/Domain/Shared/Aggregate/` |
-| Aggregate Entity | `src/Domain/{BoundedContext}/Entity/` |
-| Child Entities | `src/Domain/{BoundedContext}/Entity/` |
+| Базовый AggregateRoot | `src/Domain/Shared/Aggregate/` |
+| Сущность Aggregate | `src/Domain/{BoundedContext}/Entity/` |
+| Дочерние сущности | `src/Domain/{BoundedContext}/Entity/` |
 | Domain Events | `src/Domain/{BoundedContext}/Event/` |
-| Unit Tests | `tests/Unit/Domain/{BoundedContext}/Entity/` |
+| Юнит-тесты | `tests/Unit/Domain/{BoundedContext}/Entity/` |
 
 ---
 
-## Naming Conventions
+## Соглашения об именовании
 
-| Component | Pattern | Example |
-|-----------|---------|---------|
+| Компонент | Паттерн | Пример |
+|-----------|---------|--------|
 | Aggregate Root | `{Name}` | `Order` |
-| Child Entity | `{Parent}{Name}` | `OrderLine` |
-| Created Event | `{Name}CreatedEvent` | `OrderCreatedEvent` |
-| State Event | `{Name}{Action}Event` | `OrderConfirmedEvent` |
+| Дочерняя сущность | `{Parent}{Name}` | `OrderLine` |
+| Событие создания | `{Name}CreatedEvent` | `OrderCreatedEvent` |
+| Событие состояния | `{Name}{Action}Event` | `OrderConfirmedEvent` |
 
 ---
 
-## Quick Template Reference
+## Краткий справочник шаблонов
 
-### Base AggregateRoot
+### Базовый AggregateRoot
 
 ```php
 abstract class AggregateRoot
@@ -97,7 +97,7 @@ abstract class AggregateRoot
 }
 ```
 
-### Aggregate Root Entity
+### Корневая сущность Aggregate
 
 ```php
 final class {Name} extends AggregateRoot
@@ -129,7 +129,7 @@ final class {Name} extends AggregateRoot
 }
 ```
 
-### Child Entity
+### Дочерняя сущность
 
 ```php
 final readonly class {ChildName}
@@ -148,32 +148,32 @@ final readonly class {ChildName}
 
 ---
 
-## Design Rules
+## Правила проектирования
 
-| Rule | Good | Bad |
-|------|------|-----|
-| Transaction Boundary | One aggregate per transaction | Multiple aggregates |
-| Reference | By ID only | Full entity reference |
-| Size | Small, focused | Large with many collections |
-| Invariants | Always valid | Can be in invalid state |
-| Events | Record all state changes | No event recording |
-
----
-
-## Anti-patterns to Avoid
-
-| Anti-pattern | Problem | Solution |
-|--------------|---------|----------|
-| Large Aggregate | Performance issues | Split into smaller aggregates |
-| Entity References | Tight coupling | Use IDs only |
-| Public Setters | No invariant protection | Use behavior methods |
-| Missing Events | Can't track history | Record event for each change |
-| No Root | Multiple entry points | Single root entity |
+| Правило | Хорошо | Плохо |
+|---------|--------|-------|
+| Граница транзакции | Один aggregate на транзакцию | Несколько aggregates |
+| Ссылка | Только по ID | Полная ссылка на сущность |
+| Размер | Маленький, сфокусированный | Большой с множеством коллекций |
+| Инварианты | Всегда валидны | Может быть в невалидном состоянии |
+| События | Запись всех изменений состояния | Без записи событий |
 
 ---
 
-## References
+## Антипаттерны, которых следует избегать
 
-For complete PHP templates and examples, see:
-- `references/templates.md` — AggregateRoot, Entity, Child Entity, Test templates
-- `references/examples.md` — Order aggregate with OrderLine, events, and tests
+| Антипаттерн | Проблема | Решение |
+|-------------|---------|---------|
+| Большой Aggregate | Проблемы производительности | Разделить на меньшие aggregates |
+| Ссылки на Entity | Тесная связанность | Использовать только ID |
+| Публичные сеттеры | Нет защиты инвариантов | Использовать методы поведения |
+| Отсутствующие события | Невозможно отследить историю | Записывать событие для каждого изменения |
+| Нет корня | Множественные точки входа | Единственная корневая сущность |
+
+---
+
+## Ссылки
+
+Для полных PHP-шаблонов и примеров смотрите:
+- `references/templates.md` — Шаблоны AggregateRoot, Entity, Child Entity, Test
+- `references/examples.md` — Aggregate Order с OrderLine, событиями и тестами

@@ -1,13 +1,13 @@
 ---
 name: acc-docker-knowledge
-description: Docker knowledge base for PHP projects. Provides patterns, best practices, and guidelines for Dockerfile, Compose, security, and production readiness.
+description: База знаний по Docker для PHP-проектов. Предоставляет паттерны, лучшие практики и руководства для Dockerfile, Compose, безопасности и готовности к production.
 ---
 
-# Docker Knowledge Base
+# База знаний по Docker
 
-Quick reference for Docker patterns and PHP-specific guidelines.
+Краткий справочник по паттернам Docker и рекомендациям для PHP.
 
-## Core Concepts
+## Основные концепции
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -31,70 +31,70 @@ Quick reference for Docker patterns and PHP-specific guidelines.
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## PHP Docker Image Types
+## Типы Docker-образов PHP
 
-| Image | Use Case | Size |
+| Образ | Применение | Размер |
 |-------|----------|------|
 | `php:8.4-fpm-alpine` | Production (FPM) | ~50MB |
-| `php:8.4-cli-alpine` | CI/workers | ~45MB |
+| `php:8.4-cli-alpine` | CI/воркеры | ~45MB |
 | `php:8.4-fpm` | Production (Debian) | ~150MB |
-| `php:8.4-cli` | CI/workers (Debian) | ~140MB |
-| `php:8.4-apache` | Simple deployments | ~160MB |
+| `php:8.4-cli` | CI/воркеры (Debian) | ~140MB |
+| `php:8.4-apache` | Простые развёртывания | ~160MB |
 
-## Quick Checklists
+## Краткие чек-листы
 
-### Dockerfile Checklist
+### Чек-лист Dockerfile
 
-- [ ] Multi-stage build (deps → build → production)
-- [ ] Alpine base image when possible
-- [ ] Pinned version tags (not `latest`)
-- [ ] BuildKit syntax header
-- [ ] Non-root user
-- [ ] Health check defined
-- [ ] `.dockerignore` present
-- [ ] Composer deps installed before source copy
-- [ ] Production PHP config (`php.ini-production`)
-- [ ] OPcache enabled and configured
-- [ ] No secrets in build args or layers
+- [ ] Многоэтапная сборка (deps -> build -> production)
+- [ ] Базовый образ Alpine по возможности
+- [ ] Фиксированные теги версий (не `latest`)
+- [ ] Заголовок синтаксиса BuildKit
+- [ ] Непривилегированный пользователь
+- [ ] Определена проверка здоровья
+- [ ] Присутствует `.dockerignore`
+- [ ] Зависимости Composer установлены до копирования исходников
+- [ ] Конфигурация PHP для production (`php.ini-production`)
+- [ ] OPcache включён и настроен
+- [ ] Нет секретов в аргументах сборки или слоях
 
-### Docker Compose Checklist
+### Чек-лист Docker Compose
 
-- [ ] Health checks for all services
-- [ ] Named volumes for persistent data
-- [ ] Environment variables via `.env` file
-- [ ] Dependency ordering with `depends_on` + `condition`
-- [ ] Resource limits defined
-- [ ] Networks segmented (frontend/backend)
-- [ ] No hardcoded passwords
+- [ ] Проверки здоровья для всех сервисов
+- [ ] Именованные тома для постоянных данных
+- [ ] Переменные окружения через файл `.env`
+- [ ] Порядок зависимостей через `depends_on` + `condition`
+- [ ] Определены лимиты ресурсов
+- [ ] Сети сегментированы (frontend/backend)
+- [ ] Нет захардкоженных паролей
 
-### Security Checklist
+### Чек-лист безопасности
 
-- [ ] Non-root user (`USER app`)
-- [ ] Read-only root filesystem where possible
-- [ ] No secrets in Dockerfile or image
-- [ ] Minimal base image
-- [ ] No unnecessary packages
-- [ ] Capabilities dropped
-- [ ] No privileged mode
+- [ ] Непривилегированный пользователь (`USER app`)
+- [ ] Файловая система только для чтения где возможно
+- [ ] Нет секретов в Dockerfile или образе
+- [ ] Минимальный базовый образ
+- [ ] Нет ненужных пакетов
+- [ ] Capabilities убраны
+- [ ] Нет privileged mode
 
-## Common Violations Quick Reference
+## Краткий справочник по типичным нарушениям
 
-| Violation | Where | Severity |
-|-----------|-------|----------|
-| `FROM php:latest` | Dockerfile | High |
-| `COPY . .` before deps install | Dockerfile | High |
-| Running as root | Dockerfile | High |
-| Secrets in ENV/ARG | Dockerfile | Critical |
-| No health check | Dockerfile/Compose | Medium |
-| No `.dockerignore` | Project root | Medium |
-| `privileged: true` | docker-compose.yml | Critical |
-| Hardcoded passwords | docker-compose.yml | Critical |
-| No resource limits | docker-compose.yml | Medium |
-| Missing `depends_on` conditions | docker-compose.yml | Medium |
+| Нарушение | Где | Критичность |
+|-----------|-----|----------|
+| `FROM php:latest` | Dockerfile | Высокая |
+| `COPY . .` до установки зависимостей | Dockerfile | Высокая |
+| Запуск от root | Dockerfile | Высокая |
+| Секреты в ENV/ARG | Dockerfile | Критическая |
+| Нет проверки здоровья | Dockerfile/Compose | Средняя |
+| Нет `.dockerignore` | Корень проекта | Средняя |
+| `privileged: true` | docker-compose.yml | Критическая |
+| Захардкоженные пароли | docker-compose.yml | Критическая |
+| Нет лимитов ресурсов | docker-compose.yml | Средняя |
+| Отсутствуют условия `depends_on` | docker-compose.yml | Средняя |
 
-## PHP-Specific Best Practices
+## Лучшие практики для PHP
 
-### Extensions Installation
+### Установка расширений
 
 ```dockerfile
 # Alpine: use apk + docker-php-ext-install
@@ -108,7 +108,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 ```
 
-### OPcache Configuration (Production)
+### Конфигурация OPcache (Production)
 
 ```ini
 opcache.enable=1
@@ -121,7 +121,7 @@ opcache.jit=1255
 opcache.jit_buffer_size=256M
 ```
 
-### PHP-FPM Tuning
+### Настройка PHP-FPM
 
 ```ini
 pm = dynamic
@@ -132,12 +132,12 @@ pm.max_spare_servers = 35
 pm.max_requests = 1000
 ```
 
-## References
+## Ссылки
 
-For detailed information, load these reference files:
+Подробная информация в справочных файлах:
 
-- `references/image-selection.md` — Base image comparison and selection guide
-- `references/multistage-patterns.md` — Multi-stage build patterns for PHP
-- `references/security-hardening.md` — Security best practices and hardening
-- `references/compose-patterns.md` — Docker Compose patterns for PHP stacks
-- `references/production-checklist.md` — Production readiness checklist
+- `references/image-selection.md` — Сравнение и выбор базовых образов
+- `references/multistage-patterns.md` — Паттерны многоэтапной сборки для PHP
+- `references/security-hardening.md` — Лучшие практики безопасности и укрепление
+- `references/compose-patterns.md` — Паттерны Docker Compose для PHP-стеков
+- `references/production-checklist.md` — Чек-лист готовности к production

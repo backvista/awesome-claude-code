@@ -1,13 +1,13 @@
 ---
 name: acc-check-docker-healthcheck
-description: Checks Docker health check configuration for PHP services. Verifies PHP-FPM, Nginx, and dependent service health checks.
+description: Проверяет конфигурацию health checks в Docker для PHP-сервисов. Верифицирует health checks PHP-FPM, Nginx и зависимых сервисов.
 ---
 
-# Docker Health Check Configuration Checker
+# Проверка конфигурации Docker Health Check
 
-Analyze Docker health check configuration for PHP stacks and dependent services.
+Анализ конфигурации health checks для PHP-стеков и зависимых сервисов.
 
-## Health Check Patterns by Service
+## Паттерны Health Check по сервисам
 
 ### 1. PHP-FPM
 
@@ -91,10 +91,10 @@ services:
       start_period: 30s
 ```
 
-## Recommended Parameters
+## Рекомендуемые параметры
 
-| Service | interval | timeout | start_period | retries |
-|---------|----------|---------|--------------|---------|
+| Сервис | interval | timeout | start_period | retries |
+|--------|----------|---------|--------------|---------|
 | PHP-FPM | 10s | 3s | 10s | 3 |
 | Nginx | 10s | 3s | 5s | 3 |
 | MySQL | 10s | 5s | 30s | 5 |
@@ -102,7 +102,7 @@ services:
 | Redis | 10s | 3s | 5s | 3 |
 | RabbitMQ | 15s | 10s | 30s | 5 |
 
-## Improper Health Check Detection
+## Обнаружение некорректных Health Checks
 
 ```dockerfile
 # BAD: Too frequent (overhead)
@@ -118,7 +118,7 @@ HEALTHCHECK CMD curl -f https://api.external.com/health
 HEALTHCHECK --interval=60s --timeout=30s --retries=10 CMD curl localhost
 ```
 
-## Grep Patterns
+## Grep-паттерны
 
 ```bash
 Grep: "HEALTHCHECK" --glob "**/Dockerfile*"
@@ -127,33 +127,33 @@ Grep: "depends_on:" --glob "**/docker-compose*.yml"
 Grep: "ping\\.path|pm\\.status_path" --glob "**/*.conf"
 ```
 
-## Severity Classification
+## Классификация серьёзности
 
-| Issue | Severity | Impact |
-|-------|----------|--------|
-| No health check for any service | Critical | No failure detection |
-| PHP-FPM without health check | Critical | Dead workers undetected |
-| Database without health check | Major | App starts before DB ready |
-| No start_period for databases | Major | False unhealthy during init |
-| Checking external dependency | Major | External outage cascades |
-| depends_on without condition | Major | Startup race condition |
-| Interval too low (< 5s) | Minor | Unnecessary overhead |
-| Interval too high (> 60s) | Minor | Slow failure detection |
-| timeout >= interval | Minor | Overlapping checks |
+| Проблема | Серьёзность | Влияние |
+|----------|-------------|---------|
+| Нет health check ни для одного сервиса | Critical | Нет обнаружения сбоев |
+| PHP-FPM без health check | Critical | Мёртвые воркеры не обнаруживаются |
+| БД без health check | Major | Приложение стартует до готовности БД |
+| Нет start_period для БД | Major | Ложное unhealthy при инициализации |
+| Проверка внешней зависимости | Major | Каскадное влияние внешнего сбоя |
+| depends_on без условия | Major | Race condition при запуске |
+| Интервал слишком мал (< 5s) | Minor | Лишние накладные расходы |
+| Интервал слишком велик (> 60s) | Minor | Медленное обнаружение сбоев |
+| timeout >= interval | Minor | Перекрывающиеся проверки |
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### Health Check Issue: [Description]
+### Проблема Health Check: [Описание]
 
-**Severity:** Critical/Major/Minor
-**Service:** [service name]
-**File:** `docker-compose.yml:line` or `Dockerfile:line`
+**Серьёзность:** Critical/Major/Minor
+**Сервис:** [имя сервиса]
+**Файл:** `docker-compose.yml:line` или `Dockerfile:line`
 
-**Issue:**
-[Description of missing or misconfigured health check]
+**Проблема:**
+[Описание отсутствующего или некорректно настроенного health check]
 
-**Recommended:**
+**Рекомендация:**
 ```yaml
 healthcheck:
   test: ["CMD-SHELL", "..."]
@@ -163,11 +163,11 @@ healthcheck:
   retries: 3
 ```
 
-**Parameters:**
-| Param | Current | Recommended | Reason |
-|-------|---------|-------------|--------|
-| interval | N/A | 10s | Standard frequency |
-| timeout | N/A | 3s | Fast failure detection |
-| start_period | N/A | 10s | Allow initialization |
-| retries | N/A | 3 | Prevent flapping |
+**Параметры:**
+| Параметр | Текущий | Рекомендуемый | Причина |
+|----------|---------|---------------|---------|
+| interval | N/A | 10s | Стандартная частота |
+| timeout | N/A | 3s | Быстрое обнаружение сбоев |
+| start_period | N/A | 10s | Время на инициализацию |
+| retries | N/A | 3 | Предотвращение флаппинга |
 ```

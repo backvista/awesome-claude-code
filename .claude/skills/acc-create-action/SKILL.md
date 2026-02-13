@@ -1,22 +1,22 @@
 ---
 name: acc-create-action
-description: Generates ADR Action classes for PHP 8.2. Creates single-responsibility HTTP endpoint handlers with PSR-7 support. Includes unit tests.
+description: Генерирует ADR Action классы для PHP 8.2. Создаёт обработчики HTTP-эндпоинтов с единственной ответственностью и поддержкой PSR-7. Включает юнит-тесты.
 ---
 
-# Action Generator
+# Генератор Action
 
-Generate ADR-compliant Action classes for HTTP endpoints.
+Генерация ADR-совместимых Action классов для HTTP-эндпоинтов.
 
-## Action Characteristics
+## Характеристики Action
 
-- **Single Responsibility**: One action = one HTTP endpoint
-- **Input Parsing**: Collects and parses request input
-- **Domain Invocation**: Calls UseCase/Handler
-- **Response Delegation**: Passes result to Responder
-- **No Business Logic**: Thin coordination layer
-- **Invokable**: Single `__invoke()` method
+- **Единственная ответственность**: Один action = один HTTP-эндпоинт
+- **Разбор ввода**: Сбор и разбор данных запроса
+- **Вызов домена**: Вызывает UseCase/Handler
+- **Делегирование ответа**: Передаёт результат в Responder
+- **Без бизнес-логики**: Тонкий координационный слой
+- **Invokable**: Единственный метод `__invoke()`
 
-## Template
+## Шаблон
 
 ```php
 <?php
@@ -55,7 +55,7 @@ final readonly class {Action}Action
 }
 ```
 
-## Test Template
+## Шаблон теста
 
 ```php
 <?php
@@ -129,9 +129,9 @@ final class {Action}ActionTest extends TestCase
 }
 ```
 
-## Action Patterns by HTTP Method
+## Паттерны Action по HTTP-методу
 
-### GET (Read Single)
+### GET (Чтение одного)
 
 ```php
 <?php
@@ -165,7 +165,7 @@ final readonly class GetUserByIdAction
 }
 ```
 
-### GET (List with Pagination)
+### GET (Список с пагинацией)
 
 ```php
 <?php
@@ -204,7 +204,7 @@ final readonly class ListUsersAction
 }
 ```
 
-### POST (Create)
+### POST (Создание)
 
 ```php
 <?php
@@ -242,7 +242,7 @@ final readonly class CreateUserAction
 }
 ```
 
-### PUT/PATCH (Update)
+### PUT/PATCH (Обновление)
 
 ```php
 <?php
@@ -316,38 +316,38 @@ final readonly class DeleteUserAction
 }
 ```
 
-## File Placement
+## Размещение файлов
 
-| Component | Path |
+| Компонент | Путь |
 |-----------|------|
 | Action | `src/Presentation/Api/{Context}/{Action}/{Action}Action.php` |
 | Action Interface | `src/Presentation/Shared/Action/ActionInterface.php` |
-| Test | `tests/Unit/Presentation/Api/{Context}/{Action}/{Action}ActionTest.php` |
+| Тест | `tests/Unit/Presentation/Api/{Context}/{Action}/{Action}ActionTest.php` |
 
-## Generation Instructions
+## Инструкции по генерации
 
-When asked to create an Action:
+При создании Action:
 
-1. **Identify HTTP method** (GET, POST, PUT, DELETE)
-2. **Determine input source** (body, query params, route attributes)
-3. **Identify Command/Query DTO** (what to pass to handler)
-4. **Generate Action class** with proper namespace
-5. **Generate test** with mocked dependencies
+1. **Определить HTTP-метод** (GET, POST, PUT, DELETE)
+2. **Определить источник ввода** (body, query params, route attributes)
+3. **Определить Command/Query DTO** (что передать обработчику)
+4. **Сгенерировать класс Action** с правильным namespace
+5. **Сгенерировать тест** с замоканными зависимостями
 
-## Naming Conventions
+## Соглашения об именовании
 
-| HTTP Method | Action Name | Command/Query |
-|-------------|-------------|---------------|
-| GET (single) | Get{Resource}ByIdAction | Get{Resource}ByIdQuery |
-| GET (list) | List{Resource}sAction | List{Resource}sQuery |
+| HTTP-метод | Имя Action | Command/Query |
+|------------|-----------|---------------|
+| GET (один) | Get{Resource}ByIdAction | Get{Resource}ByIdQuery |
+| GET (список) | List{Resource}sAction | List{Resource}sQuery |
 | POST | Create{Resource}Action | Create{Resource}Command |
 | PUT | Update{Resource}Action | Update{Resource}Command |
 | PATCH | Patch{Resource}Action | Patch{Resource}Command |
 | DELETE | Delete{Resource}Action | Delete{Resource}Command |
 
-## References
+## Ссылки
 
-For detailed patterns and examples:
+Для подробных паттернов и примеров:
 
-- `references/templates.md` — Additional Action templates
-- `references/examples.md` — Real-world Action examples
+- `references/templates.md` — Дополнительные шаблоны Action
+- `references/examples.md` — Реальные примеры Action

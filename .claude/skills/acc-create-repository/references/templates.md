@@ -1,6 +1,6 @@
-# Repository Pattern Templates
+# Шаблоны Repository Pattern
 
-## Interface Template (Domain Layer)
+## Интерфейс (слой Domain)
 
 ```php
 <?php
@@ -28,7 +28,7 @@ interface {AggregateRoot}RepositoryInterface
 
 ---
 
-## Doctrine Implementation Template
+## Шаблон реализации Doctrine
 
 ```php
 <?php
@@ -76,7 +76,7 @@ final readonly class Doctrine{AggregateRoot}Repository implements {AggregateRoot
 
 ---
 
-## In-Memory Repository (for Testing)
+## In-Memory репозиторий (для тестирования)
 
 ```php
 <?php
@@ -128,7 +128,7 @@ final class InMemory{AggregateRoot}Repository implements {AggregateRoot}Reposito
 
 ---
 
-## Integration Test Template
+## Шаблон интеграционного теста
 
 ```php
 <?php
@@ -190,52 +190,52 @@ final class Doctrine{AggregateRoot}RepositoryTest extends KernelTestCase
 
 ---
 
-## Design Rules
+## Правила проектирования
 
-### Interface in Domain Layer
+### Интерфейс в слое Domain
 
 ```
 Domain/
 └── Order/
     └── Repository/
-        └── OrderRepositoryInterface.php   ← Interface here
+        └── OrderRepositoryInterface.php   ← Интерфейс здесь
 
 Infrastructure/
 └── Persistence/
     └── Doctrine/
-        └── DoctrineOrderRepository.php    ← Implementation here
+        └── DoctrineOrderRepository.php    ← Реализация здесь
 ```
 
-### Works with Aggregates, Not Entities
+### Работает с агрегатами, а не с сущностями
 
 ```php
-// GOOD: Repository for aggregate root
+// ХОРОШО: репозиторий для корневого агрегата
 interface OrderRepositoryInterface
 {
     public function findById(OrderId $id): ?Order;
     public function save(Order $order): void;
 }
 
-// BAD: Repository for child entity
-interface OrderLineRepositoryInterface  // OrderLine is not an aggregate root
+// ПЛОХО: репозиторий для дочерней сущности
+interface OrderLineRepositoryInterface  // OrderLine не является корневым агрегатом
 {
     public function findById(OrderLineId $id): ?OrderLine;
 }
 ```
 
-### No Business Logic in Query Methods
+### Никакой бизнес-логики в методах запросов
 
 ```php
-// GOOD: Simple query methods
+// ХОРОШО: простые методы запросов
 interface OrderRepositoryInterface
 {
     public function findById(OrderId $id): ?Order;
     public function findByStatus(OrderStatus $status): array;
 }
 
-// BAD: Business logic in repository
+// ПЛОХО: бизнес-логика в репозитории
 interface OrderRepositoryInterface
 {
-    public function findOrdersEligibleForDiscount(): array;  // Business logic!
+    public function findOrdersEligibleForDiscount(): array;  // Бизнес-логика!
 }
 ```

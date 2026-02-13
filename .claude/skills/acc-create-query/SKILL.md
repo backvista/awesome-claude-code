@@ -1,83 +1,83 @@
 ---
 name: acc-create-query
-description: Generates CQRS Queries and Handlers for PHP 8.2. Creates read-only query DTOs with handlers that return data without side effects. Includes unit tests.
+description: Генерирует CQRS-запросы и обработчики для PHP 8.2. Создаёт DTO запросов только для чтения с обработчиками, возвращающими данные без побочных эффектов. Включает модульные тесты.
 ---
 
-# Query Generator
+# Генератор запросов (Query)
 
-Generate CQRS-compliant Queries and Query Handlers with tests.
+Генерирует CQRS-совместимые запросы и обработчики запросов с тестами.
 
-## Query Characteristics
+## Характеристики запросов
 
-- **Immutable**: `final readonly class`
-- **Interrogative naming**: Get/Find/List + noun
-- **No side effects**: Handler never modifies state
-- **Returns DTOs**: Never returns domain entities
-- **Read-optimized**: Can use dedicated read models
-
----
-
-## Generation Process
-
-### Step 1: Generate Query
-
-**Path:** `src/Application/{BoundedContext}/Query/`
-
-1. `{Name}Query.php` — Immutable query DTO with parameters
-
-### Step 2: Generate Handler
-
-**Path:** `src/Application/{BoundedContext}/Handler/`
-
-1. `{Name}Handler.php` — Read model consumer
-
-### Step 3: Generate DTOs
-
-**Path:** `src/Application/{BoundedContext}/DTO/`
-
-1. `{Name}DTO.php` — Result data structure
-2. `PaginatedResultDTO.php` — For list queries (optional)
-
-### Step 4: Generate Read Model Interface
-
-**Path:** `src/Application/{BoundedContext}/ReadModel/`
-
-1. `{Name}ReadModelInterface.php` — Query methods contract
-
-### Step 5: Generate Tests
-
-**Path:** `tests/Unit/Application/{BoundedContext}/`
+- **Иммутабельность**: `final readonly class`
+- **Вопросительное именование**: Get/Find/List + существительное
+- **Без побочных эффектов**: Обработчик никогда не изменяет состояние
+- **Возвращает DTO**: Никогда не возвращает доменные сущности
+- **Оптимизация для чтения**: Может использовать выделенные модели чтения
 
 ---
 
-## File Placement
+## Процесс генерации
 
-| Component | Path |
+### Шаг 1: Генерация запроса
+
+**Путь:** `src/Application/{BoundedContext}/Query/`
+
+1. `{Name}Query.php` — Иммутабельный DTO запроса с параметрами
+
+### Шаг 2: Генерация обработчика
+
+**Путь:** `src/Application/{BoundedContext}/Handler/`
+
+1. `{Name}Handler.php` — Потребитель модели чтения
+
+### Шаг 3: Генерация DTO
+
+**Путь:** `src/Application/{BoundedContext}/DTO/`
+
+1. `{Name}DTO.php` — Структура данных результата
+2. `PaginatedResultDTO.php` — Для запросов списков (опционально)
+
+### Шаг 4: Генерация интерфейса модели чтения
+
+**Путь:** `src/Application/{BoundedContext}/ReadModel/`
+
+1. `{Name}ReadModelInterface.php` — Контракт методов запроса
+
+### Шаг 5: Генерация тестов
+
+**Путь:** `tests/Unit/Application/{BoundedContext}/`
+
+---
+
+## Размещение файлов
+
+| Компонент | Путь |
 |-----------|------|
-| Query | `src/Application/{BoundedContext}/Query/` |
-| Handler | `src/Application/{BoundedContext}/Handler/` |
+| Запрос | `src/Application/{BoundedContext}/Query/` |
+| Обработчик | `src/Application/{BoundedContext}/Handler/` |
 | DTO | `src/Application/{BoundedContext}/DTO/` |
-| Read Model Interface | `src/Application/{BoundedContext}/ReadModel/` |
-| Unit Tests | `tests/Unit/Application/{BoundedContext}/` |
+| Интерфейс модели чтения | `src/Application/{BoundedContext}/ReadModel/` |
+| Модульные тесты | `tests/Unit/Application/{BoundedContext}/` |
 
 ---
 
-## Query Naming Conventions
+## Соглашения об именовании запросов
 
-| Purpose | Query Name | Returns |
-|---------|------------|---------|
-| Single by ID | `GetOrderDetailsQuery` | DTO or throws |
-| Single by field | `FindUserByEmailQuery` | DTO or null |
-| List/Collection | `ListOrdersQuery` | PaginatedResult |
-| Search | `SearchProductsQuery` | array of DTOs |
-| Count | `CountPendingOrdersQuery` | int |
-| Check existence | `CheckEmailExistsQuery` | bool |
+| Назначение | Имя запроса | Возвращает |
+|------------|-------------|------------|
+| Один по ID | `GetOrderDetailsQuery` | DTO или исключение |
+| Один по полю | `FindUserByEmailQuery` | DTO или null |
+| Список/коллекция | `ListOrdersQuery` | PaginatedResult |
+| Поиск | `SearchProductsQuery` | массив DTO |
+| Подсчёт | `CountPendingOrdersQuery` | int |
+| Проверка существования | `CheckEmailExistsQuery` | bool |
 
 ---
 
-## Quick Template Reference
+## Краткий справочник шаблонов
 
-### Query
+### Запрос
 
 ```php
 final readonly class {Name}Query
@@ -88,7 +88,7 @@ final readonly class {Name}Query
 }
 ```
 
-### Query with Pagination
+### Запрос с пагинацией
 
 ```php
 final readonly class List{Name}Query
@@ -107,7 +107,7 @@ final readonly class List{Name}Query
 }
 ```
 
-### Handler
+### Обработчик
 
 ```php
 final readonly class {Name}Handler
@@ -131,20 +131,20 @@ final readonly class {Name}Handler
 
 ---
 
-## Anti-patterns to Avoid
+## Антипаттерны, которых следует избегать
 
-| Anti-pattern | Problem | Solution |
-|--------------|---------|----------|
-| Side Effects | Handler modifies state | Keep read-only |
-| Returning Entities | Leaking domain | Return DTOs only |
-| No Validation | Invalid parameters | Validate in constructor |
-| Unbounded Lists | Performance issues | Always paginate |
-| Missing Read Model | Querying write model | Use dedicated read model |
+| Антипаттерн | Проблема | Решение |
+|-------------|----------|---------|
+| Побочные эффекты | Обработчик изменяет состояние | Оставляйте только для чтения |
+| Возврат сущностей | Утечка домена | Возвращайте только DTO |
+| Без валидации | Невалидные параметры | Валидируйте в конструкторе |
+| Неограниченные списки | Проблемы производительности | Всегда используйте пагинацию |
+| Отсутствие модели чтения | Запросы к модели записи | Используйте выделенную модель чтения |
 
 ---
 
-## References
+## Ссылки
 
-For complete PHP templates and examples, see:
-- `references/templates.md` — Query, Handler, DTO, PaginatedResult, ReadModel templates
-- `references/examples.md` — GetOrderDetails, ListOrders, OrderDTO examples and tests
+Полные PHP-шаблоны и примеры см. в:
+- `references/templates.md` — Шаблоны Query, Handler, DTO, PaginatedResult, ReadModel
+- `references/examples.md` — Примеры GetOrderDetails, ListOrders, OrderDTO и тесты

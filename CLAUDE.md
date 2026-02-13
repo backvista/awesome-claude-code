@@ -1,84 +1,84 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Этот файл предоставляет руководство для Claude Code (claude.ai/code) при работе с кодом в этом репозитории.
 
-## Project Overview
+## Обзор проекта
 
-Composer plugin (`composer-plugin` type) providing Claude Code extensions for PHP development with DDD, CQRS, and Clean Architecture patterns. Installed via `composer require backvista/awesome-claude-code`. The plugin auto-copies `.claude/` components (commands, agents, skills) to the target project on install/update, never overwriting existing files.
+Composer-плагин (тип `composer-plugin`), предоставляющий расширения Claude Code для PHP-разработки с паттернами DDD, CQRS и Clean Architecture. Устанавливается через `composer require backvista/awesome-claude-code`. Плагин автоматически копирует компоненты `.claude/` (команды, агенты, навыки) в целевой проект при install/update, никогда не перезаписывая существующие файлы.
 
-## Commands
+## Команды
 
 ```bash
-make help                   # Show all available make targets (default)
-make validate-claude        # Validate .claude/ structure — run before every commit
-make list-commands          # List all slash commands
-make list-agents            # List all agents
-make list-skills            # List all skills
-make test                   # Install in Docker test environment (tests/)
-make test-clear             # Clear test environment
-make changelog              # Show recent git commits for changelog
-make release                # Run validate-claude, then print release instructions
-./bin/acc upgrade                        # Force upgrade components (creates backup)
-./bin/acc upgrade --no-backup            # Upgrade without backup
-./bin/acc upgrade --component=commands   # Upgrade only commands|agents|skills
+make help                   # Показать все доступные make-цели (по умолчанию)
+make validate-claude        # Валидация структуры .claude/ — запускать перед каждым коммитом
+make list-commands          # Список всех slash-команд
+make list-agents            # Список всех агентов
+make list-skills            # Список всех навыков
+make test                   # Установка в Docker-тестовом окружении (tests/)
+make test-clear             # Очистка тестового окружения
+make changelog              # Показать последние git-коммиты для changelog
+make release                # Запуск validate-claude, затем вывод инструкций по релизу
+./bin/acc upgrade                        # Принудительное обновление компонентов (создаёт резервную копию)
+./bin/acc upgrade --no-backup            # Обновление без резервной копии
+./bin/acc upgrade --component=commands   # Обновление только commands|agents|skills
 ```
 
-**Testing**: `make test` runs `docker compose run --rm php composer install` in `tests/` directory, which triggers the Composer plugin and copies components to `tests/.claude/`. Use `make test-clear` to reset.
+**Тестирование**: `make test` выполняет `docker compose run --rm php composer install` в директории `tests/`, что запускает Composer-плагин и копирует компоненты в `tests/.claude/`. Используйте `make test-clear` для сброса.
 
-## Architecture
+## Архитектура
 
 ```
 .claude/
-├── commands/     # Slash commands (26) — user-invokable via /acc-*
-├── agents/       # Subagents (57) — invoked via Task tool with subagent_type
-├── skills/       # Skills (242) — knowledge bases, generators, analyzers
-└── settings.json # Hooks and permission allowlist (NOT copied by plugin)
+├── commands/     # Slash-команды (26) — вызываемые пользователем через /acc-*
+├── agents/       # Субагенты (57) — вызываемые через Task tool с subagent_type
+├── skills/       # Навыки (242) — базы знаний, генераторы, анализаторы
+└── settings.json # Хуки и список разрешений (НЕ копируется плагином)
 
 src/
-└── ComposerPlugin.php  # Single PHP file — subscribes to POST_PACKAGE_INSTALL/UPDATE
+└── ComposerPlugin.php  # Единственный PHP-файл — подписывается на POST_PACKAGE_INSTALL/UPDATE
 
-bin/acc                 # CLI tool for force-upgrading components
+bin/acc                 # CLI-инструмент для принудительного обновления компонентов
 docs/                   # commands.md, agents.md, skills.md, hooks.md, component-flow.md, mcp.md, quick-reference.md
-tests/                  # Docker-based test environment (Dockerfile + docker-compose.yml + composer.json)
+tests/                  # Docker-тестовое окружение (Dockerfile + docker-compose.yml + composer.json)
 ```
 
-### Execution Flow
+### Поток выполнения
 
 ```
-User → /acc-command → Coordinator Agent (opus) → Specialized Agents (sonnet, parallel via Task) → Skills → Output
+User → /acc-command → Coordinator Agent (opus) → Specialized Agents (sonnet, параллельно через Task) → Skills → Output
 ```
 
-**Three component types with strict integration chain:**
+**Три типа компонентов со строгой цепочкой интеграции:**
 
-1. **Skill** provides knowledge or generates code (`.claude/skills/name/SKILL.md`, optionally `references/` subfolder)
-2. **Agent** references skills via `skills:` frontmatter, performs analysis/generation
-3. **Command** delegates to agents via the `Task` tool with `subagent_type="agent-name"`
+1. **Skill** предоставляет знания или генерирует код (`.claude/skills/name/SKILL.md`, опционально подпапка `references/`)
+2. **Agent** ссылается на навыки через frontmatter `skills:`, выполняет анализ/генерацию
+3. **Command** делегирует агентам через инструмент `Task` с `subagent_type="agent-name"`
 
-### Agent Categories
+### Категории агентов
 
-- **Coordinators** (6): orchestrate multi-agent workflows via Task delegation, use `model: opus`, have `TaskCreate/TaskUpdate` for progress tracking — `bug-fix-coordinator`, `ci-coordinator`, `code-review-coordinator`, `docker-coordinator`, `explain-coordinator`, `refactor-coordinator`
-- **Auditor-coordinators** (3): audit via sub-agent delegation, use `model: opus` — `architecture-auditor`, `pattern-auditor`, `ddd-auditor`
-- **Specialists** (47): perform focused tasks, use `model: sonnet` — auditors, generators, reviewers, CI/Docker/Explainer agents
+- **Координаторы** (6): оркестрируют многоагентные workflow через делегирование Task, используют `model: opus`, имеют `TaskCreate/TaskUpdate` для отслеживания прогресса — `bug-fix-coordinator`, `ci-coordinator`, `code-review-coordinator`, `docker-coordinator`, `explain-coordinator`, `refactor-coordinator`
+- **Аудиторы-координаторы** (3): аудит через делегирование суб-агентам, используют `model: opus` — `architecture-auditor`, `pattern-auditor`, `ddd-auditor`
+- **Специалисты** (47): выполняют сфокусированные задачи, используют `model: sonnet` — аудиторы, генераторы, ревьюеры, CI/Docker/Explainer агенты
 
-### Composer Plugin
+### Composer-плагин
 
-`src/ComposerPlugin.php` — the only PHP source file. Copies `.claude/{commands,agents,skills}` from vendor to project root. Skips existing files (prints "Skipping (exists)"). Files NOT copied: `settings.json`, `settings.local.json` — these are project-specific.
+`src/ComposerPlugin.php` — единственный PHP-файл исходного кода. Копирует `.claude/{commands,agents,skills}` из vendor в корень проекта. Пропускает существующие файлы (выводит "Skipping (exists)"). Файлы НЕ копируются: `settings.json`, `settings.local.json` — они специфичны для проекта.
 
-## Key Rules
+## Ключевые правила
 
-- **`acc-` prefix** on all components to avoid naming conflicts with other extensions
-- **`--` separator** in commands for meta-instructions: `/acc-audit-ddd ./src -- focus on aggregates`
-- **After any change**: run `make validate-claude`, update the matching `docs/*.md` file and `CHANGELOG.md`
-- **Component counts** appear in 6 places — keep all in sync: `README.md` (Documentation table), `docs/quick-reference.md` (Statistics + file tree), `composer.json` (description), `llms.txt` (Quick Facts + Project Structure + Skills by Category), `CHANGELOG.md`, `CLAUDE.md` (Architecture section)
-- **File renames**: always use `git mv` instead of delete + create to preserve git history
-- **CI/CD `acc-docker-agent`** (for CI pipelines) is separate from Docker Expert System agents (`acc-docker-coordinator`, `acc-docker-*-agent`) — do not merge them
-- **`settings.json`** is project-specific (NOT copied by plugin). Contains: PostToolUse hook (`php -l` on `.php` files after Write), permissions allowlist (make, git read-only, composer validate, WebSearch)
-- **Every skill must be referenced** by at least one agent's `skills:` frontmatter — orphaned skills cause audit failures
+- **Префикс `acc-`** на всех компонентах для избежания конфликтов имён с другими расширениями
+- **Разделитель `--`** в командах для мета-инструкций: `/acc-audit-ddd ./src -- focus on aggregates`
+- **После любого изменения**: запустите `make validate-claude`, обновите соответствующий файл `docs/*.md` и `CHANGELOG.md`
+- **Количество компонентов** появляется в 6 местах — держите все в синхронизации: `README.md` (таблица Documentation), `docs/quick-reference.md` (Statistics + дерево файлов), `composer.json` (description), `llms.txt` (Quick Facts + Project Structure + Skills by Category), `CHANGELOG.md`, `CLAUDE.md` (секция Architecture)
+- **Переименование файлов**: всегда используйте `git mv` вместо удаления + создания для сохранения истории git
+- **CI/CD `acc-docker-agent`** (для CI-конвейеров) отдельный от Docker Expert System агентов (`acc-docker-coordinator`, `acc-docker-*-agent`) — не объединяйте их
+- **`settings.json`** специфичен для проекта (НЕ копируется плагином). Содержит: PostToolUse hook (`php -l` на `.php` файлах после Write), список разрешений (make, git read-only, composer validate, WebSearch)
+- **Каждый навык должен быть упомянут** как минимум в frontmatter `skills:` одного агента — осиротевшие навыки вызывают сбои аудита
 
-## Conditional Rules
+## Условные правила
 
-`.claude/rules/` contains context-specific rules loaded only when matching files are involved:
+`.claude/rules/` содержит контекстно-специфичные правила, загружаемые только при работе с соответствующими файлами:
 
-- `component-creation.md` — command/agent/skill frontmatter specs (loads for `.claude/` edits)
-- `versioning.md` — versioning workflow and documentation files table (loads for CHANGELOG, README, docs/)
-- `troubleshooting.md` — diagnostic table for common issues (loads for `.claude/`, `src/`, Makefile)
+- `component-creation.md` — спецификации frontmatter команд/агентов/навыков (загружается для редактирования `.claude/`)
+- `versioning.md` — workflow версионирования и таблица файлов документации (загружается для CHANGELOG, README, docs/)
+- `troubleshooting.md` — диагностическая таблица для распространённых проблем (загружается для `.claude/`, `src/`, Makefile)

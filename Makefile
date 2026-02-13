@@ -2,26 +2,26 @@
 
 .DEFAULT_GOAL := help
 
-# Colors
+# Цвета
 GREEN  := \033[0;32m
 YELLOW := \033[0;33m
 CYAN   := \033[0;36m
 RESET  := \033[0m
 
-help: ## Show this help
+help: ## Показать эту справку
 	@echo ""
-	@echo "$(CYAN)Available commands:$(RESET)"
+	@echo "$(CYAN)Доступные команды:$(RESET)"
 	@echo ""
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(GREEN)%-15s$(RESET) %s\n", $$1, $$2}'
 	@echo ""
 
 # =============================================================================
-# Claude Components
+# Компоненты Claude
 # =============================================================================
 
-list-commands: ## List all available slash commands
+list-commands: ## Список всех доступных slash-команд
 	@echo ""
-	@echo "$(CYAN)Available Commands:$(RESET)"
+	@echo "$(CYAN)Доступные команды:$(RESET)"
 	@echo ""
 	@if [ -d ".claude/commands" ]; then \
 		find .claude/commands -name "*.md" -type f | while read file; do \
@@ -30,13 +30,13 @@ list-commands: ## List all available slash commands
 			printf "  $(GREEN)/%-20s$(RESET) %s\n" "$$name" "$$desc"; \
 		done; \
 	else \
-		echo "  $(YELLOW)No commands found$(RESET)"; \
+		echo "  $(YELLOW)Команды не найдены$(RESET)"; \
 	fi
 	@echo ""
 
-list-skills: ## List all available skills
+list-skills: ## Список всех доступных навыков
 	@echo ""
-	@echo "$(CYAN)Available Skills:$(RESET)"
+	@echo "$(CYAN)Доступные навыки:$(RESET)"
 	@echo ""
 	@if [ -d ".claude/skills" ]; then \
 		find .claude/skills -name "*.md" -type f | while read file; do \
@@ -45,13 +45,13 @@ list-skills: ## List all available skills
 			printf "  $(GREEN)%-20s$(RESET) %s\n" "$$name" "$$desc"; \
 		done; \
 	else \
-		echo "  $(YELLOW)No skills found$(RESET)"; \
+		echo "  $(YELLOW)Навыки не найдены$(RESET)"; \
 	fi
 	@echo ""
 
-list-agents: ## List all available agents
+list-agents: ## Список всех доступных агентов
 	@echo ""
-	@echo "$(CYAN)Available Agents:$(RESET)"
+	@echo "$(CYAN)Доступные агенты:$(RESET)"
 	@echo ""
 	@if [ -d ".claude/agents" ]; then \
 		find .claude/agents -name "*.md" -type f | while read file; do \
@@ -60,82 +60,82 @@ list-agents: ## List all available agents
 			printf "  $(GREEN)%-20s$(RESET) %s\n" "$$name" "$$desc"; \
 		done; \
 	else \
-		echo "  $(YELLOW)No agents found$(RESET)"; \
+		echo "  $(YELLOW)Агенты не найдены$(RESET)"; \
 	fi
 	@echo ""
 
-validate-claude: ## Validate .claude directory structure
+validate-claude: ## Валидация структуры директории .claude
 	@echo ""
-	@echo "$(CYAN)Validating .claude structure...$(RESET)"
+	@echo "$(CYAN)Валидация структуры .claude...$(RESET)"
 	@echo ""
 	@errors=0; \
 	if [ ! -d ".claude" ]; then \
-		echo "  $(YELLOW)Warning: .claude directory not found$(RESET)"; \
+		echo "  $(YELLOW)Предупреждение: директория .claude не найдена$(RESET)"; \
 		exit 0; \
 	fi; \
 	for dir in commands skills agents; do \
 		if [ -d ".claude/$$dir" ]; then \
-			echo "  $(GREEN)✓$(RESET) .claude/$$dir exists"; \
+			echo "  $(GREEN)✓$(RESET) .claude/$$dir существует"; \
 			count=$$(find ".claude/$$dir" -name "*.md" -type f | wc -l | tr -d ' '); \
-			echo "    Found $$count markdown files"; \
+			echo "    Найдено $$count markdown файлов"; \
 		else \
-			echo "  $(YELLOW)○$(RESET) .claude/$$dir not found (optional)"; \
+			echo "  $(YELLOW)○$(RESET) .claude/$$dir не найден (опционально)"; \
 		fi; \
 	done; \
 	echo ""; \
-	echo "$(CYAN)Checking markdown syntax...$(RESET)"; \
+	echo "$(CYAN)Проверка markdown синтаксиса...$(RESET)"; \
 	find .claude -name "*.md" -type f | while read file; do \
 		if head -1 "$$file" | grep -q "^#\|^---"; then \
 			echo "  $(GREEN)✓$(RESET) $$file"; \
 		else \
-			echo "  $(YELLOW)?$(RESET) $$file (no header found)"; \
+			echo "  $(YELLOW)?$(RESET) $$file (заголовок не найден)"; \
 		fi; \
 	done; \
 	echo ""
 
 # =============================================================================
-# Upgrade
+# Обновление
 # =============================================================================
 
-upgrade: ## Force upgrade Claude components (creates backup)
+upgrade: ## Принудительное обновление компонентов Claude (создает резервную копию)
 	@./bin/acc upgrade
 
 # =============================================================================
-# Testing
+# Тестирование
 # =============================================================================
 
-test: ## Install package in test environment (tests/)
+test: ## Установка пакета в тестовое окружение (tests/)
 	@echo ""
-	@echo "$(CYAN)Installing package in test environment...$(RESET)"
+	@echo "$(CYAN)Установка пакета в тестовое окружение...$(RESET)"
 	@cd tests && docker compose run --rm php composer install --no-interaction
 	@echo ""
-	@echo "$(GREEN)Done! Check tests/.claude/ for installed components$(RESET)"
+	@echo "$(GREEN)Готово! Проверьте tests/.claude/ для установленных компонентов$(RESET)"
 	@echo ""
 
-test-clear: ## Clear test environment (remove vendor, .claude)
+test-clear: ## Очистка тестового окружения (удаление vendor, .claude)
 	@echo ""
-	@echo "$(CYAN)Clearing test environment...$(RESET)"
+	@echo "$(CYAN)Очистка тестового окружения...$(RESET)"
 	@rm -rf tests/vendor tests/composer.lock tests/.claude
-	@echo "$(GREEN)Done!$(RESET)"
+	@echo "$(GREEN)Готово!$(RESET)"
 	@echo ""
 
 # =============================================================================
-# Release
+# Релиз
 # =============================================================================
 
-changelog: ## Generate changelog from git commits
+changelog: ## Генерация changelog из git коммитов
 	@echo ""
 	@echo "$(CYAN)Changelog:$(RESET)"
 	@echo ""
 	@git log --oneline --no-merges HEAD~10..HEAD 2>/dev/null || git log --oneline --no-merges -10
 	@echo ""
 
-release: validate-claude ## Prepare release (run checks)
+release: validate-claude ## Подготовка релиза (запуск проверок)
 	@echo ""
-	@echo "$(GREEN)All checks passed!$(RESET)"
+	@echo "$(GREEN)Все проверки пройдены!$(RESET)"
 	@echo ""
-	@echo "$(CYAN)To create a release:$(RESET)"
-	@echo "  1. Update version in composer.json (if needed)"
+	@echo "$(CYAN)Для создания релиза:$(RESET)"
+	@echo "  1. Обновите версию в composer.json (при необходимости)"
 	@echo "  2. git add -A && git commit -m 'Release vX.Y.Z'"
 	@echo "  3. git tag vX.Y.Z"
 	@echo "  4. git push origin master --tags"

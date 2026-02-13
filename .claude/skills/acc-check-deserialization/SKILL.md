@@ -1,15 +1,15 @@
 ---
 name: acc-check-deserialization
-description: Analyzes PHP code for insecure deserialization. Detects unserialize with user input, missing allowed_classes, PHP object injection risks, gadget chains.
+description: Анализирует PHP-код на небезопасную десериализацию. Обнаруживает unserialize с пользовательским вводом, отсутствие allowed_classes, риски PHP object injection, цепочки гаджетов.
 ---
 
-# Insecure Deserialization Security Check
+# Проверка безопасности десериализации
 
-Analyze PHP code for insecure deserialization vulnerabilities (OWASP A08:2021).
+Анализ PHP-кода на уязвимости небезопасной десериализации (OWASP A08:2021).
 
-## Detection Patterns
+## Паттерны обнаружения
 
-### 1. Unserialize with User Input
+### 1. Unserialize с пользовательским вводом
 
 ```php
 // CRITICAL: Direct user input
@@ -25,7 +25,7 @@ $content = file_get_contents($_FILES['import']['tmp_name']);
 $data = unserialize($content);
 ```
 
-### 2. Missing allowed_classes Option
+### 2. Отсутствие опции allowed_classes
 
 ```php
 // CRITICAL: No allowed_classes restriction (PHP 7+)
@@ -44,7 +44,7 @@ $data = unserialize($serialized, [
 ]);
 ```
 
-### 3. Gadget Chain Triggers
+### 3. Триггеры цепочек гаджетов
 
 ```php
 // VULNERABLE: Classes with dangerous magic methods
@@ -94,7 +94,7 @@ class CommandRunner
 }
 ```
 
-### 4. Database-Stored Serialized Data
+### 4. Сериализованные данные из БД
 
 ```php
 // CRITICAL: Trusting database content
@@ -106,7 +106,7 @@ $settings = unserialize($row['settings']);
 $sessionData = unserialize($redis->get('session:' . $sessionId));
 ```
 
-### 5. Phar Deserialization
+### 5. Десериализация через Phar
 
 ```php
 // CRITICAL: Phar metadata triggers unserialize
@@ -123,7 +123,7 @@ fopen('phar://' . $filename, 'r');
 include 'phar://' . $plugin . '/bootstrap.php';
 ```
 
-### 6. Base64-Encoded Serialized Data
+### 6. Base64-кодированные сериализованные данные
 
 ```php
 // CRITICAL: Common pattern to hide serialized data
@@ -137,7 +137,7 @@ $sessionData = unserialize(base64_decode($_COOKIE['session']));
 $auth = unserialize(base64_decode($request->header('X-Auth-Data')));
 ```
 
-### 7. JSON with Object Mapping
+### 7. JSON с маппингом объектов
 
 ```php
 // POTENTIALLY VULNERABLE: JSON to object without validation
@@ -152,7 +152,7 @@ $object = (new UserDTO())->fromArray(json_decode($json, true));
 $user = $this->serializer->deserialize($json, 'object', 'json');
 ```
 
-### 8. Cache Deserialization
+### 8. Десериализация из кэша
 
 ```php
 // CRITICAL: Cache poisoning leads to object injection
@@ -165,7 +165,7 @@ $cached = file_get_contents("/tmp/cache/{$key}.cache");
 $data = unserialize($cached);
 ```
 
-### 9. Framework-Specific Patterns
+### 9. Фреймворк-специфичные паттерны
 
 ```php
 // CRITICAL: Laravel signed URLs without validation
@@ -185,7 +185,7 @@ class MySessionHandler implements SessionHandlerInterface
 }
 ```
 
-### 10. RPC/IPC Serialization
+### 10. Сериализация RPC/IPC
 
 ```php
 // CRITICAL: Inter-process communication
@@ -198,7 +198,7 @@ $job = unserialize($queue->pop());
 $data = unserialize(socket_read($socket, 1024));
 ```
 
-## Grep Patterns
+## Grep-паттерны
 
 ```bash
 # unserialize calls
@@ -217,9 +217,9 @@ Grep: "__wakeup|__destruct|__toString|__call\s*\(" --glob "**/*.php"
 Grep: "unserialize\s*\([^)]+\)\s*;" --glob "**/*.php"
 ```
 
-## Secure Patterns
+## Безопасные паттерны
 
-### Use JSON Instead
+### Используйте JSON вместо serialize
 
 ```php
 // SECURE: JSON for data interchange
@@ -232,7 +232,7 @@ if (!isset($data['expected_field'])) {
 }
 ```
 
-### Restrict allowed_classes
+### Ограничение allowed_classes
 
 ```php
 // SECURE: Only allow specific classes
@@ -247,7 +247,7 @@ $data = unserialize($serialized, ['allowed_classes' => $allowed]);
 $data = unserialize($serialized, ['allowed_classes' => false]);
 ```
 
-### Signature Verification
+### Проверка подписи
 
 ```php
 // SECURE: Sign serialized data
@@ -284,7 +284,7 @@ final class SecureSerializer
 }
 ```
 
-### Use Typed DTOs
+### Используйте типизированные DTO
 
 ```php
 // SECURE: Manual mapping to DTO
@@ -311,7 +311,7 @@ $data = json_decode($input, true);
 $request = CreateUserRequest::fromArray($data);
 ```
 
-### Disable Phar Wrapper
+### Отключение обёртки Phar
 
 ```php
 // In php.ini
@@ -326,41 +326,41 @@ if (pathinfo($file, PATHINFO_EXTENSION) === 'phar') {
 }
 ```
 
-## Severity Classification
+## Классификация серьёзности
 
-| Pattern | Severity | CWE |
-|---------|----------|-----|
-| unserialize($_GET/$_POST) | 🔴 Critical | CWE-502 |
-| unserialize without allowed_classes | 🔴 Critical | CWE-502 |
-| Phar with user-controlled path | 🔴 Critical | CWE-502 |
-| Classes with dangerous __destruct | 🟠 Major | CWE-502 |
-| Cache/DB deserialization | 🟠 Major | CWE-502 |
-| Missing signature verification | 🟡 Minor | CWE-502 |
+| Паттерн | Серьёзность | CWE |
+|---------|-------------|-----|
+| unserialize($_GET/$_POST) | Critical | CWE-502 |
+| unserialize без allowed_classes | Critical | CWE-502 |
+| Phar с пользовательским путём | Critical | CWE-502 |
+| Классы с опасным __destruct | Major | CWE-502 |
+| Десериализация из кэша/БД | Major | CWE-502 |
+| Отсутствие проверки подписи | Minor | CWE-502 |
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### Insecure Deserialization: [Description]
+### Небезопасная десериализация: [Описание]
 
-**Severity:** 🔴 Critical
-**Location:** `file.php:line`
+**Серьёзность:** Critical
+**Расположение:** `file.php:line`
 **CWE:** CWE-502 (Deserialization of Untrusted Data)
 
-**Issue:**
-User-controlled data is deserialized without restrictions, allowing object injection.
+**Проблема:**
+Пользовательские данные десериализуются без ограничений, что позволяет внедрение объектов.
 
-**Attack Vector:**
-1. Attacker crafts serialized payload with gadget chain
-2. Payload triggers __destruct() that writes to file
-3. Attacker achieves remote code execution
+**Вектор атаки:**
+1. Атакующий создаёт сериализованный payload с цепочкой гаджетов
+2. Payload вызывает __destruct(), который записывает в файл
+3. Атакующий получает удалённое выполнение кода
 
-**Code:**
+**Код:**
 ```php
 // Vulnerable
 $data = unserialize($_POST['data']);
 ```
 
-**Fix:**
+**Исправление:**
 ```php
 // Secure: Use JSON or restrict classes
 $data = json_decode($_POST['data'], true);
@@ -371,7 +371,7 @@ $data = unserialize($payload, [
 ]);
 ```
 
-**References:**
+**Ссылки:**
 - [OWASP Deserialization](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/15-Testing_for_HTTP_Incoming_Requests)
 - [PHP Object Injection](https://owasp.org/www-community/vulnerabilities/PHP_Object_Injection)
 ```

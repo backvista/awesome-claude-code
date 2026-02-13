@@ -1,22 +1,22 @@
 ---
 name: acc-create-psr20-clock
-description: Generates PSR-20 Clock implementation for PHP 8.2. Creates ClockInterface implementations including SystemClock, FrozenClock, and OffsetClock for time abstraction and testing. Includes unit tests.
+description: Генерирует реализацию PSR-20 Clock для PHP 8.2. Создаёт реализации ClockInterface, включая SystemClock, FrozenClock и OffsetClock для абстракции времени и тестирования. Включает модульные тесты.
 ---
 
-# PSR-20 Clock Generator
+# Генератор PSR-20 Clock
 
-## Overview
+## Обзор
 
-Generates PSR-20 compliant clock implementations for time abstraction.
+Генерирует PSR-20-совместимые реализации часов для абстракции времени.
 
-## When to Use
+## Когда использовать
 
-- Time-dependent business logic
-- Testing time-sensitive code
-- Scheduling and time calculations
-- Reproducible time behavior
+- Бизнес-логика, зависящая от времени
+- Тестирование кода, чувствительного к времени
+- Планирование и расчёты с временем
+- Воспроизводимое поведение по времени
 
-## Template: Clock Interface
+## Шаблон: Интерфейс Clock
 
 ```php
 <?php
@@ -33,7 +33,7 @@ interface ClockInterface
 }
 ```
 
-## Template: System Clock
+## Шаблон: Системные часы
 
 ```php
 <?php
@@ -65,7 +65,7 @@ final readonly class SystemClock implements ClockInterface
 }
 ```
 
-## Template: Frozen Clock (Testing)
+## Шаблон: Замороженные часы (для тестирования)
 
 ```php
 <?php
@@ -106,7 +106,7 @@ final class FrozenClock implements ClockInterface
 }
 ```
 
-## Template: Offset Clock
+## Шаблон: Часы со смещением
 
 ```php
 <?php
@@ -159,7 +159,7 @@ final readonly class OffsetClock implements ClockInterface
 }
 ```
 
-## Template: Monotonic Clock
+## Шаблон: Монотонные часы
 
 ```php
 <?php
@@ -196,7 +196,7 @@ final class MonotonicClock implements ClockInterface
 }
 ```
 
-## Template: Unit Test
+## Шаблон: Модульный тест
 
 ```php
 <?php
@@ -283,7 +283,7 @@ final class ClockTest extends TestCase
 }
 ```
 
-## Usage Example
+## Пример использования
 
 ```php
 <?php
@@ -321,18 +321,18 @@ final readonly class SubscriptionService
 }
 ```
 
-## File Placement
+## Размещение файлов
 
-| Component | Path |
+| Компонент | Путь |
 |-----------|------|
-| Clock Interface | `src/Infrastructure/Clock/ClockInterface.php` |
-| System Clock | `src/Infrastructure/Clock/SystemClock.php` |
-| Frozen Clock | `src/Infrastructure/Clock/FrozenClock.php` |
-| Offset Clock | `src/Infrastructure/Clock/OffsetClock.php` |
-| Monotonic Clock | `src/Infrastructure/Clock/MonotonicClock.php` |
-| Tests | `tests/Unit/Infrastructure/Clock/` |
+| Интерфейс Clock | `src/Infrastructure/Clock/ClockInterface.php` |
+| Системные часы | `src/Infrastructure/Clock/SystemClock.php` |
+| Замороженные часы | `src/Infrastructure/Clock/FrozenClock.php` |
+| Часы со смещением | `src/Infrastructure/Clock/OffsetClock.php` |
+| Монотонные часы | `src/Infrastructure/Clock/MonotonicClock.php` |
+| Тесты | `tests/Unit/Infrastructure/Clock/` |
 
-## Requirements
+## Требования
 
 ```json
 {

@@ -1,22 +1,22 @@
 ---
-description: Comprehensive architecture audit with pattern recommendations. Detects DDD, CQRS, Clean/Hexagonal/Layered Architecture, Event Sourcing, EDA, Outbox, Saga, Stability, GoF Structural (Adapter, Facade, Proxy, Composite, Bridge, Flyweight), and Behavioral (Strategy, State, Chain, Decorator, Null Object, Template Method, Visitor, Iterator, Memento) patterns. Provides actionable recommendations with links to generation skills.
+description: Комплексный аудит архитектуры с рекомендациями по паттернам. Обнаруживает DDD, CQRS, Clean/Hexagonal/Layered Architecture, Event Sourcing, EDA, Outbox, Saga, Stability, GoF Structural (Adapter, Facade, Proxy, Composite, Bridge, Flyweight) и Behavioral (Strategy, State, Chain, Decorator, Null Object, Template Method, Visitor, Iterator, Memento) паттерны. Предоставляет практические рекомендации со ссылками на навыки генерации.
 allowed-tools: Read, Grep, Glob, Bash, Task
 model: opus
-argument-hint: <path> [-- additional instructions]
+argument-hint: <path> [-- дополнительные инструкции]
 ---
 
-# Architecture Audit Command
+# Команда аудита архитектуры
 
-Perform a comprehensive architecture audit with actionable pattern recommendations.
+Выполняет комплексный аудит архитектуры с практическими рекомендациями по паттернам.
 
-## Input Parsing
+## Парсинг входных данных
 
-Parse `$ARGUMENTS` to extract path and optional meta-instructions:
+Парсит `$ARGUMENTS` для извлечения пути и опциональных мета-инструкций:
 
 ```
-Format: <path> [-- <meta-instructions>]
+Формат: <path> [-- <мета-инструкции>]
 
-Examples:
+Примеры:
 - /acc-audit-architecture ./src
 - /acc-audit-architecture ./src -- focus on CQRS and Event Sourcing
 - /acc-audit-architecture ./src -- skip stability patterns, check DDD only
@@ -24,41 +24,41 @@ Examples:
 - /acc-audit-architecture ./src -- only structural audit (DDD, Clean, SOLID)
 ```
 
-**Parsing rules:**
-1. Split `$ARGUMENTS` by ` -- ` (space-dash-dash-space)
-2. First part = **path** (required, default: current directory)
-3. Second part = **meta-instructions** (optional, additional focus/filters)
+**Правила парсинга:**
+1. Разделить `$ARGUMENTS` по ` -- ` (пробел-тире-тире-пробел)
+2. Первая часть = **path** (обязательно, по умолчанию: текущая директория)
+3. Вторая часть = **мета-инструкции** (опционально, дополнительный фокус/фильтры)
 
-## Target
+## Цель
 
-- **Path**: First part of `$ARGUMENTS` (before `--`)
-- **Meta-instructions**: Second part (after `--`) — use to customize audit scope
+- **Path**: Первая часть `$ARGUMENTS` (до `--`)
+- **Мета-инструкции**: Вторая часть (после `--`) — используется для настройки области аудита
 
-If meta-instructions provided, adjust audit to:
-- Focus on specific patterns/auditors mentioned
-- Skip certain auditors if requested (structural/behavioral/integration)
-- Apply additional checks
-- Modify report format if requested
+Если мета-инструкции указаны, настроить аудит для:
+- Фокуса на конкретных паттернах/аудиторах, упомянутых в инструкциях
+- Пропуска определённых аудиторов по запросу (structural/behavioral/integration)
+- Применения дополнительных проверок
+- Модификации формата отчёта по запросу
 
-## Pre-flight Check
+## Предварительная проверка
 
-1. Verify the path exists:
-   - If `$ARGUMENTS` is empty, ask user for the project path
-   - If path doesn't exist, report error and stop
+1. Проверить существование пути:
+   - Если `$ARGUMENTS` пуст, запросить у пользователя путь к проекту
+   - Если путь не существует, сообщить об ошибке и остановиться
 
-2. Verify it's a PHP project:
-   - Check for `composer.json` or `*.php` files
-   - If not a PHP project, report and stop
+2. Проверить, что это PHP-проект:
+   - Проверить наличие `composer.json` или `*.php` файлов
+   - Если это не PHP-проект, сообщить и остановиться
 
-## Instructions
+## Инструкции
 
-Execute a two-phase audit using specialized agents:
+Выполнить двухфазный аудит с использованием специализированных агентов:
 
-### Phase 1: Architecture Audit
+### Фаза 1: Аудит архитектуры
 
-Extract audit level from meta-instructions: `level:quick`, `level:standard`, `level:deep`. Default: `standard`.
+Извлечь уровень аудита из мета-инструкций: `level:quick`, `level:standard`, `level:deep`. По умолчанию: `standard`.
 
-Use the `acc-architecture-auditor` agent (with audit level and progress tracking) to analyze:
+Использовать агент `acc-architecture-auditor` (с уровнем аудита и отслеживанием прогресса) для анализа:
 - DDD (Domain-Driven Design)
 - CQRS (Command Query Responsibility Segregation)
 - Clean Architecture
@@ -69,139 +69,148 @@ Use the `acc-architecture-auditor` agent (with audit level and progress tracking
 - Outbox Pattern
 - Saga Pattern
 
-### Phase 2: Design Patterns Audit
+### Фаза 2: Аудит паттернов проектирования
 
-Pass to each agent: `"Audit level: [LEVEL]. Use TaskCreate/TaskUpdate for progress visibility."`
+Передать каждому агенту: `"Audit level: [LEVEL]. Use TaskCreate/TaskUpdate for progress visibility."`
 
-Use the `acc-pattern-auditor` agent to analyze:
+Использовать агент `acc-pattern-auditor` для анализа:
 - Stability Patterns (Circuit Breaker, Retry, Rate Limiter, Bulkhead)
 - Behavioral Patterns (Strategy, State, Chain of Responsibility, Decorator, Null Object, Template Method, Visitor, Iterator, Memento)
 - GoF Structural Patterns (Adapter, Facade, Proxy, Composite, Bridge, Flyweight)
 - Creational Patterns (Builder, Object Pool)
 - Enterprise Patterns (Read Model, Policy)
 
-### Phase 3: Generate Recommendations
+### Фаза 3: Генерация рекомендаций
 
-Based on detected issues, map problems to solutions:
+На основе обнаруженных проблем сопоставить проблемы с решениями:
 
-| Issue Type | Pattern | Generation Skill |
+| Тип проблемы | Паттерн | Навык генерации |
 |------------|---------|------------------|
-| External API failures | Circuit Breaker | `acc-create-circuit-breaker` |
-| Transient errors | Retry | `acc-create-retry-pattern` |
-| API rate limits | Rate Limiter | `acc-create-rate-limiter` |
-| Resource exhaustion | Bulkhead | `acc-create-bulkhead` |
-| Message loss risk | Outbox | `acc-create-outbox-pattern` |
-| Distributed transactions | Saga | `acc-create-saga-pattern` |
-| Primitive obsession | Value Object | `acc-create-value-object` |
-| Anemic entities | Entity | `acc-create-entity` |
-| Missing invariants | Aggregate | `acc-create-aggregate` |
-| Complex creation | Factory | `acc-create-factory` |
-| Complex queries | Specification | `acc-create-specification` |
-| Cross-layer data | DTO | `acc-create-dto` |
-| External systems | Anti-Corruption Layer | `acc-create-anti-corruption-layer` |
-| Algorithm switching | Strategy | `acc-create-strategy` |
-| State transitions | State | `acc-create-state` |
-| Request pipelines | Chain of Responsibility | `acc-create-chain-of-responsibility` |
-| Dynamic behavior | Decorator | `acc-create-decorator` |
-| Null checks | Null Object | `acc-create-null-object` |
-| Algorithm skeleton | Template Method | `acc-create-template-method` |
-| Operations on structure | Visitor | `acc-create-visitor` |
-| Collection traversal | Iterator | `acc-create-iterator` |
-| Undo/redo, snapshots | Memento | `acc-create-memento` |
-| Interface incompatibility | Adapter | `acc-create-adapter` |
-| Complex subsystem access | Facade | `acc-create-facade` |
-| Lazy loading, caching | Proxy | `acc-create-proxy` |
-| Tree structures | Composite | `acc-create-composite` |
-| Class explosion | Bridge | `acc-create-bridge` |
-| Repeated immutable objects | Flyweight | `acc-create-flyweight` |
-| Complex construction | Builder | `acc-create-builder` |
-| Expensive resources | Object Pool | `acc-create-object-pool` |
-| Query optimization | Read Model | `acc-create-read-model` |
-| Authorization rules | Policy | `acc-create-policy` |
+| Сбои внешних API | Circuit Breaker | `acc-create-circuit-breaker` |
+| Временные ошибки | Retry | `acc-create-retry-pattern` |
+| Лимиты API | Rate Limiter | `acc-create-rate-limiter` |
+| Исчерпание ресурсов | Bulkhead | `acc-create-bulkhead` |
+| Риск потери сообщений | Outbox | `acc-create-outbox-pattern` |
+| Распределённые транзакции | Saga | `acc-create-saga-pattern` |
+| Примитивная одержимость | Value Object | `acc-create-value-object` |
+| Анемичные сущности | Entity | `acc-create-entity` |
+| Отсутствие инвариантов | Aggregate | `acc-create-aggregate` |
+| Сложное создание | Factory | `acc-create-factory` |
+| Сложные запросы | Specification | `acc-create-specification` |
+| Данные между слоями | DTO | `acc-create-dto` |
+| Внешние системы | Anti-Corruption Layer | `acc-create-anti-corruption-layer` |
+| Переключение алгоритмов | Strategy | `acc-create-strategy` |
+| Переходы состояний | State | `acc-create-state` |
+| Конвейеры запросов | Chain of Responsibility | `acc-create-chain-of-responsibility` |
+| Динамическое поведение | Decorator | `acc-create-decorator` |
+| Проверки на null | Null Object | `acc-create-null-object` |
+| Скелет алгоритма | Template Method | `acc-create-template-method` |
+| Операции над структурой | Visitor | `acc-create-visitor` |
+| Обход коллекции | Iterator | `acc-create-iterator` |
+| Отмена/повтор, снимки | Memento | `acc-create-memento` |
+| Несовместимость интерфейсов | Adapter | `acc-create-adapter` |
+| Доступ к сложной подсистеме | Facade | `acc-create-facade` |
+| Ленивая загрузка, кеширование | Proxy | `acc-create-proxy` |
+| Древовидные структуры | Composite | `acc-create-composite` |
+| Взрыв классов | Bridge | `acc-create-bridge` |
+| Повторяющиеся неизменяемые объекты | Flyweight | `acc-create-flyweight` |
+| Сложная конструкция | Builder | `acc-create-builder` |
+| Дорогие ресурсы | Object Pool | `acc-create-object-pool` |
+| Оптимизация запросов | Read Model | `acc-create-read-model` |
+| Правила авторизации | Policy | `acc-create-policy` |
 
-## Expected Output
+## Ожидаемый результат
 
-A structured markdown report containing:
+Структурированный markdown-отчёт, содержащий:
 
-### 1. Executive Summary
-- Overall architecture health score
-- Detected patterns overview
-- Critical issues count
+### 1. Краткая сводка
 
-### 2. Pattern Detection Matrix
-| Pattern | Detected | Compliance | Status |
+- Общий показатель здоровья архитектуры
+- Обзор обнаруженных паттернов
+- Количество критичных проблем
+
+### 2. Матрица обнаружения паттернов
+
+| Паттерн | Обнаружен | Соответствие | Статус |
 |---------|----------|------------|--------|
 
-### 3. Critical Issues
-Issues requiring immediate attention with:
-- File locations
-- Code snippets
-- Severity level
-- Fix recommendations
+### 3. Критичные проблемы
 
-### 4. Warnings
-Best practice violations with improvement suggestions.
+Проблемы, требующие немедленного внимания, с:
+- Расположением файлов
+- Фрагментами кода
+- Уровнем критичности
+- Рекомендациями по исправлению
 
-### 5. Cross-Pattern Analysis
-Conflicts between architectural patterns.
+### 4. Предупреждения
 
-### 6. Pattern Recommendations
+Нарушения лучших практик с предложениями по улучшению.
 
-**Actionable recommendations linking issues to solutions:**
+### 5. Кросс-паттерн анализ
 
-#### Resilience Improvements
-| Problem Found | Recommended | Skill to Use |
+Конфликты между архитектурными паттернами.
+
+### 6. Рекомендации по паттернам
+
+**Практические рекомендации, связывающие проблемы с решениями:**
+
+#### Улучшения отказоустойчивости
+
+| Обнаруженная проблема | Рекомендуется | Навык для использования |
 |---------------|-------------|--------------|
-| [Specific issue] | Circuit Breaker | Run `/acc-create-circuit-breaker` |
+| [Конкретная проблема] | Circuit Breaker | Запустите `/acc-create-circuit-breaker` |
 
-#### Integration Improvements
-| Problem Found | Recommended | Skill to Use |
+#### Улучшения интеграции
+
+| Обнаруженная проблема | Рекомендуется | Навык для использования |
 |---------------|-------------|--------------|
-| [Specific issue] | Outbox Pattern | Run `/acc-create-outbox-pattern` |
+| [Конкретная проблема] | Outbox Pattern | Запустите `/acc-create-outbox-pattern` |
 
-#### DDD Improvements
-| Problem Found | Recommended | Skill to Use |
+#### Улучшения DDD
+
+| Обнаруженная проблема | Рекомендуется | Навык для использования |
 |---------------|-------------|--------------|
-| [Specific issue] | Value Object | Run `/acc-create-value-object` |
+| [Конкретная проблема] | Value Object | Запустите `/acc-create-value-object` |
 
-### 7. Prioritized Action Items
-1. **Critical:** [Action with skill reference]
-2. **High:** [Action with skill reference]
-3. **Medium:** [Action with skill reference]
+### 7. Приоритизированные задачи
 
-## Audit Levels
+1. **Критично:** [Действие со ссылкой на навык]
+2. **Высоко:** [Действие со ссылкой на навык]
+3. **Средне:** [Действие со ссылкой на навык]
 
-Extract audit level from meta-instructions: `level:quick`, `level:standard`, `level:deep`. Default: `standard`.
+## Уровни аудита
 
-| Level | Scope | What's Checked |
+Извлечь уровень аудита из мета-инструкций: `level:quick`, `level:standard`, `level:deep`. По умолчанию: `standard`.
+
+| Уровень | Область | Что проверяется |
 |-------|-------|----------------|
-| `quick` | Layer detection | Architecture type detection, basic layer compliance |
-| `standard` | Full pattern analysis | All architecture + design patterns, compliance matrix |
-| `deep` | Standard + cross-analysis | Standard + cross-pattern conflicts, opportunity detection, SOLID/GRASP |
+| `quick` | Обнаружение слоёв | Определение типа архитектуры, базовое соответствие слоёв |
+| `standard` | Полный анализ паттернов | Все архитектурные + паттерны проектирования, матрица соответствия |
+| `deep` | Standard + кросс-анализ | Standard + конфликты между паттернами, обнаружение возможностей, SOLID/GRASP |
 
-## Severity Levels
+## Уровни критичности
 
-| Level | Symbol | Criteria |
+| Уровень | Символ | Критерий |
 |-------|--------|----------|
-| Critical | 🔴 | Domain → Infrastructure dependency, framework leakage into Domain |
-| High | 🟠 | Missing resilience patterns, unprotected external calls, anemic models |
-| Medium | 🟡 | Suboptimal pattern usage, missing opportunities |
-| Low | 🟢 | Style improvements, optional pattern suggestions |
+| Критичный | 🔴 | Зависимость Domain → Infrastructure, утечка фреймворка в Domain |
+| Высокий | 🟠 | Отсутствие паттернов отказоустойчивости, незащищённые внешние вызовы, анемичные модели |
+| Средний | 🟡 | Неоптимальное использование паттернов, упущенные возможности |
+| Низкий | 🟢 | Улучшения стиля, опциональные предложения паттернов |
 
-## Meta-Instructions Guide
+## Руководство по мета-инструкциям
 
-| Instruction | Effect |
+| Инструкция | Эффект |
 |-------------|--------|
-| `focus on CQRS` | Deep CQRS/Event Sourcing analysis |
-| `focus on stability` | Prioritize stability patterns |
-| `structural only` | Only DDD/Clean/Hexagonal audit |
-| `skip behavioral` | Exclude behavioral patterns |
-| `level:quick` | Fast audit (layer detection only) |
-| `level:deep` | Deep audit (+ cross-pattern conflicts) |
-| `detailed report` | Maximum detail in report |
-| `на русском` | Report in Russian |
+| `focus on CQRS` | Глубокий анализ CQRS/Event Sourcing |
+| `focus on stability` | Приоритет паттернам отказоустойчивости |
+| `structural only` | Только аудит DDD/Clean/Hexagonal |
+| `skip behavioral` | Исключить поведенческие паттерны |
+| `level:quick` | Быстрый аудит (только обнаружение слоёв) |
+| `level:deep` | Глубокий аудит (+ конфликты между паттернами) |
+| `detailed report` | Максимальная детализация в отчёте |
+| `на русском` | Отчёт на русском языке |
 
-## Usage Examples
+## Примеры использования
 
 ```bash
 /acc-audit-architecture ./src
@@ -209,4 +218,3 @@ Extract audit level from meta-instructions: `level:quick`, `level:standard`, `le
 /acc-audit-architecture ./src -- level:deep
 /acc-audit-architecture ./src -- level:quick
 ```
-

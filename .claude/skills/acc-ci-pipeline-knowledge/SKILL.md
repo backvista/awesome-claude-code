@@ -1,13 +1,13 @@
 ---
 name: acc-ci-pipeline-knowledge
-description: CI/CD pipeline knowledge base. Provides platforms overview (GitHub Actions, GitLab CI), pipeline stages, caching strategies, parallelization, artifact management, and environment management.
+description: База знаний CI/CD-пайплайнов. Содержит обзор платформ (GitHub Actions, GitLab CI), этапы пайплайна, стратегии кеширования, параллелизацию, управление артефактами и окружениями.
 ---
 
-# CI/CD Pipeline Knowledge Base
+# База знаний CI/CD-пайплайнов
 
-Quick reference for CI/CD pipeline patterns, platforms, and best practices.
+Краткий справочник по паттернам, платформам и лучшим практикам CI/CD-пайплайнов.
 
-## Pipeline Stages
+## Этапы пайплайна
 
 ```
 ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
@@ -17,27 +17,27 @@ Quick reference for CI/CD pipeline patterns, platforms, and best practices.
      Cache           PHPStan            Coverage          Artifacts         Environments
 ```
 
-**Standard PHP Pipeline:**
-1. **Install** — Composer dependencies, cache restore
+**Стандартный PHP-пайплайн:**
+1. **Install** — зависимости Composer, восстановление кеша
 2. **Lint** — PHPStan, Psalm, PHP-CS-Fixer, DEPTRAC
-3. **Test** — PHPUnit, code coverage, mutation testing
-4. **Build** — Docker image, version tagging
-5. **Deploy** — Environment deployment, health checks
+3. **Test** — PHPUnit, покрытие кода, мутационное тестирование
+4. **Build** — Docker-образ, тегирование версий
+5. **Deploy** — деплой в окружение, проверки здоровья
 
-## Platform Comparison
+## Сравнение платформ
 
-| Feature | GitHub Actions | GitLab CI |
+| Возможность | GitHub Actions | GitLab CI |
 |---------|----------------|-----------|
-| Config file | `.github/workflows/*.yml` | `.gitlab-ci.yml` |
-| Runners | GitHub-hosted / self-hosted | GitLab-hosted / self-hosted |
-| Caching | `actions/cache` | Built-in `cache:` |
-| Artifacts | `actions/upload-artifact` | Built-in `artifacts:` |
-| Secrets | Repository/Environment secrets | CI/CD Variables |
-| Matrix builds | `strategy.matrix` | `parallel:matrix` |
-| Reusable | Composite actions, workflows | `include:`, `extends:` |
-| Container | `container:` | `image:` |
+| Файл конфигурации | `.github/workflows/*.yml` | `.gitlab-ci.yml` |
+| Раннеры | GitHub-hosted / self-hosted | GitLab-hosted / self-hosted |
+| Кеширование | `actions/cache` | Встроенный `cache:` |
+| Артефакты | `actions/upload-artifact` | Встроенный `artifacts:` |
+| Секреты | Repository/Environment secrets | CI/CD Variables |
+| Матричные сборки | `strategy.matrix` | `parallel:matrix` |
+| Переиспользование | Composite actions, workflows | `include:`, `extends:` |
+| Контейнеры | `container:` | `image:` |
 
-## GitHub Actions Structure
+## Структура GitHub Actions
 
 ```yaml
 name: CI Pipeline
@@ -91,7 +91,7 @@ jobs:
       - uses: codecov/codecov-action@v4
 ```
 
-## GitLab CI Structure
+## Структура GitLab CI
 
 ```yaml
 stages:
@@ -148,9 +148,9 @@ test:unit:
         path: coverage.xml
 ```
 
-## Caching Strategies
+## Стратегии кеширования
 
-### Composer Cache
+### Кеш Composer
 
 **GitHub Actions:**
 ```yaml
@@ -177,7 +177,7 @@ cache:
   policy: pull-push  # pull on jobs, push on install
 ```
 
-### Docker Layer Cache
+### Кеш Docker-слоёв
 
 **GitHub Actions:**
 ```yaml
@@ -199,9 +199,9 @@ build:
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
 ```
 
-## Parallelization Patterns
+## Паттерны параллелизации
 
-### Matrix Strategy (GitHub Actions)
+### Матричная стратегия (GitHub Actions)
 
 ```yaml
 test:
@@ -218,7 +218,7 @@ test:
     - run: echo "Testing PHP ${{ matrix.php }} with ${{ matrix.database }}"
 ```
 
-### Parallel Jobs (GitLab CI)
+### Параллельные задания (GitLab CI)
 
 ```yaml
 test:
@@ -230,7 +230,7 @@ test:
     - echo "Testing PHP $PHP_VERSION with $DATABASE"
 ```
 
-### Test Splitting
+### Разделение тестов
 
 ```yaml
 # Split PHPUnit tests across runners
@@ -240,9 +240,9 @@ test:
     - vendor/bin/phpunit --testsuite unit --filter "Test$((($CI_NODE_INDEX - 1) * 25 + 1))-$(($CI_NODE_INDEX * 25))"
 ```
 
-## Environment Management
+## Управление окружениями
 
-### GitHub Environments
+### Окружения GitHub
 
 ```yaml
 deploy-production:
@@ -257,7 +257,7 @@ deploy-production:
       run: ./deploy.sh
 ```
 
-### GitLab Environments
+### Окружения GitLab
 
 ```yaml
 deploy:production:
@@ -271,9 +271,9 @@ deploy:production:
     - ./deploy.sh
 ```
 
-## Artifact Management
+## Управление артефактами
 
-### Test Reports
+### Отчёты о тестах
 
 **GitHub Actions:**
 ```yaml
@@ -303,20 +303,20 @@ test:
     expire_in: 30 days
 ```
 
-## Pipeline Optimization Checklist
+## Чек-лист оптимизации пайплайна
 
-| Optimization | Impact | Implementation |
+| Оптимизация | Эффект | Реализация |
 |-------------|--------|----------------|
-| Dependency caching | ⬇️ 2-5 min | Cache composer, npm |
-| Docker layer caching | ⬇️ 3-10 min | BuildKit cache |
-| Parallel jobs | ⬇️ 50-80% | Matrix, split tests |
-| Skip unchanged | ⬇️ Variable | Path filters, needs |
-| Smaller images | ⬇️ 1-3 min | Alpine, multi-stage |
-| Fail fast | ⬇️ Variable | Early exit on errors |
+| Кеширование зависимостей | ⬇️ 2-5 мин | Кеш composer, npm |
+| Кеширование Docker-слоёв | ⬇️ 3-10 мин | BuildKit cache |
+| Параллельные задания | ⬇️ 50-80% | Matrix, разделение тестов |
+| Пропуск неизменённого | ⬇️ Варьируется | Фильтры путей, needs |
+| Лёгкие образы | ⬇️ 1-3 мин | Alpine, multi-stage |
+| Быстрый отказ | ⬇️ Варьируется | Ранний выход при ошибках |
 
-## Common Pipeline Patterns
+## Распространённые паттерны пайплайнов
 
-### 1. Monorepo Pipeline
+### 1. Пайплайн для монорепозитория
 
 ```yaml
 # Only run when specific paths change
@@ -338,7 +338,7 @@ on:
     # Run full pipeline with deploy
 ```
 
-### 3. Scheduled Security Scans
+### 3. Запланированные проверки безопасности
 
 ```yaml
 on:
@@ -347,7 +347,7 @@ on:
   workflow_dispatch:  # Manual trigger
 ```
 
-### 4. Release Workflow
+### 4. Рабочий процесс релиза
 
 ```yaml
 on:
@@ -361,30 +361,30 @@ jobs:
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 ```
 
-## Best Practices
+## Лучшие практики
 
-### DO
+### РЕКОМЕНДУЕТСЯ
 
-- ✅ Cache dependencies aggressively
-- ✅ Use specific action versions (`@v4`, not `@latest`)
-- ✅ Fail fast in PR pipelines
-- ✅ Run security scans on schedule
-- ✅ Use environments for deployment gates
-- ✅ Store secrets in vault, not code
+- ✅ Агрессивно кешировать зависимости
+- ✅ Использовать конкретные версии actions (`@v4`, не `@latest`)
+- ✅ Быстрый отказ в PR-пайплайнах
+- ✅ Запускать проверки безопасности по расписанию
+- ✅ Использовать окружения как шлюзы для деплоя
+- ✅ Хранить секреты в хранилище, не в коде
 
-### DON'T
+### НЕ РЕКОМЕНДУЕТСЯ
 
-- ❌ Run full pipeline on every commit
-- ❌ Install dependencies in every job
-- ❌ Use mutable tags for Docker images
-- ❌ Expose secrets in logs
-- ❌ Skip tests for "quick fixes"
-- ❌ Deploy without health checks
+- ❌ Запускать полный пайплайн на каждом коммите
+- ❌ Устанавливать зависимости в каждом задании
+- ❌ Использовать изменяемые теги для Docker-образов
+- ❌ Выводить секреты в логи
+- ❌ Пропускать тесты для «быстрых исправлений»
+- ❌ Деплоить без проверок здоровья
 
-## References
+## Справочные материалы
 
-For detailed information, load these reference files:
+Детальная информация в справочных файлах:
 
-- `references/github-actions.md` — GitHub Actions deep dive
-- `references/gitlab-ci.md` — GitLab CI configuration
-- `references/caching.md` — Caching strategies and patterns
+- `references/github-actions.md` — Глубокое погружение в GitHub Actions
+- `references/gitlab-ci.md` — Конфигурация GitLab CI
+- `references/caching.md` — Стратегии и паттерны кеширования

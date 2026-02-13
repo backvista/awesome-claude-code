@@ -5,44 +5,44 @@ paths:
   - .claude/skills/**/SKILL.md
 ---
 
-# Adding Components
+# Создание компонентов
 
-## Command (`.claude/commands/acc-name.md`)
+## Команда (`.claude/commands/acc-name.md`)
 
 ```yaml
 ---
-description: Required (shown in /help)
-allowed-tools: Optional (e.g. "Read, Grep, Glob, Bash, Task")
-model: Optional (sonnet|haiku|opus — opus for coordinators)
-argument-hint: Optional (e.g. "<path> [-- instructions]")
+description: Обязательное поле (отображается в /help)
+allowed-tools: Опционально (например, "Read, Grep, Glob, Bash, Task")
+model: Опционально (sonnet|haiku|opus — opus для координаторов)
+argument-hint: Опционально (например, "<path> [-- instructions]")
 ---
 ```
 
-Commands parse `$ARGUMENTS` for input. The `--` separator passes meta-instructions. Always specify `model:` explicitly (`sonnet` for most, `opus` for coordinators).
+Команды парсят `$ARGUMENTS` для ввода. Разделитель `--` передает мета-инструкции. Всегда явно указывайте `model:` (`sonnet` для большинства, `opus` для координаторов).
 
-## Agent (`.claude/agents/acc-name.md`)
+## Агент (`.claude/agents/acc-name.md`)
 
 ```yaml
 ---
-name: Required (matches filename without .md)
-description: Required
-tools: Optional (default: all tools)
-model: Optional (default: opus)
+name: Обязательное поле (соответствует имени файла без .md)
+description: Обязательное поле
+tools: Опционально (по умолчанию: все инструменты)
+model: Опционально (по умолчанию: opus)
 skills: acc-skill-one, acc-skill-two
 ---
 ```
 
-**Important**: `skills:` is a comma-separated inline list (not a YAML array). Skill names must match the skill folder name exactly.
+**Важно**: `skills:` — это список через запятую (не YAML массив). Имена навыков должны точно соответствовать именам папок навыков.
 
-For coordinators with 3+ phases: add `TaskCreate, TaskUpdate` to tools, include `acc-task-progress-knowledge` in skills.
+Для координаторов с 3+ фазами: добавьте `TaskCreate, TaskUpdate` в tools, включите `acc-task-progress-knowledge` в skills.
 
-## Skill (`.claude/skills/acc-name/SKILL.md`)
+## Навык (`.claude/skills/acc-name/SKILL.md`)
 
 ```yaml
 ---
-name: Required (lowercase, hyphens, must match folder name)
-description: Required (max 1024 chars)
+name: Обязательное поле (строчные буквы, дефисы, должно совпадать с именем папки)
+description: Обязательное поле (макс. 1024 символа)
 ---
 ```
 
-Max 500 lines in SKILL.md — extract large content to `references/` subfolder.
+Максимум 500 строк в SKILL.md — большой контент выносите в подпапку `references/`.

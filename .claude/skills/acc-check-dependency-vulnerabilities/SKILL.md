@@ -1,15 +1,15 @@
 ---
 name: acc-check-dependency-vulnerabilities
-description: Analyzes PHP dependencies for security vulnerabilities. Detects outdated packages, known CVEs, unsupported versions, vulnerable transitive dependencies.
+description: Анализирует PHP-зависимости на уязвимости безопасности. Обнаруживает устаревшие пакеты, известные CVE, неподдерживаемые версии, уязвимые транзитивные зависимости.
 ---
 
-# Dependency Vulnerability Check
+# Проверка уязвимостей зависимостей
 
-Analyze PHP project dependencies for security vulnerabilities.
+Анализ зависимостей PHP-проекта на уязвимости безопасности.
 
-## Analysis Process
+## Процесс анализа
 
-### 1. Check composer.json/composer.lock
+### 1. Проверка composer.json/composer.lock
 
 ```bash
 # Read composer.lock to get exact versions
@@ -22,10 +22,10 @@ composer outdated --direct
 composer audit
 ```
 
-### 2. Common Vulnerable Packages
+### 2. Распространённые уязвимые пакеты
 
-| Package | Vulnerable Versions | Issue | CVE |
-|---------|---------------------|-------|-----|
+| Пакет | Уязвимые версии | Проблема | CVE |
+|-------|-----------------|----------|-----|
 | symfony/http-kernel | < 4.4.50 | Request smuggling | CVE-2022-24894 |
 | guzzlehttp/guzzle | < 7.4.5 | Header injection | CVE-2022-31090 |
 | doctrine/dbal | < 2.13.9 | SQL injection | CVE-2021-43608 |
@@ -35,7 +35,7 @@ composer audit
 | phpmailer/phpmailer | < 6.5.0 | XSS | CVE-2021-34551 |
 | monolog/monolog | < 2.7.0 | RCE via SMTP | CVE-2022-29244 |
 
-### 3. End-of-Life Versions
+### 3. Версии с истёкшим сроком поддержки
 
 ```php
 // CRITICAL: EOL PHP versions
@@ -48,7 +48,7 @@ composer audit
 // PHP 8.3 - Security fixes until December 2027
 ```
 
-### 4. Detection Patterns
+### 4. Паттерны обнаружения
 
 ```json
 // composer.json - Risky version constraints
@@ -63,7 +63,7 @@ composer audit
 }
 ```
 
-### 5. Abandoned Packages
+### 5. Заброшенные пакеты
 
 ```bash
 # Check for abandoned packages
@@ -76,7 +76,7 @@ composer show --abandoned
 # paragonie/random_compat → Use random_bytes() (PHP 7+)
 ```
 
-### 6. Transitive Dependencies
+### 6. Транзитивные зависимости
 
 ```bash
 # Check dependency tree
@@ -86,7 +86,7 @@ composer depends vendor/package
 composer why vendor/vulnerable-package
 ```
 
-## Grep Patterns
+## Grep-паттерны
 
 ```bash
 # composer.json with wildcard versions
@@ -99,26 +99,26 @@ Grep: "guzzlehttp/guzzle|symfony/http-kernel|doctrine/dbal" --glob "**/composer.
 Grep: '"php":\s*"[^"]*7\.[0-4]|"php":\s*"[^"]*8\.0' --glob "**/composer.json"
 ```
 
-## Severity Classification
+## Классификация серьёзности
 
-| Pattern | Severity |
-|---------|----------|
-| Known CVE with exploit | 🔴 Critical |
-| EOL PHP version | 🔴 Critical |
-| Abandoned package with issues | 🟠 Major |
-| Outdated with security fixes | 🟠 Major |
-| Wildcard version constraint | 🟡 Minor |
+| Паттерн | Серьёзность |
+|---------|-------------|
+| Известная CVE с эксплоитом | Critical |
+| EOL-версия PHP | Critical |
+| Заброшенный пакет с проблемами | Major |
+| Устаревший с исправлениями безопасности | Major |
+| Wildcard-ограничение версии | Minor |
 
-## Vulnerability Resources
+## Ресурсы по уязвимостям
 
 - **PHP Security Advisories Database**: https://github.com/FriendsOfPHP/security-advisories
 - **Snyk Vulnerability DB**: https://snyk.io/vuln
 - **NVD**: https://nvd.nist.gov/
 - **Packagist Advisories**: https://packagist.org/advisories
 
-## Remediation
+## Устранение
 
-### Upgrade Process
+### Процесс обновления
 
 ```bash
 # Check what will be upgraded
@@ -134,7 +134,7 @@ composer update
 ./vendor/bin/phpunit
 ```
 
-### Version Constraints
+### Ограничения версий
 
 ```json
 {
@@ -148,7 +148,7 @@ composer update
 }
 ```
 
-### Lock File Management
+### Управление lock-файлом
 
 ```bash
 # Always commit composer.lock
@@ -161,36 +161,36 @@ composer config platform.php 8.2
 composer audit --locked
 ```
 
-## Output Format
+## Формат вывода
 
 ```markdown
-### Vulnerable Dependency: [package-name]
+### Уязвимая зависимость: [package-name]
 
-**Severity:** 🔴/🟠/🟡
-**Current Version:** 1.2.3
-**Fixed Version:** 1.2.4
+**Серьёзность:** Critical/Major/Minor
+**Текущая версия:** 1.2.3
+**Исправленная версия:** 1.2.4
 **CVE:** CVE-2024-XXXX
 
-**Issue:**
-[Description of the vulnerability]
+**Проблема:**
+[Описание уязвимости]
 
-**Risk:**
-[What an attacker can do]
+**Риск:**
+[Что может сделать атакующий]
 
-**Location:**
-- `composer.lock:line` (direct dependency)
-- Required by: `other/package`
+**Расположение:**
+- `composer.lock:line` (прямая зависимость)
+- Требуется для: `other/package`
 
-**Fix:**
+**Исправление:**
 ```bash
 composer update vendor/package
 ```
 
-**Workaround (if upgrade not possible):**
-[Temporary mitigation]
+**Обходное решение (если обновление невозможно):**
+[Временная мера]
 ```
 
-## Automated Scanning
+## Автоматическое сканирование
 
 ### GitHub Dependabot
 
@@ -205,7 +205,7 @@ updates:
     open-pull-requests-limit: 10
 ```
 
-### CI/CD Integration
+### Интеграция в CI/CD
 
 ```yaml
 # In CI pipeline
@@ -220,10 +220,10 @@ updates:
     fi
 ```
 
-## Important Notes
+## Важные замечания
 
-1. **Always check composer.lock** — Not just composer.json
-2. **Transitive dependencies matter** — Your dependencies have dependencies
-3. **Regular audits** — Run `composer audit` in CI/CD
-4. **Test after updates** — Security updates can break things
-5. **Monitor advisories** — Subscribe to security mailing lists
+1. **Всегда проверяйте composer.lock** — не только composer.json
+2. **Транзитивные зависимости важны** — у ваших зависимостей есть свои зависимости
+3. **Регулярный аудит** — запускайте `composer audit` в CI/CD
+4. **Тестируйте после обновлений** — обновления безопасности могут сломать функциональность
+5. **Мониторьте рекомендации** — подпишитесь на рассылки по безопасности

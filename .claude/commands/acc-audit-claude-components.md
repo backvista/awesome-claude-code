@@ -1,61 +1,61 @@
 ---
-description: Comprehensive audit of .claude folder. Checks structure, quality, cross-references, antipatterns, resource usage, behavior verification, context alignment, semantic fit, God-Agent detection, skill responsibility analysis, domain boundaries, memory/rules, plugins, hooks, and refactoring recommendations.
+description: Комплексный аудит папки .claude. Проверяет структуру, качество, кросс-ссылки, антипаттерны, использование ресурсов, проверку поведения, соответствие контексту, семантическую согласованность, обнаружение God-Agent, анализ ответственности skills, границы доменов, memory/rules, плагины, хуки и рекомендации по рефакторингу.
 allowed-tools: Read, Glob, Grep, Bash
 model: opus
-argument-hint: [-- additional instructions]
+argument-hint: [-- дополнительные инструкции]
 ---
 
-# Claude Code Configuration Audit
+# Аудит конфигурации Claude Code
 
-Perform a comprehensive audit of the `.claude/` folder in the current project.
+Выполнить комплексный аудит папки `.claude/` в текущем проекте.
 
-## Input Parsing
+## Разбор входных данных
 
-Parse `$ARGUMENTS` to extract optional meta-instructions:
+Разобрать `$ARGUMENTS` для извлечения опциональных мета-инструкций:
 
 ```
-Format: [-- <meta-instructions>]
+Формат: [-- <мета-инструкции>]
 
-Examples:
+Примеры:
 - /acc-audit-claude-code
-- /acc-audit-claude-code -- focus on God-Agent detection
-- /acc-audit-claude-code -- check only commands
-- /acc-audit-claude-code -- skip skills, check agents
+- /acc-audit-claude-code -- фокус на обнаружении God-Agent
+- /acc-audit-claude-code -- проверить только commands
+- /acc-audit-claude-code -- пропустить skills, проверить agents
 ```
 
-**Parsing rules:**
-1. Split `$ARGUMENTS` by ` -- ` (space-dash-dash-space)
-2. Content after `--` = **meta-instructions** (optional, audit focus)
+**Правила разбора:**
+1. Разделить `$ARGUMENTS` по ` -- ` (пробел-дефис-дефис-пробел)
+2. Содержимое после `--` = **мета-инструкции** (опционально, фокус аудита)
 
-If meta-instructions provided, adjust audit to:
-- Focus on specific component types (commands/agents/skills)
-- Prioritize specific checks (God-Agent, cross-references, etc.)
-- Skip certain analysis phases
+Если предоставлены мета-инструкции, настроить аудит на:
+- Фокус на конкретных типах компонентов (commands/agents/skills)
+- Приоритет конкретных проверок (God-Agent, кросс-ссылки и т.д.)
+- Пропуск определённых фаз анализа
 
-## Pre-flight Check
+## Предварительная проверка
 
-1. Check if `.claude/` folder exists in the current working directory
-2. If missing, skip to **Missing Configuration** section
+1. Проверить наличие папки `.claude/` в текущей рабочей директории
+2. Если отсутствует, перейти к разделу **Отсутствующая конфигурация**
 
-## Audit Process
+## Процесс аудита
 
-### Step 1: Scan Structure
+### Шаг 1: Сканирование структуры
 
-Discover all components:
+Обнаружить все компоненты:
 
 ```
 .claude/
-├── commands/           # Slash commands (*.md)
-├── agents/             # Custom agents (*.md)
-├── skills/             # Skills (name/SKILL.md)
-├── plans/              # Plan files
-├── settings.json       # Project settings
-├── settings.local.json # Local settings (gitignored)
-├── CLAUDE.md           # Project instructions
-└── README.md           # Documentation
+├── commands/           # Slash-команды (*.md)
+├── agents/             # Пользовательские агенты (*.md)
+├── skills/             # Навыки (name/SKILL.md)
+├── plans/              # Файлы планов
+├── settings.json       # Настройки проекта
+├── settings.local.json # Локальные настройки (gitignored)
+├── CLAUDE.md           # Инструкции проекта
+└── README.md           # Документация
 ```
 
-Use Glob to find:
+Использовать Glob для поиска:
 - `.claude/commands/*.md`
 - `.claude/agents/*.md`
 - `.claude/skills/*/SKILL.md`
@@ -64,441 +64,441 @@ Use Glob to find:
 - `.claude/CLAUDE.md`
 - `.claude/rules/*.md`
 - `.claude-plugin/plugin.json`
-- `CLAUDE.md` (project root)
-- `CLAUDE.local.md` (project root)
+- `CLAUDE.md` (корень проекта)
+- `CLAUDE.local.md` (корень проекта)
 
-### Step 2: Analyze Each Component
+### Шаг 2: Анализ каждого компонента
 
-For each file found, evaluate against quality criteria:
+Для каждого найденного файла оценить по критериям качества:
 
-#### Commands Quality Criteria
+#### Критерии качества команд
 
-| Criterion | ✅ Good | ⚠️ Improve | ❌ Problem |
-|-----------|---------|------------|------------|
-| YAML frontmatter | Valid, all fields | Missing optional fields | Invalid/missing |
-| Description | Clear, specific | Too generic | Missing |
-| Instructions | Step-by-step, clear | Vague steps | No instructions |
-| $ARGUMENTS handling | Documented, validated | Used but not documented | Ignored |
-| Tool restrictions | Appropriate for task | Too permissive | Missing when needed |
+| Критерий | ✅ Хорошо | ⚠️ Улучшить | ❌ Проблема |
+|----------|-----------|--------------|-------------|
+| YAML frontmatter | Валидный, все поля | Отсутствуют опциональные поля | Невалидный/отсутствует |
+| Description | Ясное, конкретное | Слишком общее | Отсутствует |
+| Instructions | Пошаговые, чёткие | Размытые шаги | Нет инструкций |
+| Обработка $ARGUMENTS | Задокументирована, валидирована | Используется, но не задокументирована | Игнорируется |
+| Ограничения инструментов | Подходящие для задачи | Слишком разрешительные | Отсутствуют при необходимости |
 
-#### Agents Quality Criteria
+#### Критерии качества агентов
 
-| Criterion | ✅ Good | ⚠️ Improve | ❌ Problem |
-|-----------|---------|------------|------------|
-| YAML frontmatter | name, description, tools | Missing optional | Invalid/missing |
-| Name | Lowercase, hyphenated | Inconsistent casing | Invalid characters |
-| Description | Specific purpose | Too generic | Missing |
-| Tool restrictions | Minimal needed set | Missing restrictions | Overly broad |
-| Skills reference | Links to skills | No skill usage | Broken references |
-| disallowedTools | Used when most tools needed except few | Not used, tools list too long | Conflicts with tools list |
-| hooks field | Valid scoped hooks with matchers | Hooks without matchers | Invalid hook events |
-| memory field | Appropriate scope (user/project/local) | Missing when isolation needed | Invalid value |
-| permissionMode | Appropriate for task type | Missing for sensitive ops | Overly permissive |
+| Критерий | ✅ Хорошо | ⚠️ Улучшить | ❌ Проблема |
+|----------|-----------|--------------|-------------|
+| YAML frontmatter | name, description, tools | Отсутствуют опциональные | Невалидный/отсутствует |
+| Name | Lowercase, через дефис | Несогласованный регистр | Недопустимые символы |
+| Description | Конкретная цель | Слишком общее | Отсутствует |
+| Ограничения инструментов | Минимальный необходимый набор | Отсутствуют ограничения | Слишком широкие |
+| Ссылки на skills | Ссылки на skills | Нет использования skill | Битые ссылки |
+| disallowedTools | Используется, когда нужны почти все инструменты кроме нескольких | Не используется, список tools слишком длинный | Конфликт со списком tools |
+| Поле hooks | Валидные хуки с матчерами | Хуки без матчеров | Невалидные события хуков |
+| Поле memory | Подходящий scope (user/project/local) | Отсутствует при необходимости изоляции | Невалидное значение |
+| permissionMode | Подходящий для типа задачи | Отсутствует для чувствительных операций | Слишком разрешительный |
 
-#### Skills Quality Criteria
+#### Критерии качества skills
 
-| Criterion | ✅ Good | ⚠️ Improve | ❌ Problem |
-|-----------|---------|------------|------------|
-| Location | name/SKILL.md structure | Flat file | Wrong location |
-| YAML frontmatter | name, description | Missing fields | Invalid |
-| Size | Under 500 lines | 500-1000 lines | Over 1000 lines |
-| References | Large content in references/ | Everything in SKILL.md | Missing needed refs |
-| Trigger conditions | Clear "when to use" | Vague triggers | No triggers |
-| context field | `fork` when isolated execution needed | Missing when should be set | Invalid value |
-| model field | Appropriate model override | Missing when speed matters | Invalid model name |
-| hooks field | Valid lifecycle hooks | Hooks without matchers | Invalid hook events |
+| Критерий | ✅ Хорошо | ⚠️ Улучшить | ❌ Проблема |
+|----------|-----------|--------------|-------------|
+| Location | Структура name/SKILL.md | Плоский файл | Неправильное расположение |
+| YAML frontmatter | name, description | Отсутствуют поля | Невалидный |
+| Size | Менее 500 строк | 500-1000 строк | Более 1000 строк |
+| References | Большой контент в references/ | Всё в SKILL.md | Отсутствуют нужные ссылки |
+| Условия триггера | Чёткое "когда использовать" | Размытые триггеры | Нет триггеров |
+| Поле context | `fork` при необходимости изолированного выполнения | Отсутствует когда должно быть | Невалидное значение |
+| Поле model | Подходящее переопределение модели | Отсутствует когда важна скорость | Невалидное имя модели |
+| Поле hooks | Валидные хуки жизненного цикла | Хуки без матчеров | Невалидные события хуков |
 
-#### Settings Quality Criteria
+#### Критерии качества настроек
 
-| Criterion | ✅ Good | ⚠️ Improve | ❌ Problem |
-|-----------|---------|------------|------------|
-| JSON validity | Valid JSON | - | Parse errors |
-| Hooks | Defined and documented | Undocumented | Invalid format |
-| Hook events | Valid event names (12) | Uncommon events | Invalid event names |
-| Hook types | Correct type (command/prompt/agent) | Missing type field | Invalid type |
-| Permissions | Explicit allow/deny/ask | Implicit defaults | Overly permissive |
-| Permission syntax | Tool(specifier) format | Missing specifiers | Invalid syntax |
-| Permission eval order | deny → ask → allow | Only allow rules | No deny rules |
-| Sandbox | Configured when auto-allowing Bash | Not configured | Disabled with bypassPermissions |
-| Local settings | Gitignored properly | Not gitignored | Secrets exposed |
-| MCP servers | Explicitly allowed/denied | All enabled without review | Secrets in config |
+| Критерий | ✅ Хорошо | ⚠️ Улучшить | ❌ Проблема |
+|----------|-----------|--------------|-------------|
+| Валидность JSON | Валидный JSON | - | Ошибки парсинга |
+| Hooks | Определены и задокументированы | Не задокументированы | Невалидный формат |
+| События хуков | Валидные имена событий (12) | Необычные события | Невалидные имена событий |
+| Типы хуков | Правильный тип (command/prompt/agent) | Отсутствует поле type | Невалидный тип |
+| Permissions | Явные allow/deny/ask | Неявные значения по умолчанию | Слишком разрешительные |
+| Синтаксис permission | Формат Tool(specifier) | Отсутствуют спецификаторы | Невалидный синтаксис |
+| Порядок оценки permission | deny → ask → allow | Только allow правила | Нет deny правил |
+| Sandbox | Настроен при автоматическом разрешении Bash | Не настроен | Отключён с bypassPermissions |
+| Локальные настройки | Правильно в gitignored | Не в gitignore | Секреты раскрыты |
+| MCP servers | Явно разрешены/запрещены | Все включены без проверки | Секреты в конфигурации |
 
-#### Memory/Rules Quality Criteria
+#### Критерии качества Memory/Rules
 
-| Criterion | ✅ Good | ⚠️ Improve | ❌ Problem |
-|-----------|---------|------------|------------|
-| Root CLAUDE.md | Exists with project instructions | Exists but empty | Missing |
-| CLAUDE.md size | Under 500 lines | 500-800 lines | Over 800 lines |
-| Rules modularity | `.claude/rules/*.md` for topics | Everything in CLAUDE.md | No rules |
-| Path scoping | `paths` frontmatter on relevant rules | Generic rules for specific areas | Invalid glob patterns |
-| Local settings | `CLAUDE.local.md` gitignored | Not in .gitignore | Committed with secrets |
-| @imports | Resolve correctly (max 5 hops) | Missing referenced files | Circular imports |
-| Rules/CLAUDE.md alignment | Rules match project architecture | Outdated rules | Contradictory rules |
+| Критерий | ✅ Хорошо | ⚠️ Улучшить | ❌ Проблема |
+|----------|-----------|--------------|-------------|
+| Корневой CLAUDE.md | Существует с инструкциями проекта | Существует, но пустой | Отсутствует |
+| Размер CLAUDE.md | Менее 500 строк | 500-800 строк | Более 800 строк |
+| Модульность rules | `.claude/rules/*.md` для тем | Всё в CLAUDE.md | Нет rules |
+| Скопирование путей | Фронтматтер `paths` на релевантных rules | Общие rules для конкретных областей | Невалидные glob паттерны |
+| Локальные настройки | `CLAUDE.local.md` в gitignored | Не в .gitignore | Закоммичены с секретами |
+| @imports | Резолвятся корректно (макс 5 переходов) | Отсутствуют ссылочные файлы | Циклические импорты |
+| Согласованность Rules/CLAUDE.md | Rules соответствуют архитектуре проекта | Устаревшие rules | Противоречивые rules |
 
-#### Plugin Quality Criteria (if `.claude-plugin/` exists)
+#### Критерии качества плагинов (если существует `.claude-plugin/`)
 
-| Criterion | ✅ Good | ⚠️ Improve | ❌ Problem |
-|-----------|---------|------------|------------|
-| Manifest | Valid plugin.json with required fields | Missing optional fields | Invalid/missing manifest |
-| Name | Lowercase, hyphens | Inconsistent | Missing |
-| Components | Proper directory structure | Mixed locations | Missing directories |
-| Namespacing | No prefix collisions | Inconsistent prefixes | Name conflicts |
-| Hooks | In hooks/hooks.json | Scattered locations | Invalid format |
+| Критерий | ✅ Хорошо | ⚠️ Улучшить | ❌ Проблема |
+|----------|-----------|--------------|-------------|
+| Manifest | Валидный plugin.json с обязательными полями | Отсутствуют опциональные поля | Невалидный/отсутствующий манифест |
+| Name | Lowercase, через дефис | Несогласованное | Отсутствует |
+| Components | Правильная структура директорий | Смешанные расположения | Отсутствуют директории |
+| Namespacing | Нет конфликтов префиксов | Несогласованные префиксы | Конфликты имён |
+| Hooks | В hooks/hooks.json | Разбросаны по расположениям | Невалидный формат |
 
-### Step 3: Check Cross-References
+### Шаг 3: Проверка кросс-ссылок
 
-Verify integrity:
-- Commands referencing agents → agents exist
-- Agents referencing skills → skills exist
-- Skills referencing other files → files exist
+Проверить целостность:
+- Команды ссылаются на агентов → агенты существуют
+- Агенты ссылаются на skills → skills существуют
+- Skills ссылаются на другие файлы → файлы существуют
 
-### Step 4: Detect Antipatterns
+### Шаг 4: Обнаружение антипаттернов
 
-#### 4.1 Structural Antipatterns
+#### 4.1 Структурные антипаттерны
 
-Common issues to flag:
+Распространённые проблемы для отметки:
 
-1. **Duplicate functionality** — Multiple commands doing similar things
-2. **Missing descriptions** — Components without clear purpose
-3. **Hardcoded paths** — Paths that won't work in other projects
-4. **Overly long files** — Skills over 500 lines, commands over 200 lines
-5. **No tool restrictions** — Commands/agents with unlimited tool access
-6. **Inconsistent naming** — Mixed naming conventions
-7. **Missing error handling** — Commands without pre-flight checks
-8. **Secrets in settings** — API keys or sensitive data in versioned files
-9. **Missing CLAUDE.md** — Project lacks root CLAUDE.md for instructions
-10. **Rules without paths** — Rules in `.claude/rules/` that should be path-scoped but aren't
-11. **Oversized context** — CLAUDE.md > 500 lines (always loaded, impacts context budget)
-12. **Invalid hook events** — Hook using non-existent event name (12 valid events)
-13. **Missing permission rules** — Settings with hooks but no permission deny rules
+1. **Дублирование функциональности** — Несколько команд делают похожие вещи
+2. **Отсутствующие описания** — Компоненты без чёткой цели
+3. **Захардкоженные пути** — Пути, которые не будут работать в других проектах
+4. **Слишком длинные файлы** — Skills более 500 строк, команды более 200 строк
+5. **Нет ограничений инструментов** — Команды/агенты с неограниченным доступом к инструментам
+6. **Несогласованное именование** — Смешанные соглашения об именовании
+7. **Отсутствующая обработка ошибок** — Команды без предварительных проверок
+8. **Секреты в настройках** — API ключи или чувствительные данные в версионных файлах
+9. **Отсутствующий CLAUDE.md** — Проект без корневого CLAUDE.md для инструкций
+10. **Rules без paths** — Rules в `.claude/rules/`, которые должны быть ограничены путями, но не ограничены
+11. **Избыточный контекст** — CLAUDE.md > 500 строк (всегда загружается, влияет на бюджет контекста)
+12. **Невалидные события хуков** — Хук использует несуществующее имя события (12 валидных событий)
+13. **Отсутствующие правила permission** — Настройки с хуками, но без правил permission deny
 
-#### 4.2 Architectural Antipatterns
+#### 4.2 Архитектурные антипаттерны
 
-Advanced architectural issues:
+Продвинутые архитектурные проблемы:
 
-1. **God-Agent** — Agent with >15 skills, violates SRP
-2. **Feature Envy** — Skill placed in wrong domain (e.g., testing skill in DDD agent)
-3. **Semantic Mismatch** — Command uses agent from different domain
-4. **Skill Duplication** — Multiple skills with >70% similar functionality
-5. **Missing Orchestration** — Complex workflow without coordinator agent
-6. **Domain Leakage** — Skills mixing multiple bounded contexts
-7. **Circular Dependencies** — Agents/skills referencing each other in loops
-8. **Orphaned Domain** — Domain knowledge skill without corresponding generator/auditor
+1. **God-Agent** — Агент с >15 skills, нарушает SRP
+2. **Feature Envy** — Skill помещён в неправильный домен (напр., testing skill в DDD агенте)
+3. **Semantic Mismatch** — Команда использует агента из другого домена
+4. **Дублирование Skill** — Несколько skills с >70% похожей функциональности
+5. **Отсутствующая оркестрация** — Сложный workflow без агента-координатора
+6. **Утечка домена** — Skills смешивают несколько ограниченных контекстов
+7. **Циклические зависимости** — Агенты/skills ссылаются друг на друга в циклах
+8. **Осиротевший домен** — Skill знаний домена без соответствующего генератора/аудитора
 
-### Step 5: Resource Usage Analysis
+### Шаг 5: Анализ использования ресурсов
 
-Build dependency graph and find unused components:
+Построить граф зависимостей и найти неиспользуемые компоненты:
 
-#### 5.1 Build Usage Graph
+#### 5.1 Построение графа использования
 
-Extract references from all components:
+Извлечь ссылки из всех компонентов:
 
-1. **Commands → Agents**: Parse command bodies for agent references
-   - Look for Task tool calls with agent names
-   - Pattern: `acc-*-agent`, `acc-*-auditor`, `acc-*-generator`, `acc-*-expert`, `acc-*-writer`, `acc-*-designer`
+1. **Commands → Agents**: Разобрать тела команд на ссылки на агентов
+   - Искать вызовы инструмента Task с именами агентов
+   - Паттерн: `acc-*-agent`, `acc-*-auditor`, `acc-*-generator`, `acc-*-expert`, `acc-*-writer`, `acc-*-designer`
 
-2. **Agents → Skills**: Parse agent frontmatter `skills:` field
-   - Extract skill names from YAML list
-   - Also check agent body for skill mentions
+2. **Agents → Skills**: Разобрать фронтматтер `skills:` агента
+   - Извлечь имена skills из YAML списка
+   - Также проверить тело агента на упоминания skills
 
-3. **Skills → Skills**: Parse skill bodies for cross-references
-   - Look for skill name patterns in instructions
+3. **Skills → Skills**: Разобрать тела skills на кросс-ссылки
+   - Искать паттерны имён skills в инструкциях
 
-#### 5.2 Find Orphans
+#### 5.2 Поиск осиротевших
 
-Compare discovered components against usage graph:
+Сравнить обнаруженные компоненты с графом использования:
 
-- **Orphaned skills** — Skills not referenced by any agent
-- **Orphaned agents** — Agents not referenced by any command
-- **Undocumented commands** — Commands not mentioned in README.md
+- **Осиротевшие skills** — Skills, на которые не ссылается ни один агент
+- **Осиротевшие агенты** — Агенты, на которые не ссылается ни одна команда
+- **Недокументированные команды** — Команды, не упомянутые в README.md
 
-#### 5.3 Resource Report Format
-
-```
-📊 Resource Usage Analysis
-├── Active components: X/Y (Z%)
-├── Orphaned skills: [list or "none"]
-├── Orphaned agents: [list or "none"]
-├── Undocumented commands: [list or "none"]
-└── Circular references: [list or "none"]
-```
-
-### Step 6: Behavior Verification
-
-Verify that component descriptions match actual behavior:
-
-#### 6.1 Extract Declared Behavior
-
-For each component, parse:
-- `description` field — what it claims to do
-- `argument-hint` — expected input format
-- Key action verbs: generates, creates, audits, analyzes, validates, executes
-
-#### 6.2 Extract Actual Behavior
-
-Analyze component body:
-- Tool usage patterns (Write = generates, Read/Grep = audits, Bash = executes)
-- `$ARGUMENTS` handling — is it used if argument-hint is present?
-- Output patterns — what the component actually produces
-
-#### 6.3 Behavior Mapping Rules
-
-| Description verb | Expected tools | Validation |
-|------------------|----------------|------------|
-| "generates", "creates", "writes" | Write, Edit | Must modify files |
-| "audits", "analyzes", "checks" | Read, Grep, Glob | Must read files |
-| "executes", "runs" | Bash | Must run commands |
-| "validates" | Read, Grep | Must check criteria |
-
-#### 6.4 Behavior Report Format
+#### 5.3 Формат отчёта о ресурсах
 
 ```
-📋 Behavior Verification
-├── ✅ acc-commit.md — description matches behavior
-├── ⚠️ acc-foo.md — claims "generates" but no Write tool
-├── ❌ acc-bar.md — argument-hint defined but $ARGUMENTS unused
-└── Summary: X/Y components verified (Z%)
+📊 Анализ использования ресурсов
+├── Активные компоненты: X/Y (Z%)
+├── Осиротевшие skills: [список или "нет"]
+├── Осиротевшие агенты: [список или "нет"]
+├── Недокументированные команды: [список или "нет"]
+└── Циклические ссылки: [список или "нет"]
 ```
 
-### Step 7: Context Awareness
+### Шаг 6: Проверка поведения
 
-Check alignment with project architecture and goals:
+Проверить, что описания компонентов соответствуют фактическому поведению:
 
-#### 7.1 Detect Project Context
+#### 6.1 Извлечение заявленного поведения
 
-Read project configuration files:
-- `CLAUDE.md` (root) — global instructions
-- `.claude/CLAUDE.md` — project-specific rules
-- `README.md` — project purpose and tech stack
-- `composer.json` — PHP dependencies (if exists)
+Для каждого компонента разобрать:
+- Поле `description` — что компонент утверждает, что делает
+- `argument-hint` — ожидаемый формат ввода
+- Ключевые глаголы действия: generates, creates, audits, analyzes, validates, executes
 
-#### 7.2 Identify Project Patterns
+#### 6.2 Извлечение фактического поведения
 
-Look for mentions of:
-- Architecture patterns: DDD, CQRS, Clean Architecture, Hexagonal, Event Sourcing
-- Standards: PSR-1, PSR-4, PSR-12, etc.
-- Frameworks: Symfony, Laravel, etc.
-- Tech stack: PHP version, databases, queues
+Проанализировать тело компонента:
+- Паттерны использования инструментов (Write = генерирует, Read/Grep = аудирует, Bash = выполняет)
+- Обработка `$ARGUMENTS` — используется ли, если присутствует argument-hint?
+- Паттерны вывода — что компонент фактически производит
 
-#### 7.3 Verify CLAUDE.md/Rules Alignment
+#### 6.3 Правила сопоставления поведения
 
-Check that CLAUDE.md and `.claude/rules/` are consistent with components:
-- Rules mention patterns → corresponding skills/agents exist
-- CLAUDE.md architecture decisions → matching audit commands available
-- Rules size is reasonable (< 500 lines total in CLAUDE.md, modular rules in `.claude/rules/`)
-- No contradictory rules between CLAUDE.md and `.claude/rules/`
+| Глагол в описании | Ожидаемые инструменты | Валидация |
+|-------------------|------------------------|-----------|
+| "generates", "creates", "writes" | Write, Edit | Должен изменять файлы |
+| "audits", "analyzes", "checks" | Read, Grep, Glob | Должен читать файлы |
+| "executes", "runs" | Bash | Должен выполнять команды |
+| "validates" | Read, Grep | Должен проверять критерии |
 
-#### 7.4 Verify Pattern Alignment
+#### 6.4 Формат отчёта о поведении
 
-Check if Claude configuration supports detected patterns:
+```
+📋 Проверка поведения
+├── ✅ acc-commit.md — описание соответствует поведению
+├── ⚠️ acc-foo.md — утверждает "генерирует", но нет инструмента Write
+├── ❌ acc-bar.md — argument-hint определён, но $ARGUMENTS не используется
+└── Итого: X/Y компонентов проверено (Z%)
+```
 
-| Project mentions | Required support |
-|------------------|------------------|
-| DDD | DDD audit command, DDD skills |
+### Шаг 7: Осведомлённость о контексте
+
+Проверить соответствие архитектуре и целям проекта:
+
+#### 7.1 Определение контекста проекта
+
+Прочитать конфигурационные файлы проекта:
+- `CLAUDE.md` (корень) — глобальные инструкции
+- `.claude/CLAUDE.md` — правила для конкретного проекта
+- `README.md` — цель проекта и технологический стек
+- `composer.json` — зависимости PHP (если существует)
+
+#### 7.2 Идентификация паттернов проекта
+
+Искать упоминания:
+- Архитектурные паттерны: DDD, CQRS, Clean Architecture, Hexagonal, Event Sourcing
+- Стандарты: PSR-1, PSR-4, PSR-12 и т.д.
+- Фреймворки: Symfony, Laravel и т.д.
+- Технологический стек: версия PHP, базы данных, очереди
+
+#### 7.3 Проверка согласованности CLAUDE.md/Rules
+
+Проверить, что CLAUDE.md и `.claude/rules/` согласованы с компонентами:
+- Rules упоминают паттерны → соответствующие skills/агенты существуют
+- Архитектурные решения CLAUDE.md → доступны соответствующие команды аудита
+- Размер rules разумный (< 500 строк в CLAUDE.md, модульные rules в `.claude/rules/`)
+- Нет противоречивых rules между CLAUDE.md и `.claude/rules/`
+
+#### 7.4 Проверка соответствия паттернов
+
+Проверить, поддерживает ли конфигурация Claude обнаруженные паттерны:
+
+| Проект упоминает | Требуемая поддержка |
+|------------------|---------------------|
+| DDD | Команда DDD аудита, DDD skills |
 | CQRS | CQRS skills |
-| PSR-* | PSR audit command, PSR skills |
+| PSR-* | Команда PSR аудита, PSR skills |
 | Event Sourcing | Event skills |
-| PHP X.Y | Skills compatible with version |
+| PHP X.Y | Skills совместимые с версией |
 
-#### 7.4 Context Report Format
+#### 7.5 Формат отчёта о контексте
 
 ```
-🎯 Context Alignment
-├── Project type: [detected patterns]
-├── Tech stack: [detected technologies]
-├── Pattern coverage:
-│   ├── ✅ DDD — full support (audit + 13 skills)
-│   ├── ✅ CQRS — full support (4 skills)
-│   ├── ⚠️ Event Sourcing — partial (mentioned but no skills)
-│   └── ❌ Laravel — not supported (no framework-specific skills)
-└── Suggestions:
-    └── 💡 Add Event Sourcing skills (mentioned in CLAUDE.md)
+🎯 Соответствие контексту
+├── Тип проекта: [обнаруженные паттерны]
+├── Технологический стек: [обнаруженные технологии]
+├── Покрытие паттернов:
+│   ├── ✅ DDD — полная поддержка (аудит + 13 skills)
+│   ├── ✅ CQRS — полная поддержка (4 skills)
+│   ├── ⚠️ Event Sourcing — частичная (упомянуто, но нет skills)
+│   └── ❌ Laravel — не поддерживается (нет framework-специфичных skills)
+└── Предложения:
+    └── 💡 Добавить Event Sourcing skills (упомянуто в CLAUDE.md)
 ```
 
-### Step 8: Command-Agent Semantic Fit
+### Шаг 8: Семантическое соответствие Command-Agent
 
-Verify that commands use agents appropriate for their domain:
+Проверить, что команды используют агентов, подходящих для их домена:
 
-#### 8.1 Extract Domain from Component Name
+#### 8.1 Извлечение домена из имени компонента
 
-Parse naming patterns to identify domain:
-- `acc-audit-ddd` → Domain: DDD
-- `acc-generate-test` → Domain: Testing
-- `acc-create-entity` → Domain: DDD
-- `acc-psr-*` → Domain: PSR Standards
+Разобрать паттерны именования для идентификации домена:
+- `acc-audit-ddd` → Домен: DDD
+- `acc-generate-test` → Домен: Testing
+- `acc-create-entity` → Домен: DDD
+- `acc-psr-*` → Домен: PSR Standards
 
-#### 8.2 Build Domain Map
+#### 8.2 Построение карты доменов
 
-Group components by domain:
+Группировать компоненты по доменам:
 ```
-DDD Domain:
+Домен DDD:
 ├── Commands: acc-audit-ddd
 ├── Agents: acc-ddd-auditor, acc-ddd-generator
 └── Skills: acc-ddd-knowledge, acc-create-entity, acc-create-value-object, ...
 
-Testing Domain:
+Домен Testing:
 ├── Commands: acc-generate-test, acc-audit-test
 ├── Agents: acc-test-generator, acc-test-auditor
 └── Skills: acc-testing-knowledge, acc-create-unit-test, ...
 ```
 
-#### 8.3 Verify Semantic Fit
+#### 8.3 Проверка семантического соответствия
 
-Check command → agent domain alignment:
+Проверить соответствие домена команда → агент:
 
-| Pattern | Status | Issue |
-|---------|--------|-------|
-| `acc-audit-ddd` → `acc-ddd-auditor` | ✅ Good | Same domain |
-| `acc-audit-ddd` → `acc-test-auditor` | ❌ Mismatch | Cross-domain |
-| `acc-generate-test` → `acc-ddd-generator` | ❌ Mismatch | Wrong domain |
+| Паттерн | Статус | Проблема |
+|---------|--------|----------|
+| `acc-audit-ddd` → `acc-ddd-auditor` | ✅ Хорошо | Тот же домен |
+| `acc-audit-ddd` → `acc-test-auditor` | ❌ Несоответствие | Кросс-домен |
+| `acc-generate-test` → `acc-ddd-generator` | ❌ Несоответствие | Неправильный домен |
 
-#### 8.5 Semantic Fit Report Format
+#### 8.5 Формат отчёта о семантическом соответствии
 
 ```
-🔗 Command-Agent Semantic Fit
-├── Commands analyzed: X
-├── Perfect fit: Y (Z%)
-├── Cross-domain usage: [list]
-│   └── ⚠️ acc-foo.md uses acc-bar-agent (expected: acc-foo-agent)
-└── Recommendation: Create domain-specific agents for mismatched commands
+🔗 Семантическое соответствие Command-Agent
+├── Проанализировано команд: X
+├── Идеальное соответствие: Y (Z%)
+├── Кросс-доменное использование: [список]
+│   └── ⚠️ acc-foo.md использует acc-bar-agent (ожидалось: acc-foo-agent)
+└── Рекомендация: Создать агентов для конкретных доменов для несоответствующих команд
 ```
 
-### Step 9: Agent Complexity Analysis (God-Agent Detection)
+### Шаг 9: Анализ сложности агентов (обнаружение God-Agent)
 
-Detect agents that violate Single Responsibility Principle:
+Обнаружить агентов, нарушающих принцип единой ответственности:
 
-#### 9.1 Complexity Metrics
+#### 9.1 Метрики сложности
 
-For each agent, calculate:
-- **Skill count** — number of skills in frontmatter
-- **Tool count** — number of tools in frontmatter
-- **Responsibility count** — distinct action verbs in description
-- **Line count** — total lines in agent file
+Для каждого агента вычислить:
+- **Количество skills** — число skills во фронтматтере
+- **Количество инструментов** — число инструментов во фронтматтере
+- **Количество ответственностей** — различные глаголы действия в описании
+- **Количество строк** — общее количество строк в файле агента
 
-#### 9.2 God-Agent Thresholds
+#### 9.2 Пороги God-Agent
 
-| Metric | ✅ Good | ⚠️ Warning | ❌ God-Agent |
-|--------|---------|------------|--------------|
+| Метрика | ✅ Хорошо | ⚠️ Предупреждение | ❌ God-Agent |
+|---------|-----------|-------------------|--------------|
 | Skills | 1-10 | 11-15 | >15 |
 | Tools | 1-5 | 6-8 | >8 |
 | Responsibilities | 1-3 | 4-5 | >5 |
 | Lines | <200 | 200-400 | >400 |
 
-#### 9.3 Coordinator Progress Tracking Check
+#### 9.3 Проверка отслеживания прогресса координатора
 
-For agents with "coordinator" in name or description containing "orchestrates/coordinates":
+Для агентов с "coordinator" в имени или описании, содержащем "orchestrates/coordinates":
 
-| Check | ✅ Good | ⚠️ Missing |
-|-------|---------|------------|
-| TaskCreate in tools | Listed in frontmatter | Not listed |
-| TaskUpdate in tools | Listed in frontmatter | Not listed |
-| Progress section | Has "Progress Tracking" section | Missing section |
-| Phase count | 3-5 phases defined | <3 or >5 phases |
-| acc-task-progress-knowledge | In skills list | Missing |
+| Проверка | ✅ Хорошо | ⚠️ Отсутствует |
+|----------|-----------|----------------|
+| TaskCreate в tools | Указан во фронтматтере | Не указан |
+| TaskUpdate в tools | Указан во фронтматтере | Не указан |
+| Раздел Progress | Есть раздел "Progress Tracking" | Отсутствует раздел |
+| Количество фаз | 3-5 фаз определено | <3 или >5 фаз |
+| acc-task-progress-knowledge | В списке skills | Отсутствует |
 
-**Detection:**
+**Обнаружение:**
 ```bash
-# Check if coordinator has TaskCreate
+# Проверить, есть ли у координатора TaskCreate
 Grep: "TaskCreate" --glob ".claude/agents/*coordinator*.md"
 Grep: "Progress Tracking" --glob ".claude/agents/*coordinator*.md"
 Grep: "acc-task-progress-knowledge" --glob ".claude/agents/*coordinator*.md"
 ```
 
-**Coordinator Progress Report:**
+**Отчёт о прогрессе координатора:**
 ```
-📊 Coordinator Progress Tracking
-├── Coordinators found: X
-├── With progress tracking: Y (Z%)
-├── Missing TaskCreate:
-│   └── ❌ acc-foo-coordinator — no Progress Tracking section
-└── Recommendation: Add TaskCreate/TaskUpdate to coordinators
-```
-
-#### 9.3 Responsibility Extraction
-
-Parse description for action verbs:
-- "audits, validates, and generates" → 3 responsibilities
-- "creates DDD components" → 1 responsibility
-- "analyzes, detects, reports, and fixes" → 4 responsibilities
-
-#### 9.4 God-Agent Report Format
-
-```
-🏛️ Agent Complexity Analysis
-├── Agents analyzed: X
-├── Healthy agents: Y (Z%)
-├── Warning level: [list]
-│   └── ⚠️ acc-architecture-auditor (12 skills, 4 responsibilities)
-├── God-Agents detected:
-│   └── ❌ acc-mega-agent (23 skills, 8 responsibilities)
-│       ├── Recommended split:
-│       │   ├── acc-mega-auditor (audit responsibilities)
-│       │   └── acc-mega-generator (generation responsibilities)
-│       └── Skills to redistribute: [grouped list]
-└── Summary: X agents need refactoring
+📊 Отслеживание прогресса координаторов
+├── Найдено координаторов: X
+├── С отслеживанием прогресса: Y (Z%)
+├── Отсутствует TaskCreate:
+│   └── ❌ acc-foo-coordinator — нет раздела Progress Tracking
+└── Рекомендация: Добавить TaskCreate/TaskUpdate координаторам
 ```
 
-### Step 10: Skill Responsibility Analysis
+#### 9.4 Извлечение ответственностей
 
-Analyze skill design quality:
+Разобрать описание на глаголы действия:
+- "audits, validates, and generates" → 3 ответственности
+- "creates DDD components" → 1 ответственность
+- "analyzes, detects, reports, and fixes" → 4 ответственности
 
-#### 10.1 Single Responsibility Check
+#### 9.5 Формат отчёта о God-Agent
 
-For each skill, verify:
-- **One primary action** — creates, audits, analyzes, generates (not multiple)
-- **One domain focus** — DDD, Testing, PSR (not mixed)
-- **Clear trigger** — when to use is specific
+```
+🏛️ Анализ сложности агентов
+├── Проанализировано агентов: X
+├── Здоровые агенты: Y (Z%)
+├── Уровень предупреждения: [список]
+│   └── ⚠️ acc-architecture-auditor (12 skills, 4 ответственности)
+├── Обнаружены God-Agents:
+│   └── ❌ acc-mega-agent (23 skills, 8 ответственностей)
+│       ├── Рекомендуемое разделение:
+│       │   ├── acc-mega-auditor (ответственности аудита)
+│       │   └── acc-mega-generator (ответственности генерации)
+│       └── Skills для перераспределения: [сгруппированный список]
+└── Итого: X агентов нуждаются в рефакторинге
+```
 
-#### 10.2 Feature Envy Detection
+### Шаг 10: Анализ ответственности Skill
 
-Check if skill belongs in correct agent:
+Анализ качества дизайна skills:
+
+#### 10.1 Проверка единой ответственности
+
+Для каждого skill проверить:
+- **Одно основное действие** — создаёт, аудирует, анализирует, генерирует (не несколько)
+- **Один фокус домена** — DDD, Testing, PSR (не смешанный)
+- **Чёткий триггер** — когда использовать, должен быть конкретным
+
+#### 10.2 Обнаружение Feature Envy
+
+Проверить, принадлежит ли skill правильному агенту:
 
 ```
 Skill: acc-create-unit-test
-├── Current agent: acc-ddd-generator
-├── Expected domain: Testing
-├── Status: ❌ Feature Envy
-└── Recommendation: Move to acc-test-generator
+├── Текущий агент: acc-ddd-generator
+├── Ожидаемый домен: Testing
+├── Статус: ❌ Feature Envy
+└── Рекомендация: Переместить в acc-test-generator
 ```
 
-#### 10.3 Skill Similarity Analysis
+#### 10.3 Анализ сходства Skills
 
-Compare skills for potential duplication:
+Сравнить skills на потенциальное дублирование:
 
-1. **Name similarity** — Levenshtein distance < 5
-2. **Description similarity** — >70% word overlap
-3. **Instruction similarity** — >60% content overlap
-
-```
-Potential duplicates:
-├── acc-create-unit-test vs acc-create-test (85% similar)
-│   └── Recommendation: Merge into acc-create-unit-test
-├── acc-ddd-knowledge vs acc-domain-knowledge (75% similar)
-│   └── Recommendation: Keep acc-ddd-knowledge, deprecate other
-```
-
-#### 10.4 Skill Responsibility Report Format
+1. **Сходство имён** — расстояние Левенштейна < 5
+2. **Сходство описаний** — >70% совпадение слов
+3. **Сходство инструкций** — >60% совпадение контента
 
 ```
-📋 Skill Responsibility Analysis
-├── Skills analyzed: X
-├── SRP compliant: Y (Z%)
-├── SRP violations:
-│   └── ⚠️ acc-mega-skill.md — multiple actions (creates, audits, validates)
+Потенциальные дубликаты:
+├── acc-create-unit-test vs acc-create-test (85% похожи)
+│   └── Рекомендация: Объединить в acc-create-unit-test
+├── acc-ddd-knowledge vs acc-domain-knowledge (75% похожи)
+│   └── Рекомендация: Оставить acc-ddd-knowledge, удалить другой
+```
+
+#### 10.4 Формат отчёта об ответственности Skill
+
+```
+📋 Анализ ответственности Skills
+├── Проанализировано skills: X
+├── Соответствуют SRP: Y (Z%)
+├── Нарушения SRP:
+│   └── ⚠️ acc-mega-skill.md — несколько действий (создаёт, аудирует, валидирует)
 ├── Feature Envy:
-│   └── ⚠️ acc-create-test in acc-ddd-generator (should be in acc-test-generator)
-├── Similar skills (potential merge):
-│   └── acc-foo-skill ↔ acc-bar-skill (82% similar)
-└── Summary: X skills need attention
+│   └── ⚠️ acc-create-test в acc-ddd-generator (должен быть в acc-test-generator)
+├── Похожие skills (потенциальное слияние):
+│   └── acc-foo-skill ↔ acc-bar-skill (82% похожи)
+└── Итого: X skills требуют внимания
 ```
 
-### Step 11: Domain Boundary Analysis
+### Шаг 11: Анализ границ доменов
 
-Analyze bounded context separation:
+Анализ разделения ограниченных контекстов:
 
-#### 11.1 Identify Domains
+#### 11.1 Идентификация доменов
 
-Extract domains from component naming and content:
+Извлечь домены из именования и контента компонентов:
 - **DDD** — entity, value-object, aggregate, repository, domain-service
 - **CQRS** — command, query, read-model
 - **Testing** — test, mock, stub, builder
@@ -507,72 +507,72 @@ Extract domains from component naming and content:
 - **Patterns** — circuit-breaker, retry, saga, outbox
 - **Architecture** — clean, hexagonal, layered, eda
 
-#### 11.2 Build Domain Graph
+#### 11.2 Построение графа доменов
 
-Map components to domains and find overlaps:
+Сопоставить компоненты доменам и найти пересечения:
 
 ```
-Domain: DDD
+Домен: DDD
 ├── Commands: 1
 ├── Agents: 2
 ├── Skills: 15
-└── Boundary violations: 2
-    ├── acc-ddd-generator uses acc-testing-knowledge (Testing domain)
-    └── acc-ddd-auditor references PSR patterns (PSR domain)
+└── Нарушения границ: 2
+    ├── acc-ddd-generator использует acc-testing-knowledge (домен Testing)
+    └── acc-ddd-auditor ссылается на PSR паттерны (домен PSR)
 ```
 
-#### 11.3 Cross-Domain Dependencies
+#### 11.3 Кросс-доменные зависимости
 
-Identify when domains depend on each other:
+Идентифицировать, когда домены зависят друг от друга:
 
-| From Domain | To Domain | Type | Status |
-|-------------|-----------|------|--------|
-| DDD | Testing | Expected | ✅ OK (test generation uses DDD) |
-| PSR | DDD | Unexpected | ⚠️ Review |
-| Documentation | All | Expected | ✅ OK (docs for everything) |
+| Из домена | В домен | Тип | Статус |
+|-----------|---------|-----|--------|
+| DDD | Testing | Ожидаемый | ✅ OK (генерация тестов использует DDD) |
+| PSR | DDD | Неожиданный | ⚠️ Проверить |
+| Documentation | Все | Ожидаемый | ✅ OK (документация для всего) |
 
-#### 11.4 Domain Boundary Report Format
+#### 11.4 Формат отчёта о границах доменов
 
 ```
-🌐 Domain Boundary Analysis
-├── Domains identified: X
-├── Domain map:
+🌐 Анализ границ доменов
+├── Идентифицировано доменов: X
+├── Карта доменов:
 │   ├── DDD: 1 cmd, 2 agents, 15 skills
 │   ├── Testing: 2 cmd, 2 agents, 7 skills
 │   ├── PSR: 1 cmd, 1 agent, 14 skills
 │   └── ...
-├── Boundary violations:
-│   └── ⚠️ acc-foo-skill in DDD domain references Testing domain
-├── Missing domains:
-│   └── 💡 No dedicated Caching domain (mentioned in CLAUDE.md)
-└── Recommendations:
-    └── Consider creating acc-caching-* components
+├── Нарушения границ:
+│   └── ⚠️ acc-foo-skill в домене DDD ссылается на домен Testing
+├── Отсутствующие домены:
+│   └── 💡 Нет выделенного домена Caching (упомянуто в CLAUDE.md)
+└── Рекомендации:
+    └── Рассмотреть создание компонентов acc-caching-*
 ```
 
-### Step 12: Refactoring Recommendations
+### Шаг 12: Рекомендации по рефакторингу
 
-Generate actionable refactoring proposals:
+Сгенерировать практические предложения по рефакторингу:
 
-#### 12.1 Split Recommendations
+#### 12.1 Рекомендации по разделению
 
-For God-Agents and SRP violations:
+Для God-Agents и нарушений SRP:
 
 ```markdown
-### Split Recommendation: acc-mega-agent
+### Рекомендация по разделению: acc-mega-agent
 
-**Current state:**
-- 23 skills across 4 domains
-- Responsibilities: audits, generates, validates, documents
+**Текущее состояние:**
+- 23 skills через 4 домена
+- Ответственности: audits, generates, validates, documents
 
-**Proposed split:**
+**Предложенное разделение:**
 
-| New Agent | Domain | Skills | Responsibilities |
-|-----------|--------|--------|------------------|
+| Новый агент | Домен | Skills | Ответственности |
+|-------------|-------|--------|------------------|
 | acc-mega-auditor | Audit | 8 | audits, validates |
 | acc-mega-generator | Generation | 10 | generates, creates |
 | acc-mega-documenter | Documentation | 5 | documents |
 
-**Before:**
+**До:**
 ```yaml
 name: acc-mega-agent
 description: Audits, generates, validates, and documents everything
@@ -580,7 +580,7 @@ skills:
   - 23 skills listed
 ```
 
-**After (acc-mega-auditor):**
+**После (acc-mega-auditor):**
 ```yaml
 name: acc-mega-auditor
 description: Audits and validates mega components
@@ -591,344 +591,344 @@ skills:
 ```
 ```
 
-#### 12.2 Merge Recommendations
+#### 12.2 Рекомендации по слиянию
 
-For duplicate/similar skills:
+Для дублирующихся/похожих skills:
 
 ```markdown
-### Merge Recommendation: acc-create-test + acc-create-unit-test
+### Рекомендация по слиянию: acc-create-test + acc-create-unit-test
 
-**Similarity:** 85%
-**Reason:** Both create unit tests with minor variations
+**Сходство:** 85%
+**Причина:** Оба создают unit тесты с небольшими вариациями
 
-**Proposed merge:**
-- Keep: acc-create-unit-test (more specific name)
-- Deprecate: acc-create-test
-- Migrate: Update acc-test-generator to use acc-create-unit-test
+**Предложенное слияние:**
+- Оставить: acc-create-unit-test (более конкретное имя)
+- Удалить: acc-create-test
+- Мигрировать: Обновить acc-test-generator для использования acc-create-unit-test
 
-**Before:**
-- acc-create-test: Generic test creation
-- acc-create-unit-test: Unit test creation
+**До:**
+- acc-create-test: Общее создание тестов
+- acc-create-unit-test: Создание unit тестов
 
-**After:**
-- acc-create-unit-test: Unified test creation with type parameter
+**После:**
+- acc-create-unit-test: Унифицированное создание тестов с параметром типа
 ```
 
-#### 12.3 Move Recommendations
+#### 12.3 Рекомендации по перемещению
 
-For Feature Envy:
+Для Feature Envy:
 
 ```markdown
-### Move Recommendation: acc-create-mock-repository
+### Рекомендация по перемещению: acc-create-mock-repository
 
-**Current location:** acc-ddd-generator (DDD domain)
-**Recommended location:** acc-test-generator (Testing domain)
-**Reason:** Mock repositories are testing artifacts, not DDD building blocks
+**Текущее расположение:** acc-ddd-generator (домен DDD)
+**Рекомендуемое расположение:** acc-test-generator (домен Testing)
+**Причина:** Mock репозитории — это артефакты тестирования, а не строительные блоки DDD
 
-**Action:**
-1. Remove from acc-ddd-generator skills list
-2. Add to acc-test-generator skills list
-3. Update documentation
+**Действие:**
+1. Удалить из списка skills acc-ddd-generator
+2. Добавить в список skills acc-test-generator
+3. Обновить документацию
 ```
 
-#### 12.4 Rename Recommendations
+#### 12.4 Рекомендации по переименованию
 
-For naming inconsistencies:
+Для несоответствий именования:
 
 ```markdown
-### Rename Recommendation: acc-domain-knowledge
+### Рекомендация по переименованию: acc-domain-knowledge
 
-**Current:** acc-domain-knowledge
-**Proposed:** acc-ddd-knowledge
-**Reason:** Consistency with acc-ddd-* naming convention
+**Текущее:** acc-domain-knowledge
+**Предложенное:** acc-ddd-knowledge
+**Причина:** Согласованность с соглашением об именовании acc-ddd-*
 
-**Affected files:**
+**Затронутые файлы:**
 - .claude/skills/acc-domain-knowledge/SKILL.md → acc-ddd-knowledge/SKILL.md
-- .claude/agents/acc-ddd-auditor.md (skills reference)
+- .claude/agents/acc-ddd-auditor.md (ссылка на skills)
 ```
 
-#### 12.5 Refactoring Report Format
+#### 12.5 Формат отчёта о рефакторинге
 
 ```
-🔧 Refactoring Recommendations
-├── Split recommendations: X
+🔧 Рекомендации по рефакторингу
+├── Рекомендации по разделению: X
 │   └── acc-mega-agent → acc-mega-auditor + acc-mega-generator
-├── Merge recommendations: X
+├── Рекомендации по слиянию: X
 │   └── acc-create-test + acc-create-unit-test → acc-create-unit-test
-├── Move recommendations: X
-│   └── acc-create-mock → from acc-ddd-generator to acc-test-generator
-├── Rename recommendations: X
+├── Рекомендации по перемещению: X
+│   └── acc-create-mock → из acc-ddd-generator в acc-test-generator
+├── Рекомендации по переименованию: X
 │   └── acc-domain-knowledge → acc-ddd-knowledge
-├── Priority order:
-│   1. ❌ Critical: Split acc-mega-agent (God-Agent)
-│   2. ⚠️ High: Move Feature Envy skills
-│   3. 💡 Low: Merge similar skills
-└── Estimated impact: X files affected
+├── Порядок приоритетов:
+│   1. ❌ Критично: Разделить acc-mega-agent (God-Agent)
+│   2. ⚠️ Высокий: Переместить Feature Envy skills
+│   3. 💡 Низкий: Объединить похожие skills
+└── Оценочное влияние: Затронуто X файлов
 ```
 
-## Output Format
+## Формат вывода
 
-Generate a structured markdown report:
+Сгенерировать структурированный markdown отчёт:
 
-### 1. Overview
+### 1. Обзор
 
 ```
-📁 .claude/ Audit Report
+📁 Отчёт об аудите .claude/
 ========================
 
-📊 Summary
-├── Commands:  X found (Y issues)
-├── Agents:    X found (Y issues)
-├── Skills:    X found (Y issues)
-├── Settings:  X files (Y issues)
-├── Resource usage: X% active
-├── Behavior match: X%
-├── Context alignment: X%
-├── Semantic fit: X%
-├── SRP compliance: X%
-├── Domain coverage: X domains
-└── Total issues: X critical, Y warnings, Z suggestions
+📊 Итоги
+├── Commands:  X найдено (Y проблем)
+├── Agents:    X найдено (Y проблем)
+├── Skills:    X найдено (Y проблем)
+├── Settings:  X файлов (Y проблем)
+├── Использование ресурсов: X% активные
+├── Соответствие поведения: X%
+├── Соответствие контексту: X%
+├── Семантическое соответствие: X%
+├── Соответствие SRP: X%
+├── Покрытие доменов: X доменов
+└── Всего проблем: X критичных, Y предупреждений, Z предложений
 ```
 
-### 2. File Tree
+### 2. Дерево файлов
 
-Show discovered structure with status indicators:
+Показать обнаруженную структуру с индикаторами статуса:
 ```
 .claude/
 ├── commands/
 │   ├── ✅ acc-commit.md
-│   ├── ⚠️ my-command.md (missing description)
-│   └── ❌ broken.md (invalid YAML)
+│   ├── ⚠️ my-command.md (отсутствует description)
+│   └── ❌ broken.md (невалидный YAML)
 ├── agents/
 │   └── ✅ my-agent.md
 ├── skills/
-│   └── ⚠️ my-skill/SKILL.md (too long: 800 lines)
+│   └── ⚠️ my-skill/SKILL.md (слишком длинный: 800 строк)
 └── ✅ settings.json
 ```
 
-### 3. Detailed Analysis
+### 3. Детальный анализ
 
-For each file with issues:
+Для каждого файла с проблемами:
 
 ```markdown
 #### ⚠️ commands/my-command.md
 
-**Issues:**
-- Missing `description` in frontmatter
-- No $ARGUMENTS validation
-- Uses Bash without restriction
+**Проблемы:**
+- Отсутствует `description` во фронтматтере
+- Нет валидации $ARGUMENTS
+- Использует Bash без ограничений
 
-**Current:**
+**Текущее:**
 ```yaml
 ---
 allowed-tools: Bash
 ---
 ```
 
-**Recommended:**
+**Рекомендуемое:**
 ```yaml
 ---
-description: Brief description of what this command does
+description: Краткое описание того, что делает эта команда
 allowed-tools: Bash, Read
-argument-hint: <required-argument>
+argument-hint: <обязательный-аргумент>
 ---
 
-## Pre-flight Check
-Validate $ARGUMENTS before proceeding...
+## Предварительная проверка
+Валидировать $ARGUMENTS перед продолжением...
 ```
 ```
 
-### 4. Recommendations
+### 4. Рекомендации
 
-Prioritized action items:
+Приоритизированные пункты действий:
 
-| Priority | File | Issue | Fix |
-|----------|------|-------|-----|
-| ❌ Critical | broken.md | Invalid YAML | Fix frontmatter syntax |
-| ⚠️ High | my-command.md | No description | Add description field |
-| 💡 Suggestion | settings.json | No hooks | Consider adding pre-commit hook |
+| Приоритет | Файл | Проблема | Исправление |
+|-----------|------|----------|-------------|
+| ❌ Критично | broken.md | Невалидный YAML | Исправить синтаксис фронтматтера |
+| ⚠️ Высокий | my-command.md | Нет description | Добавить поле description |
+| 💡 Предложение | settings.json | Нет hooks | Рассмотреть добавление pre-commit хука |
 
-### 5. Resource Usage
-
-```
-📊 Resource Usage Analysis
-├── Active components: 81/84 (96%)
-├── Orphaned skills:
-│   └── acc-example-skill (not used by any agent)
-├── Orphaned agents: none
-├── Undocumented commands: none
-└── Circular references: none
-```
-
-**Recommendation:**
-- Remove orphaned skills or add them to relevant agents
-- Document the purpose of undocumented commands
-
-### 6. Behavior Verification
+### 5. Использование ресурсов
 
 ```
-📋 Behavior Verification
-├── Commands: 8/8 verified
-│   ├── ✅ acc-commit.md — "generates commit" + Bash ✓
-│   ├── ✅ acc-audit-ddd.md — "audits" + Read/Grep ✓
+📊 Анализ использования ресурсов
+├── Активные компоненты: 81/84 (96%)
+├── Осиротевшие skills:
+│   └── acc-example-skill (не используется ни одним агентом)
+├── Осиротевшие агенты: нет
+├── Недокументированные команды: нет
+└── Циклические ссылки: нет
+```
+
+**Рекомендация:**
+- Удалить осиротевшие skills или добавить их в релевантные агенты
+- Документировать цель недокументированных команд
+
+### 6. Проверка поведения
+
+```
+📋 Проверка поведения
+├── Commands: 8/8 проверено
+│   ├── ✅ acc-commit.md — "генерирует commit" + Bash ✓
+│   ├── ✅ acc-audit-ddd.md — "аудирует" + Read/Grep ✓
 │   └── ...
-├── Agents: 11/11 verified
-└── Skills: 73/73 verified
+├── Agents: 11/11 проверено
+└── Skills: 73/73 проверено
 ```
 
-**Mismatches found:**
-| Component | Declared | Actual | Issue |
-|-----------|----------|--------|-------|
-| acc-foo.md | "generates files" | No Write tool | Missing tool capability |
-| acc-bar.md | argument-hint: <path> | $ARGUMENTS unused | Argument not processed |
+**Найдены несоответствия:**
+| Компонент | Заявлено | Фактически | Проблема |
+|-----------|----------|------------|----------|
+| acc-foo.md | "генерирует файлы" | Нет инструмента Write | Отсутствует возможность инструмента |
+| acc-bar.md | argument-hint: <path> | $ARGUMENTS не используется | Аргумент не обрабатывается |
 
-### 7. Context Alignment
-
-```
-🎯 Context Alignment
-├── Project context detected:
-│   ├── Architecture: DDD, CQRS, Clean Architecture
-│   ├── Standards: PSR-1, PSR-4, PSR-12
-│   ├── Tech: PHP 8.2, Redis, RabbitMQ
-│   └── Principles: SOLID, GRASP
-├── Pattern coverage:
-│   ├── ✅ DDD — full (audit + 13 skills)
-│   ├── ✅ CQRS — full (4 skills)
-│   ├── ✅ PSR — full (audit + 11 skills)
-│   ├── ✅ SOLID — full (knowledge + analyzer)
-│   └── ✅ GRASP — full (knowledge skill)
-└── Suggestions: none
-```
-
-**Gaps identified:**
-| Context | Required | Available | Status |
-|---------|----------|-----------|--------|
-| Event Sourcing | skills/audit | knowledge only | ⚠️ Partial |
-| Redis | cache skills | none | 💡 Consider |
-
-### 8. Command-Agent Semantic Fit
+### 7. Соответствие контексту
 
 ```
-🔗 Command-Agent Semantic Fit
-├── Commands analyzed: 8
-├── Perfect fit: 7 (87.5%)
+🎯 Соответствие контексту
+├── Обнаружен контекст проекта:
+│   ├── Архитектура: DDD, CQRS, Clean Architecture
+│   ├── Стандарты: PSR-1, PSR-4, PSR-12
+│   ├── Технологии: PHP 8.2, Redis, RabbitMQ
+│   └── Принципы: SOLID, GRASP
+├── Покрытие паттернов:
+│   ├── ✅ DDD — полное (аудит + 13 skills)
+│   ├── ✅ CQRS — полное (4 skills)
+│   ├── ✅ PSR — полное (аудит + 11 skills)
+│   ├── ✅ SOLID — полное (знание + анализатор)
+│   └── ✅ GRASP — полное (skill знаний)
+└── Предложения: нет
+```
+
+**Обнаружены пробелы:**
+| Контекст | Требуется | Доступно | Статус |
+|----------|-----------|----------|--------|
+| Event Sourcing | skills/audit | только знание | ⚠️ Частично |
+| Redis | cache skills | нет | 💡 Рассмотреть |
+
+### 8. Семантическое соответствие Command-Agent
+
+```
+🔗 Семантическое соответствие Command-Agent
+├── Проанализировано команд: 8
+├── Идеальное соответствие: 7 (87.5%)
 │   ├── ✅ acc-audit-ddd → acc-ddd-auditor (DDD → DDD)
 │   ├── ✅ acc-generate-test → acc-test-generator (Testing → Testing)
 │   └── ...
-├── Cross-domain usage:
-│   └── ⚠️ acc-foo.md uses acc-bar-agent
-│       ├── Command domain: Foo
-│       ├── Agent domain: Bar
-│       └── Recommendation: Create acc-foo-agent or use existing Foo agent
-└── Summary: 1 command needs agent alignment
+├── Кросс-доменное использование:
+│   └── ⚠️ acc-foo.md использует acc-bar-agent
+│       ├── Домен команды: Foo
+│       ├── Домен агента: Bar
+│       └── Рекомендация: Создать acc-foo-agent или использовать существующий Foo агент
+└── Итого: 1 команда нуждается в согласовании агента
 ```
 
-### 9. Architectural Analysis
+### 9. Архитектурный анализ
 
 ```
-🏛️ Agent Complexity Analysis
-├── Agents analyzed: 11
-├── Healthy: 9 (82%)
-├── Warning level:
-│   └── ⚠️ acc-architecture-auditor (14 skills, 4 responsibilities)
+🏛️ Анализ сложности агентов
+├── Проанализировано агентов: 11
+├── Здоровые: 9 (82%)
+├── Уровень предупреждения:
+│   └── ⚠️ acc-architecture-auditor (14 skills, 4 ответственности)
 ├── God-Agents: 0
-└── Summary: Consider splitting acc-architecture-auditor
+└── Итого: Рассмотреть разделение acc-architecture-auditor
 
-📋 Skill Responsibility Analysis
-├── Skills analyzed: 73
-├── SRP compliant: 71 (97%)
-├── SRP violations:
-│   └── ⚠️ acc-mega-skill — audits AND generates
+📋 Анализ ответственности Skills
+├── Проанализировано skills: 73
+├── Соответствуют SRP: 71 (97%)
+├── Нарушения SRP:
+│   └── ⚠️ acc-mega-skill — аудирует И генерирует
 ├── Feature Envy: 1
-│   └── acc-create-mock-repository in acc-ddd-generator (Testing domain)
-├── Similar skills: 2 pairs
-│   └── acc-foo ↔ acc-bar (78% similar)
-└── Summary: 2 skills need attention
+│   └── acc-create-mock-repository в acc-ddd-generator (домен Testing)
+├── Похожие skills: 2 пары
+│   └── acc-foo ↔ acc-bar (78% похожи)
+└── Итого: 2 skills требуют внимания
 
-🌐 Domain Boundary Analysis
-├── Domains: 7 (DDD, Testing, PSR, Documentation, Patterns, Architecture, Claude Code)
-├── Domain distribution:
+🌐 Анализ границ доменов
+├── Домены: 7 (DDD, Testing, PSR, Documentation, Patterns, Architecture, Claude Code)
+├── Распределение доменов:
 │   ├── DDD: 1 cmd, 2 agents, 15 skills
 │   ├── Testing: 2 cmd, 2 agents, 7 skills
 │   └── ...
-├── Boundary violations: 1
-│   └── acc-create-mock-repository crosses DDD → Testing
-└── Missing domains: none
+├── Нарушения границ: 1
+│   └── acc-create-mock-repository пересекает DDD → Testing
+└── Отсутствующие домены: нет
 ```
 
-### 10. Refactoring Proposals
+### 10. Предложения по рефакторингу
 
 ```
-🔧 Refactoring Recommendations
+🔧 Рекомендации по рефакторингу
 
-## Split Proposals
-None needed.
+## Предложения по разделению
+Не требуется.
 
-## Merge Proposals
-| Skills | Similarity | Action |
-|--------|------------|--------|
-| acc-foo + acc-bar | 78% | Merge into acc-foo |
+## Предложения по слиянию
+| Skills | Сходство | Действие |
+|--------|----------|----------|
+| acc-foo + acc-bar | 78% | Объединить в acc-foo |
 
-## Move Proposals
-| Skill | From | To | Reason |
-|-------|------|-----|--------|
+## Предложения по перемещению
+| Skill | Из | В | Причина |
+|-------|-----|-----|---------|
 | acc-create-mock-repository | acc-ddd-generator | acc-test-generator | Feature Envy |
 
-## Rename Proposals
-None needed.
+## Предложения по переименованию
+Не требуется.
 
-## Priority Order
-1. ⚠️ High: Move acc-create-mock-repository (Feature Envy)
-2. 💡 Low: Merge similar skills
+## Порядок приоритетов
+1. ⚠️ Высокий: Переместить acc-create-mock-repository (Feature Envy)
+2. 💡 Низкий: Объединить похожие skills
 
-## Estimated Impact
-- Files affected: 3
-- Agents updated: 2
-- Commands unchanged: 8
+## Оценочное влияние
+- Затронуто файлов: 3
+- Обновлено агентов: 2
+- Команды не изменены: 8
 ```
 
-### 11. Quick Fixes
+### 11. Быстрые исправления
 
-Ready-to-apply fixes for common issues:
+Готовые к применению исправления для распространённых проблем:
 
 ```markdown
-**Fix: Add missing description to my-command.md**
-Add this to the YAML frontmatter:
-description: [Describe what this command does and when to use it]
+**Исправление: Добавить отсутствующее description в my-command.md**
+Добавьте это в YAML фронтматтер:
+description: [Опишите, что делает эта команда и когда её использовать]
 ```
 
-## Missing Configuration
+## Отсутствующая конфигурация
 
-If `.claude/` folder is missing or empty, provide starter template:
+Если папка `.claude/` отсутствует или пустая, предоставить стартовый шаблон:
 
 ```markdown
-## Recommended Structure
+## Рекомендуемая структура
 
-Your project is missing Claude Code configuration. Here's a starter setup:
+В вашем проекте отсутствует конфигурация Claude Code. Вот стартовая настройка:
 
-### 1. Create basic structure
+### 1. Создать базовую структуру
 
 ```bash
 mkdir -p .claude/commands .claude/agents .claude/skills
 ```
 
-### 2. Create CLAUDE.md
+### 2. Создать CLAUDE.md
 
 ```markdown
 # CLAUDE.md
 
-## Project Overview
-[Describe your project]
+## Обзор проекта
+[Опишите ваш проект]
 
-## Architecture
-[Key patterns and structures]
+## Архитектура
+[Ключевые паттерны и структуры]
 
-## Commands
-- `make test` — run tests
-- `make lint` — check code style
+## Команды
+- `make test` — запустить тесты
+- `make lint` — проверить стиль кода
 ```
 
-### 3. Create settings.json
+### 3. Создать settings.json
 
 ```json
 {
@@ -942,50 +942,50 @@ mkdir -p .claude/commands .claude/agents .claude/skills
 }
 ```
 
-### 4. Add to .gitignore
+### 4. Добавить в .gitignore
 
 ```
 .claude/settings.local.json
 ```
 ```
 
-## Audit Levels
+## Уровни аудита
 
-Extract audit level from meta-instructions: `level:quick`, `level:standard`, `level:deep`. Default: `standard`.
+Извлечь уровень аудита из мета-инструкций: `level:quick`, `level:standard`, `level:deep`. По умолчанию: `standard`.
 
-| Level | Scope | What's Checked |
-|-------|-------|----------------|
-| `quick` | Structure + cross-refs | Frontmatter validation, cross-reference integrity |
-| `standard` | Quick + quality + antipatterns | Standard quality criteria, structural antipatterns, behavior verification |
-| `deep` | Standard + architecture | Standard + God-Agent detection, domain boundaries, skill responsibility, refactoring recommendations |
+| Уровень | Охват | Что проверяется |
+|---------|-------|-----------------|
+| `quick` | Структура + кросс-ссылки | Валидация фронтматтера, целостность кросс-ссылок |
+| `standard` | Quick + качество + антипаттерны | Стандартные критерии качества, структурные антипаттерны, проверка поведения |
+| `deep` | Standard + архитектура | Standard + обнаружение God-Agent, границы доменов, ответственность skills, рекомендации по рефакторингу |
 
-## Severity Levels
+## Уровни серьёзности
 
-| Level | Symbol | Criteria |
-|-------|--------|----------|
-| Critical | 🔴 | Invalid YAML, broken cross-references, missing required files |
-| High | 🟠 | God-Agent detected, orphaned components, behavior mismatch |
-| Medium | 🟡 | Quality criteria warnings, naming inconsistencies |
-| Low | 🟢 | Style suggestions, optional improvements |
+| Уровень | Символ | Критерии |
+|---------|--------|----------|
+| Критично | 🔴 | Невалидный YAML, битые кросс-ссылки, отсутствующие обязательные файлы |
+| Высокий | 🟠 | Обнаружен God-Agent, осиротевшие компоненты, несоответствие поведения |
+| Средний | 🟡 | Предупреждения критериев качества, несоответствия именования |
+| Низкий | 🟢 | Предложения по стилю, опциональные улучшения |
 
-## Meta-Instructions Guide
+## Руководство по мета-инструкциям
 
-| Instruction | Effect |
-|-------------|--------|
-| `focus on God-Agent` | Deep God-Agent detection analysis |
-| `check only commands` | Only audit command files |
-| `check only agents` | Only audit agent files |
-| `skip skills` | Exclude skills from audit |
-| `level:quick` | Fast audit (structure + cross-refs only) |
-| `level:deep` | Deep audit (+ God-Agent + domain boundaries) |
-| `detailed report` | Maximum detail in report |
-| `на русском` | Report in Russian |
+| Инструкция | Эффект |
+|------------|--------|
+| `focus on God-Agent` | Глубокий анализ обнаружения God-Agent |
+| `check only commands` | Аудировать только файлы команд |
+| `check only agents` | Аудировать только файлы агентов |
+| `skip skills` | Исключить skills из аудита |
+| `level:quick` | Быстрый аудит (только структура + кросс-ссылки) |
+| `level:deep` | Глубокий аудит (+ God-Agent + границы доменов) |
+| `detailed report` | Максимальная детализация в отчёте |
+| `на русском` | Отчёт на русском языке |
 
-## Usage
+## Использование
 
 ```bash
 /acc-audit-claude-components
 /acc-audit-claude-components -- level:quick
 /acc-audit-claude-components -- level:deep
-/acc-audit-claude-components -- focus on God-Agent detection
+/acc-audit-claude-components -- фокус на обнаружении God-Agent
 ```

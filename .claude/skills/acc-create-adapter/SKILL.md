@@ -1,84 +1,84 @@
 ---
 name: acc-create-adapter
-description: Generates Adapter pattern for PHP 8.2. Converts incompatible interfaces, wraps legacy code and external libraries. Includes unit tests.
+description: Генерирует паттерн Adapter для PHP 8.2. Конвертирует несовместимые интерфейсы, оборачивает устаревший код и внешние библиотеки. Включает юнит-тесты.
 ---
 
-# Adapter Pattern Generator
+# Генератор паттерна Adapter
 
-Creates Adapter pattern infrastructure for converting incompatible interfaces into expected ones.
+Создаёт инфраструктуру паттерна Adapter для преобразования несовместимых интерфейсов в ожидаемые.
 
-## When to Use
+## Когда использовать
 
-| Scenario | Example |
-|----------|---------|
-| Legacy code integration | Wrap old API with new interface |
-| Third-party library wrapping | Stripe SDK, AWS SDK adapters |
-| Interface standardization | Multiple payment gateways with unified interface |
-| Backward compatibility | Support old and new interfaces |
+| Сценарий | Пример |
+|----------|--------|
+| Интеграция с устаревшим кодом | Обернуть старый API новым интерфейсом |
+| Обёртка сторонних библиотек | Адаптеры для Stripe SDK, AWS SDK |
+| Стандартизация интерфейсов | Несколько платёжных шлюзов с единым интерфейсом |
+| Обратная совместимость | Поддержка старого и нового интерфейсов |
 
-## Component Characteristics
+## Характеристики компонентов
 
 ### Target Interface
-- Defines expected operations
-- Client code depends on this
-- Domain layer contract
+- Определяет ожидаемые операции
+- Клиентский код зависит от него
+- Контракт Domain layer
 
 ### Adapter
-- Implements target interface
-- Wraps adaptee (existing class)
-- Translates calls between interfaces
+- Реализует target interface
+- Оборачивает adaptee (существующий класс)
+- Транслирует вызовы между интерфейсами
 
 ### Adaptee
-- Existing incompatible class
-- Legacy code or external library
-- Not modified by adapter
+- Существующий несовместимый класс
+- Устаревший код или внешняя библиотека
+- Не модифицируется адаптером
 
 ---
 
-## Generation Process
+## Процесс генерации
 
-### Step 1: Generate Target Interface
+### Шаг 1: Генерация Target Interface
 
-**Path:** `src/Domain/{BoundedContext}/`
+**Путь:** `src/Domain/{BoundedContext}/`
 
-1. `{Name}Interface.php` — Expected interface contract
+1. `{Name}Interface.php` — Контракт ожидаемого интерфейса
 
-### Step 2: Generate Adapter
+### Шаг 2: Генерация Adapter
 
-**Path:** `src/Infrastructure/{BoundedContext}/Adapter/`
+**Путь:** `src/Infrastructure/{BoundedContext}/Adapter/`
 
-1. `{Provider}{Name}Adapter.php` — Converts adaptee to target interface
-2. `{Legacy}{Name}Adapter.php` — Wraps legacy code
-3. `{External}{Name}Adapter.php` — Wraps third-party library
+1. `{Provider}{Name}Adapter.php` — Преобразует adaptee в target interface
+2. `{Legacy}{Name}Adapter.php` — Оборачивает устаревший код
+3. `{External}{Name}Adapter.php` — Оборачивает стороннюю библиотеку
 
-### Step 3: Generate Tests
+### Шаг 3: Генерация тестов
 
-1. `{AdapterName}Test.php` — Adapter behavior verification
+1. `{AdapterName}Test.php` — Проверка поведения адаптера
 
 ---
 
-## File Placement
+## Размещение файлов
 
-| Component | Path |
+| Компонент | Путь |
 |-----------|------|
 | Target Interface | `src/Domain/{BoundedContext}/` |
 | Adapter | `src/Infrastructure/{BoundedContext}/Adapter/` |
-| Adaptee (existing) | External library or legacy code |
-| Unit Tests | `tests/Unit/Infrastructure/{BoundedContext}/Adapter/` |
+| Adaptee (существующий) | Внешняя библиотека или устаревший код |
+| Юнит-тесты | `tests/Unit/Infrastructure/{BoundedContext}/Adapter/` |
 
 ---
 
-## Naming Conventions
+## Соглашения об именовании
 
-| Component | Pattern | Example |
-|-----------|---------|---------|
+| Компонент | Паттерн | Пример |
+|-----------|---------|--------|
 | Target Interface | `{Name}Interface` | `PaymentGatewayInterface` |
 | Adapter | `{Provider}{Name}Adapter` | `StripePaymentGatewayAdapter` |
-| Test | `{ClassName}Test` | `StripePaymentGatewayAdapterTest` |
+| Тест | `{ClassName}Test` | `StripePaymentGatewayAdapterTest` |
 
 ---
 
-## Quick Template Reference
+## Краткий справочник шаблонов
 
 ### Target Interface
 
@@ -111,7 +111,7 @@ final readonly class {Provider}{Name}Adapter implements {Name}Interface
 
 ---
 
-## Usage Example
+## Пример использования
 
 ```php
 // Stripe SDK is the adaptee
@@ -126,33 +126,33 @@ $result = $paymentGateway->charge($amount, $token);
 
 ---
 
-## Common Adapters
+## Распространённые адаптеры
 
-| Adapter | Purpose |
-|---------|---------|
-| PaymentGatewayAdapter | Wrap Stripe, PayPal, Square APIs |
-| StorageAdapter | Wrap AWS S3, Google Cloud Storage |
-| MessengerAdapter | Wrap Slack, Discord, Telegram APIs |
-| EmailAdapter | Wrap SendGrid, Mailgun, AWS SES |
-| CacheAdapter | Wrap Redis, Memcached, APCu |
-| LoggerAdapter | Wrap Monolog, Syslog, custom loggers |
-
----
-
-## Anti-patterns to Avoid
-
-| Anti-pattern | Problem | Solution |
-|--------------|---------|----------|
-| Leaky Adapter | Exposing adaptee details | Return only target interface types |
-| Multiple Responsibilities | Adapter doing business logic | Keep adapters focused on translation |
-| Tight Coupling | Adapter depends on concrete adaptee | Accept interface when possible |
-| Heavy Translation | Complex conversions in adapter | Extract translator services |
-| Missing Error Handling | Adaptee exceptions leak | Catch and convert to domain exceptions |
+| Адаптер | Назначение |
+|---------|-----------|
+| PaymentGatewayAdapter | Обёртка API Stripe, PayPal, Square |
+| StorageAdapter | Обёртка AWS S3, Google Cloud Storage |
+| MessengerAdapter | Обёртка API Slack, Discord, Telegram |
+| EmailAdapter | Обёртка SendGrid, Mailgun, AWS SES |
+| CacheAdapter | Обёртка Redis, Memcached, APCu |
+| LoggerAdapter | Обёртка Monolog, Syslog, пользовательских логгеров |
 
 ---
 
-## References
+## Антипаттерны, которых следует избегать
 
-For complete PHP templates and examples, see:
-- `references/templates.md` — Target Interface, Adapter templates for payment, storage, messaging
-- `references/examples.md` — Stripe, PayPal, AWS S3, legacy user adapters with unit tests
+| Антипаттерн | Проблема | Решение |
+|-------------|---------|---------|
+| Протекающий Adapter | Раскрытие деталей adaptee | Возвращать только типы target interface |
+| Множественные ответственности | Adapter содержит бизнес-логику | Сохранять фокус адаптера на трансляции |
+| Тесная связанность | Adapter зависит от конкретного adaptee | Принимать интерфейс по возможности |
+| Тяжёлая трансляция | Сложные преобразования в адаптере | Извлечь сервисы-трансляторы |
+| Отсутствующая обработка ошибок | Утечка исключений adaptee | Перехватывать и конвертировать в доменные исключения |
+
+---
+
+## Ссылки
+
+Для полных PHP-шаблонов и примеров смотрите:
+- `references/templates.md` — Шаблоны Target Interface, Adapter для платежей, хранилищ, сообщений
+- `references/examples.md` — Адаптеры Stripe, PayPal, AWS S3, legacy user с юнит-тестами
